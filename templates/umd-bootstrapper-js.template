@@ -1,0 +1,46 @@
+;(function(omidGlobal, factory, exports) {
+  // CommonJS support
+  if (typeof exports === 'object' && typeof exports.nodeName !== 'string') {
+    factory(omidGlobal, exports);
+
+  // If neither AMD nor CommonJS are used, export to a versioned name in the
+  // global context.
+  } else {
+    var exports = {};
+    const version = '${semVersionString}-${buildVersion}';
+    factory(omidGlobal, exports);
+
+    function deepFreeze(object) {
+      for (var key in object) {
+        if (object.hasOwnProperty(key)) {
+          object[key] = deepFreeze(object[key]);
+        }
+      }
+      return Object.freeze(object);
+    }
+
+    // Inject and freeze the exported components of omid.
+    for (var key in exports) {
+      if (exports.hasOwnProperty(key)) {
+        if (Object.getOwnPropertyDescriptor(omidGlobal, key) == null
+          || Object.getOwnPropertyDescriptor(omidGlobal[key], version) == null) {
+          // Define the top level property in the global scope
+          if (Object.getOwnPropertyDescriptor(omidGlobal, key) == null) {
+            Object.defineProperty(omidGlobal, key, {
+              value: {},
+            });
+          }
+          // Define the object exports keyed-off versions
+          Object.defineProperty(omidGlobal[key], version, {
+            get: function () {
+              return deepFreeze(exports[key]);
+            },
+            enumerable: true,
+          });
+        }
+      }
+    }
+  }
+}(typeof global === 'undefined' ? this : global, function(omidGlobal, omidExports) {
+  %output%
+}, typeof exports === 'undefined' ? undefined : exports));

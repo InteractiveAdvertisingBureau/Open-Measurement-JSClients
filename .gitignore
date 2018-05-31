@@ -1,0 +1,21 @@
+bin/
+node_modules/
+
+# Generated source file
+src/common/version.js
+
+# Generated prod bootstrapper
+umd-bootstrapper.js
+
+npm-debug.log
+*.orig
+*err_pid*.log
+
+# Intellij stuff
+.idea/*
+*.iml
+
+# Backup files
+*.swp
+*.swo
+*.bak

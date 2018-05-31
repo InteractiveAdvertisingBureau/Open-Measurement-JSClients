@@ -1,0 +1,9 @@
+{
+  "spec_dir": "./bin",
+  "spec_files": [
+    "./bin/Omid-Tests.js"
+  ],
+
+  "stopSpecOnExpectationFailure": false,
+  "random": false
+}

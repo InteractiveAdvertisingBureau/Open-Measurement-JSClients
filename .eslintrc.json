@@ -1,0 +1,19 @@
+{
+  "extends": "google",
+  "parserOptions": { "ecmaVersion": 6 },
+  "env": { "es6": true },
+  "rules": {
+    "valid-jsdoc": "warn",
+    "no-unused-vars": "off",
+    "max-len": "warn"
+  },
+  "overrides": {
+    "files": "test/**/*.js",
+    "rules" : {
+      "require-jsdoc": "off",
+      "valid-jsdoc": "off",
+      "guard-for-in": "off",
+      "prefer-spread": "off"
+    }
+  }
+}
