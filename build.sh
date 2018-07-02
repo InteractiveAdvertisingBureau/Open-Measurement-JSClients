@@ -35,10 +35,6 @@ npm list
 { fancyPrint "Running linter checks"; } 2>/dev/null
 npm run lint
 
-# Re-set the files containing version information
-{ fancyPrint "Purging version files"; } 2>/dev/null
-npm run purge-version
-
 # Run tests
 { fancyPrint "Running unit tests for public OMSDK components"; } 2>/dev/null
 npm run test

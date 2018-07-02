@@ -1,5 +1,12 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.1.4 - 2018-06-20
+### Fixed
+- Purge stale version files before regenerating files in npm prebuild.
+
+### Added
+- Add support for using window.omid3p in VerificationClient.
+
 ## 1.1.3 - 2018-05-29
 ### Changed
 - Make OM SDK JS client code available in public GitHub repository.

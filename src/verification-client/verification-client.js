@@ -23,6 +23,21 @@ const VERIFICATION_CLIENT_VERSION = Version;
 let EventCallback;
 
 /**
+ * Checks for and returns the window.omid3p object, if it exists.
+ * @return {?{registerSessionObserver: !Function,
+ *           addEventListener: !Function}} The omid3p object.
+ */
+function getThirdPartyOmid() {
+  const omid3p = omidGlobal['omid3p'];
+  if (omid3p &&
+      typeof omid3p['registerSessionObserver'] === 'function' &&
+      typeof omid3p['addEventListener'] === 'function') {
+    return omid3p;
+  }
+  return null;
+}
+
+/**
  * OMID VerificationClient.
  * Allows verification scripts to interact with the OM SDK Service.
  */
@@ -39,6 +54,11 @@ class VerificationClient {
     this.communication = communication;
     if (this.communication) {
       this.communication.onMessage = this.handleMessage_.bind(this);
+    } else {
+      const omid3p = getThirdPartyOmid();
+      if (omid3p) {
+        this.omid3p = omid3p;
+      }
     }
 
     // Create counters so that we can assign local IDs to timeouts and
@@ -54,6 +74,14 @@ class VerificationClient {
      * @private
      */
     this.callbackMap_ = {};
+
+    /**
+     * List to hold <img> elements for pinging URLs, to prevent garbage
+     * collection while the request is in flight.
+     * @type {!Array<!HTMLImageElement>}
+     * @private
+     */
+    this.imgCache_ = [];
   }
 
   /**
@@ -61,7 +89,7 @@ class VerificationClient {
    * @return {boolean}
    */
   isSupported() {
-    return Boolean(this.communication);
+    return Boolean(this.communication || this.omid3p);
   }
 
   /**
@@ -79,6 +107,10 @@ class VerificationClient {
    */
   registerSessionObserver(functionToExecute, vendorKey = undefined) {
     assertFunction('functionToExecute', functionToExecute);
+    if (this.omid3p) {
+      this.omid3p['registerSessionObserver'](functionToExecute, vendorKey);
+      return;
+    }
     this.sendMessage_('addSessionListener', functionToExecute, vendorKey);
   }
 
@@ -99,6 +131,10 @@ class VerificationClient {
   addEventListener(eventType, functionToExecute) {
     assertTruthyString('eventType', eventType);
     assertFunction('functionToExecute', functionToExecute);
+    if (this.omid3p) {
+      this.omid3p['addEventListener'](eventType, functionToExecute);
+      return;
+    }
     this.sendMessage_('addEventListener', functionToExecute, eventType);
   }
 
@@ -116,6 +152,10 @@ class VerificationClient {
    */
   sendUrl(url, successCallback = undefined, failureCallback = undefined) {
     assertTruthyString('url', url);
+    if (omidGlobal.document && omidGlobal.document.createElement) {
+      this.sendUrlWithImg_(url, successCallback, failureCallback);
+      return;
+    }
     this.sendMessage_(
         'sendUrl', (success) => {
           if (success && successCallback) {
@@ -124,6 +164,35 @@ class VerificationClient {
             failureCallback();
           }
         }, url);
+  }
+
+  /**
+   * Requests the target URL in browser-based environments, using an <img> tag.
+   *
+   * @param {string} url which should be requested.
+   * @param {function()=} successCallback function to be executed when the
+   *     request has been successful.
+   * @param {function()=} failureCallback function to be executed when the
+   *     request has failed.
+   * @private
+   */
+  sendUrlWithImg_(url, successCallback = undefined,
+      failureCallback = undefined) {
+    const img = /** @type {!HTMLImageElement} */
+        (omidGlobal.document.createElement('img'));
+    this.imgCache_.push(img);
+    const removeAndCall = (callback) => {
+      const i = this.imgCache_.indexOf(img);
+      if (i >= 0) {
+        this.imgCache_.splice(i, 1);
+      }
+      if (callback) {
+        callback();
+      }
+    };
+    img.addEventListener('load', removeAndCall.bind(this, successCallback));
+    img.addEventListener('error', removeAndCall.bind(this, failureCallback));
+    img.src = url;
   }
 
   /**
@@ -354,7 +423,7 @@ class VerificationClient {
    * @private
    */
   sendMessage_(method, responseCallback, ...args) {
-    if (!this.isSupported()) return;
+    if (!this.communication) return;
 
     const guid = this.communication.generateGuid();
     if (responseCallback) {

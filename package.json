@@ -1,6 +1,6 @@
 {
   "name": "open-measurement-jsclients",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "JavaScript common and client components of OM SDK",
   "watch": {
     "test-unit": {
@@ -21,7 +21,7 @@
     "watch-unit-tests": "npm-watch test-unit",
     "purge-version": "rimraf src/common/version.js && rimraf umd-bootstrapper.js",
     "generate-version": "node ./generate_version_file.js",
-    "prebuild": "rimraf ./bin && mkdirp ./bin && npm run generate-version",
+    "prebuild": "rimraf ./bin && mkdirp ./bin && npm run purge-version && npm run generate-version",
     "build": "npm run build-session-client && npm run build-verification-client && npm run build-validation-verification-script",
     "build-session-client": "gulp build-session-client && gulp package-session-client",
     "build-verification-client": "gulp build-verification-client && gulp package-verification-client",
