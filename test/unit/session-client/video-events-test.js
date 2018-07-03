@@ -27,13 +27,6 @@ function testForwardingFunction(methodName, f, ...args) {
     expect(() => f.apply(videoEvents, args)).toThrow();
   });
 
-  it('throws if an impression has not occured yet', () => {
-    asSpy(mockAdSession.assertImpressionOccured).and.callFake(() => {
-      throw new Error();
-    });
-    expect(() => f.apply(videoEvents, args)).toThrow();
-  });
-
   it('should be relayed to the service', () => {
     f.apply(videoEvents, args);
 
@@ -50,7 +43,6 @@ describe('VideoEventsTest', () => {
           'registerAdEvents',
           'sendOneWayMessage',
           'assertSessionRunning',
-          'assertImpressionOccured',
           'impressionOccurred']);
     spyOn(argsChecker, 'assertNotNullObject');
     spyOn(argsChecker, 'assertNumber');

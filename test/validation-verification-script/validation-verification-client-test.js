@@ -7,7 +7,8 @@ const {asSpy} = goog.require('omid.test.typingUtils');
 
 describe('ValidationVerificationClient', () => {
     let verificationClient;
-    let dummyVendor = 'dummyVendor';
+    let defaultServer = 'http://iabtechlab.com:66/sendMessage?msg=';
+    let defaultVendor = 'iabtechlab.com-omid';
     let validationVerificationClient;
     let fakeDate = new Date(2017, 8, 13);
     let sessionDate = new Date(2017, 7, 12);
@@ -17,7 +18,7 @@ describe('ValidationVerificationClient', () => {
 
     beforeEach(() => {
         verificationClient = jasmine.createSpyObj('VerificationClient', ['isSupported', 'registerSessionObserver', 'addEventListener', 'sendUrl']);
-        asSpy(verificationClient.registerSessionObserver).and.callFake(function(callback, vendor) {
+        asSpy(verificationClient.registerSessionObserver).and.callFake(function(callback) {
             startSession = callback;
         });
         asSpy(verificationClient.addEventListener).and.callFake(function(eventName, callback) {
@@ -32,10 +33,8 @@ describe('ValidationVerificationClient', () => {
         // Arrange
         asSpy(verificationClient.isSupported).and.returnValue(false);
         // Act
-        validationVerificationClient = new ValidationVerificationClient(verificationClient, dummyVendor);
+        validationVerificationClient = new ValidationVerificationClient(verificationClient, defaultVendor);
         // Arrange
-        const expectedLog = fakeDate.toLocaleString() + '::"OmidSupported[false]"';
-        expect(validationVerificationClient.getLogs()[0]).toBe(expectedLog);
         expect(verificationClient.registerSessionObserver).not.toHaveBeenCalled();
         expect(verificationClient.addEventListener).not.toHaveBeenCalled();
     });
@@ -44,15 +43,13 @@ describe('ValidationVerificationClient', () => {
         // Arrange
         asSpy(verificationClient.isSupported).and.returnValue(true);
         // Act
-        validationVerificationClient = new ValidationVerificationClient(verificationClient, dummyVendor);
+        validationVerificationClient = new ValidationVerificationClient(verificationClient, defaultVendor);
         // Arrange
-        const expectedLog = fakeDate.toLocaleString() + '::"OmidSupported[true]"';
-        expect(validationVerificationClient.getLogs()[0]).toBe(expectedLog);
         expect(verificationClient.registerSessionObserver).toHaveBeenCalled();
         expect(verificationClient.addEventListener).toHaveBeenCalled();
     });
 
-    it('fire sessionStart with serverLog, fire events to ServerLog', () => {
+    it('fire sessionStart to default server in presence of verification parameters', () => {
         // Arrange
         asSpy(verificationClient.isSupported).and.returnValue(true);
         const sessionData = {
@@ -66,42 +63,15 @@ describe('ValidationVerificationClient', () => {
                     'omidNativeInfo': {'partnerName': 'SomePartner', 'partnerVersion': '1.2.3'},
                     'app': {'libraryVersion': '4.0.0', 'appId': 'app-123456789'},
                     'omidJsInfo': {'serviceVersion': '4.0.0'},
-                }, 'verificationParameters': 'http://192.168.50.130/visit.jpg?message=',
+                }, 'verificationParameters': 'vp',
             },
         };
         // Act
-        validationVerificationClient = new ValidationVerificationClient(verificationClient, dummyVendor);
+        validationVerificationClient = new ValidationVerificationClient(verificationClient, defaultVendor);
         startSession(sessionData);
         // Arrange
-        const expectedIsSupportedUrl = `${sessionData.data.verificationParameters}${encodeURIComponent(`${fakeDate.toLocaleString()}::"OmidSupported[true]"`)}`;
-        const expectedSessionStart = `${sessionData.data.verificationParameters}${encodeURIComponent(`${sessionDate.toLocaleString()}::${JSON.stringify(sessionData)}`)}`;
-        expect(verificationClient.sendUrl).toHaveBeenCalledWith(expectedIsSupportedUrl);
-        expect(verificationClient.sendUrl).toHaveBeenCalledWith(expectedSessionStart);
-    });
-
-    it('fire sessionStart without serverLog, fire events to defaultServer', () => {
-        // Arrange
-        asSpy(verificationClient.isSupported).and.returnValue(true);
-        const sessionData = {
-            'adSessionId': 32423,
-            'timestamp': sessionDate,
-            'type': 'sessionStart',
-            'data': {
-                'context': {
-                    'environment': 'app',
-                    'adSessionType': 'html',
-                    'omidNativeInfo': {'partnerName': 'SomePartner', 'partnerVersion': '1.2.3'},
-                    'app': {'libraryVersion': '4.0.0', 'appId': 'app-123456789'},
-                    'omidJsInfo': {'serviceVersion': '4.0.0'},
-                },
-            },
-        };
-        // Act
-        validationVerificationClient = new ValidationVerificationClient(verificationClient, dummyVendor);
-        startSession(sessionData);
-        // Arrange
-        const expectedIsSupportedUrl = `http://localhost:66/sendMessage?msg=${encodeURIComponent(`${fakeDate.toLocaleString()}::"OmidSupported[true]"`)}`;
-        const expectedSessionStart = `http://localhost:66/sendMessage?msg=${encodeURIComponent(`${sessionDate.toLocaleString()}::${JSON.stringify(sessionData)}`)}`;
+        const expectedIsSupportedUrl = `${defaultServer}${encodeURIComponent(`${fakeDate.toLocaleString()}::"OmidSupported[true]"`)}`;
+        const expectedSessionStart = `${defaultServer}${encodeURIComponent(`${sessionDate.toLocaleString()}::${JSON.stringify(sessionData)}`)}`;
         expect(verificationClient.sendUrl).toHaveBeenCalledWith(expectedIsSupportedUrl);
         expect(verificationClient.sendUrl).toHaveBeenCalledWith(expectedSessionStart);
     });
@@ -120,7 +90,7 @@ describe('ValidationVerificationClient', () => {
                     'omidNativeInfo': {'partnerName': 'SomePartner', 'partnerVersion': '1.2.3'},
                     'app': {'libraryVersion': '4.0.0', 'appId': 'app-123456789'},
                     'omidJsInfo': {'serviceVersion': '4.0.0'},
-                }, 'verificationParameters': 'http://192.168.50.130/visit.jpg?message=',
+                }, 'verificationParameters': 'vp',
             },
         };
 
@@ -139,11 +109,11 @@ describe('ValidationVerificationClient', () => {
             },
         };
         // Act
-        validationVerificationClient = new ValidationVerificationClient(verificationClient, dummyVendor);
+        validationVerificationClient = new ValidationVerificationClient(verificationClient, defaultVendor);
         startSession(sessionData);
         fireGeometryChange(geometryChangeData);
         // Arrange
-        const expectedGeometryChangeUrl = `${sessionData.data.verificationParameters}${encodeURIComponent(`${geometryChangeDate.toLocaleString()}::${JSON.stringify(geometryChangeData)}`)}`;
+        const expectedGeometryChangeUrl = `${defaultServer}${encodeURIComponent(`${geometryChangeDate.toLocaleString()}::${JSON.stringify(geometryChangeData)}`)}`;
         expect(verificationClient.sendUrl).toHaveBeenCalledWith(expectedGeometryChangeUrl);
     });
 
@@ -152,7 +122,7 @@ describe('ValidationVerificationClient', () => {
         asSpy(verificationClient.isSupported).and.returnValue(true);
         let numOfRegistrationCalls = 0;
         // Act
-        validationVerificationClient = new ValidationVerificationClient(verificationClient, dummyVendor);
+        validationVerificationClient = new ValidationVerificationClient(verificationClient, defaultVendor);
         // Assert
         Object.keys(AdEventType).forEach( function(el) {
             if (AdEventType[el] === 'video') {

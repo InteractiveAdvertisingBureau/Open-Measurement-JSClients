@@ -4,6 +4,49 @@ const Communication = goog.require('omid.common.Communication');
 const DirectCommunication = goog.require('omid.common.DirectCommunication');
 const PostMessageCommunication = goog.require('omid.common.PostMessageCommunication');
 const {isOmidPresent} = goog.require('omid.common.DetectOmid');
+const {omidGlobal} = goog.require('omid.common.OmidGlobalProvider');
+
+
+/**
+ * This function returns the top window that is accessible from the current window context within
+ * which we are executing. The primary purpose is to ensure that when either the verification or
+ * session client initiate communication that they check the correct window context for OMID
+ * presence. If a window does not exist at all, we simply return omidGlobal.
+ * @param {?Window=} currentWindow Reference to current window context.
+ * @return {!Window}
+ */
+function resolveTopWindowContext(currentWindow = undefined) {
+  if (typeof currentWindow === 'undefined') {
+    if (typeof window !== 'undefined' && window) {
+      currentWindow = window;
+    }
+  }
+  const isWindowValid = typeof currentWindow !== 'undefined' &&
+    currentWindow &&
+    typeof currentWindow.top !== 'undefined' &&
+    currentWindow.top;
+  // Probably JSCore or some other non browser environment, so return whatever omidGlobal is.
+  if (!isWindowValid) {
+    return omidGlobal;
+  }
+  if (currentWindow === currentWindow.top) {
+    return currentWindow;
+  }
+  // The purpose of this block is to detect if we are in a cross domain iframe.
+  // If we are in a cross domain iframe, this will throw an exception, so the appropriate window
+  // context is just window.
+  // If no exception is thrown, then we are in a friendly iframe, so the correct window context
+  // is window.top.
+  try {
+    const trap = currentWindow.top.location.hostname;
+    // We don't want a simple "truthiness" check on the variable because hostname can be an empty
+    // string. If it's undefined, this is an unexpected situation, so use the current window
+    // context to be safe.
+    return (typeof trap === 'undefined' ? currentWindow : currentWindow.top);
+  } catch (e) {
+    return currentWindow;
+  }
+}
 
 /**
  * Gets the value of an unobfuscated key of an object.
@@ -42,4 +85,4 @@ function startServiceCommunication(
   return null;
 }
 
-exports = {startServiceCommunication};
+exports = {startServiceCommunication, resolveTopWindowContext};

@@ -2,7 +2,8 @@ goog.module('omid.test.common.serviceCommunication');
 
 const DirectCommunication = goog.require('omid.common.DirectCommunication');
 const PostMessageCommunication = goog.require('omid.common.PostMessageCommunication');
-const {startServiceCommunication} = goog.require('omid.common.serviceCommunication');
+const {startServiceCommunication, resolveTopWindowContext} = goog.require('omid.common.serviceCommunication');
+const {omidGlobal} = goog.require('omid.common.OmidGlobalProvider');
 
 describe('serviceCommunication', () => {
   describe('startServiceCommunication', () => {
@@ -33,6 +34,41 @@ describe('serviceCommunication', () => {
       const mockWindow = /** @type {!Window} */ ({});
       const communication = startServiceCommunication(mockWindow, ['n/a']);
       expect(communication).toBe(null);
+    });
+  });
+
+  describe('resolveTopWindowContext', () => {
+    it('returns window.top when it is accessible from current window context', () => {
+      const mockWindow = /** @type {!Window} */ ({
+        top: /** @type {!Window} */ ({
+          location: {
+            hostname: 'omid.com',
+          },
+        }),
+      });
+      const topWindowContext = resolveTopWindowContext(mockWindow);
+      expect(topWindowContext).toEqual(mockWindow.top);
+    });
+
+    it('returns omidGlobal when there is no valid window object', () => {
+      const topWindowContext = resolveTopWindowContext(null);
+      expect(topWindowContext).toEqual(omidGlobal);
+    });
+
+    it('returns window when access to window.top is not permitted from the current context', () => {
+      const mockWindow = /** @type {!Window} */ ({
+        top: /** @type {!Window} */ ({
+        }),
+      });
+      const topWindowContext = resolveTopWindowContext(mockWindow);
+      expect(topWindowContext).toEqual(mockWindow);
+    });
+
+    it('returns window.top when the current context is window.top', () => {
+      const mockWindow = /** @type {!Window} */ ({});
+      mockWindow.top = mockWindow;
+      const topWindowContext = resolveTopWindowContext(mockWindow);
+      expect(topWindowContext).toEqual(mockWindow);
     });
   });
 });

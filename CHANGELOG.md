@@ -1,5 +1,17 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.2.0 - 2018-07-03
+### Fixed
+- Use direct communication instead of post message when verification script is in a friendly iframe.
+- Fix validation script to fire the default measurement URL in presence of verification parameters.
+
+### Changed
+- Change default vendor name from 'dummyVendor' to 'iabtechlab.com-omid' in validation verification script.
+- Change default log server domain name from 'localhost' to 'iabtechlab.com' in validation verification script.
+
+### Removed
+- Remove restriction that impression event must be sent before other events can be sent.
+
 ## 1.1.4 - 2018-06-20
 ### Fixed
 - Purge stale version files before regenerating files in npm prebuild.

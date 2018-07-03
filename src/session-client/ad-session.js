@@ -11,7 +11,7 @@ const {AdEventType, ErrorType} = goog.require('omid.common.constants');
 const {Event} = goog.require('omid.common.eventTypedefs');
 const {packageExport} = goog.require('omid.common.exporter');
 const {serializeMessageArgs, deserializeMessageArgs} = goog.require('omid.common.ArgsSerDe');
-const {startServiceCommunication} = goog.require('omid.common.serviceCommunication');
+const {startServiceCommunication, resolveTopWindowContext} = goog.require('omid.common.serviceCommunication');
 const {Version} = goog.require('omid.common.version');
 
 const SESSION_CLIENT_VERSION = Version;
@@ -40,7 +40,7 @@ class AdSession {
   constructor(
       context,
       communication = startServiceCommunication(
-          window, ['omid', 'v1_SessionServiceCommunication'])) {
+          resolveTopWindowContext(window), ['omid', 'v1_SessionServiceCommunication'])) {
     argsChecker.assertNotNullObject('AdSession.context', context);
 
     this.context = context;
@@ -201,17 +201,6 @@ class AdSession {
     if (!this.isSessionRunning_) {
       throw new Error('Session not started.');
     };
-  }
-
-  /**
-   * Throws an error if an impression hasn't occured yet.
-   * NOTE: This method is friend scoped. Therefore it should not be exported
-   * beyond obfuscation.
-   */
-  assertImpressionOccured() {
-    if (!this.impressionOccurred_) {
-      throw new Error('Impression hasn\'t occured.');
-    }
   }
 
   /**

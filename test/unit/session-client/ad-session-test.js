@@ -174,17 +174,6 @@ describe('AdSessionTest', () => {
     });
   });
 
-  describe('assertImpressionOccured', () => {
-    it('throws if the impression event has not been fired by the client yet', () => {
-      expect(() => session.assertImpressionOccured()).toThrow();
-    });
-
-    it('does not throw if the impression event has been fired by the client', () => {
-      session.impressionOccurred();
-      expect(() => session.assertImpressionOccured()).not.toThrow();
-    });
-  });
-
   describe('error', () => {
     it('should call the session service', () => {
       session.error(ErrorType.GENERIC, 'error');

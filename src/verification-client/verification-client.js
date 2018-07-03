@@ -6,7 +6,7 @@ const logger = goog.require('omid.common.logger');
 const {AdEventType} = goog.require('omid.common.constants');
 const {ImpressionCallback, GeometryChangeCallback, VideoCallback, SessionObserverCallback} = goog.require('omid.common.eventTypedefs');
 const {assertTruthyString, assertFunction, assertPositiveNumber} = goog.require('omid.common.argsChecker');
-const {startServiceCommunication} = goog.require('omid.common.serviceCommunication');
+const {startServiceCommunication, resolveTopWindowContext} = goog.require('omid.common.serviceCommunication');
 const {packageExport} = goog.require('omid.common.exporter');
 const {serializeMessageArgs, deserializeMessageArgs} = goog.require('omid.common.ArgsSerDe');
 const {Version} = goog.require('omid.common.version');
@@ -50,7 +50,7 @@ class VerificationClient {
    */
   constructor(
       communication = startServiceCommunication(
-          omidGlobal, ['omid', 'v1_VerificationServiceCommunication'])) {
+          resolveTopWindowContext(), ['omid', 'v1_VerificationServiceCommunication'])) {
     this.communication = communication;
     if (this.communication) {
       this.communication.onMessage = this.handleMessage_.bind(this);

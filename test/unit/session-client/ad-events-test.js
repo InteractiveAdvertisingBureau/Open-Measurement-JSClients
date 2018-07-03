@@ -16,7 +16,6 @@ describe('AdEventsTest', () => {
           'registerAdEvents',
           'sendOneWayMessage',
           'assertSessionRunning',
-          'assertImpressionOccured',
           'impressionOccurred']);
     spyOn(argsChecker, 'assertTruthyString');
     spyOn(argsChecker, 'assertNotNullObject');

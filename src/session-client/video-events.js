@@ -47,15 +47,13 @@ class VideoEvents {
   }
 
   /**
-   * Asserts that the session is running and that an impression has occurred
-   * before sending a message to the service.
+   * Asserts that the session is running
    * @param {string} method Method name to send in the message to the service.
    * @param {...?} args Arguments to pass to the service method.
    * @private
    */
   assertReadyAndSendMessage_(method, ...args) {
     this.adSession.assertSessionRunning();
-    this.adSession.assertImpressionOccured();
     this.adSession.sendOneWayMessage(method, ...args);
   }
 
