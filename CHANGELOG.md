@@ -1,5 +1,9 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.2.2 - 2018-08-02
+### Changed
+- Update LICENSE
+
 ## 1.2.1 - 2018-07-18
 - Update version to match JS Service, Android, and iOS SDKs; no changes from 1.2.0.
 
