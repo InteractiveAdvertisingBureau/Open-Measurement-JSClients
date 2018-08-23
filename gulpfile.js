@@ -29,7 +29,7 @@ const SESSION_CLIENT_SRC = [
 ];
 
 gulp.task('build-session-client', () => {
-  closureCompiler(Object.assign({}, commonConfig, {
+  const taskConfig = {
     js: SESSION_CLIENT_SRC,
     js_output_file: 'omid-session-client-v1.js',
     output_wrapper_file: UMD_BOOTSTRAPPER,
@@ -38,7 +38,8 @@ gulp.task('build-session-client', () => {
       './src/externs/omid-exports.js',
       './src/externs/omid-jasmine.js',
     ],
-  }))
+  };
+  return closureCompiler(Object.assign({}, commonConfig, taskConfig))
       .src() // needed to force the plugin to run without gulp.src
       .pipe(gulp.dest('./bin'))
 });
@@ -48,12 +49,12 @@ const SESSION_CLIENT_ZIP_SRC = [
   './LICENSE',
 ];
 
-gulp.task('package-session-client', () => {
-  gulp.src(SESSION_CLIENT_ZIP_SRC)
-      .pipe(gulp.dest(`${PACKAGE_DIR}/Session-Client`));
-  gulp.src(SESSION_CLIENT_SRC)
-      .pipe(gulp.dest(`${PACKAGE_DIR}/Session-Client/Source`));
-});
+gulp.task('package-session-client', gulp.series(
+    () => gulp.src(SESSION_CLIENT_ZIP_SRC)
+              .pipe(gulp.dest(`${PACKAGE_DIR}/Session-Client`)),
+    () => gulp.src(SESSION_CLIENT_SRC)
+              .pipe(gulp.dest(`${PACKAGE_DIR}/Session-Client/Source`)),
+));
 
 const VERIFICATION_CLIENT_SRC = [
   './src/common/**.js',
@@ -61,7 +62,7 @@ const VERIFICATION_CLIENT_SRC = [
 ];
 
 gulp.task('build-verification-client', () => {
-  closureCompiler(Object.assign({}, commonConfig, {
+  const taskConfig = {
     js: VERIFICATION_CLIENT_SRC,
     js_output_file: 'omid-verification-client-v1.js',
     output_wrapper_file: UMD_BOOTSTRAPPER,
@@ -70,7 +71,8 @@ gulp.task('build-verification-client', () => {
       './src/externs/omid-jasmine.js',
       './src/externs/omid-exports.js',
     ],
-  }))
+  };
+  return closureCompiler(Object.assign({}, commonConfig, taskConfig))
       .src() // needed to force the plugin to run without gulp.src
       .pipe(gulp.dest('./bin'))
 });
@@ -80,19 +82,19 @@ const VERIFICATION_CLIENT_ZIP_SRC = [
   './LICENSE',
 ];
 
-gulp.task('package-verification-client', () => {
-  gulp.src(VERIFICATION_CLIENT_ZIP_SRC)
-      .pipe(gulp.dest(`${PACKAGE_DIR}/Verification-Client`));
-  gulp.src(VERIFICATION_CLIENT_SRC)
-      .pipe(gulp.dest(`${PACKAGE_DIR}/Verification-Client/Source`));
-});
+gulp.task('package-verification-client', gulp.series(
+  () => gulp.src(VERIFICATION_CLIENT_ZIP_SRC)
+            .pipe(gulp.dest(`${PACKAGE_DIR}/Verification-Client`)),
+  () => gulp.src(VERIFICATION_CLIENT_SRC)
+            .pipe(gulp.dest(`${PACKAGE_DIR}/Verification-Client/Source`)),
+));
 
 const VALIDATION_VERIFICATION_SCRIPT_SRC = [
   './src/validation-verification-script/**.js',
 ];
 
 gulp.task('build-validation-verification-script', () => {
-  closureCompiler(Object.assign({}, commonConfig, {
+  const taskConfig = {
     js: VERIFICATION_CLIENT_SRC.concat(VALIDATION_VERIFICATION_SCRIPT_SRC),
     js_output_file: 'omid-validation-verification-script-v1.js',
     output_wrapper_file: UMD_BOOTSTRAPPER,
@@ -101,9 +103,10 @@ gulp.task('build-validation-verification-script', () => {
       './src/externs/omid-jasmine.js',
       './src/externs/omid-exports.js',
     ],
-  }))
-  .src() // needed to force the plugin to run without gulp.src
-  .pipe(gulp.dest('./bin'));
+  };
+  return closureCompiler(Object.assign({}, commonConfig, taskConfig))
+      .src() // needed to force the plugin to run without gulp.src
+      .pipe(gulp.dest('./bin'));
 });
 
 const VALIDATION_VERIFICATION_SCRIPT_ZIP_SRC = [
@@ -111,52 +114,56 @@ const VALIDATION_VERIFICATION_SCRIPT_ZIP_SRC = [
   './LICENSE',
 ];
 
-gulp.task('package-validation-verification-script', () => {
-  gulp.src(VALIDATION_VERIFICATION_SCRIPT_ZIP_SRC)
-      .pipe(gulp.dest(`${PACKAGE_DIR}/Validation-Script`));
-  gulp.src(VALIDATION_VERIFICATION_SCRIPT_SRC)
-      .pipe(gulp.dest(`${PACKAGE_DIR}/Validation-Script/Source`));
+gulp.task('package-validation-verification-script', gulp.series(
+  () => gulp.src(VALIDATION_VERIFICATION_SCRIPT_ZIP_SRC)
+            .pipe(gulp.dest(`${PACKAGE_DIR}/Validation-Script`)),
+  () => gulp.src(VALIDATION_VERIFICATION_SCRIPT_SRC)
+            .pipe(gulp.dest(`${PACKAGE_DIR}/Validation-Script/Source`)),
+));
+
+gulp.task('build-unit-tests', () => {
+  const taskConfig = {
+    js: [
+      './test/unit/**.js',
+      // exclude externs in the binary test code
+      '!./src/externs/*.js',
+      './src/**.js',
+      '!./src/validation-verification-script/main.js',
+    ],
+    externs: [
+      ...commonConfig.externs,
+      './node_modules/google-closure-compiler/contrib/externs/jasmine-2.0.js',
+      './src/externs/omid-exports.js',
+    ],
+    js_output_file: 'Omid-Unit-Tests.js',
+    create_source_map: '%outname%.map',
+    dependency_mode: 'NONE',
+  };
+  return closureCompiler(Object.assign({}, commonConfig, taskConfig))
+      .src() // needed to force the plugin to run without gulp.src
+      .pipe(gulp.dest('./bin'))
 });
 
-gulp.task('build-unit-tests', () =>
-    closureCompiler(Object.assign({}, commonConfig, {
-      js: [
-        './test/unit/**.js',
-        // exclude externs in the binary test code
-        '!./src/externs/*.js',
-        './src/**.js',
-        '!./src/validation-verification-script/main.js',
-      ],
-      externs: [
-        ...commonConfig.externs,
-        './node_modules/google-closure-compiler/contrib/externs/jasmine-2.0.js',
-        './src/externs/omid-exports.js',
-      ],
-      js_output_file: 'Omid-Unit-Tests.js',
-      create_source_map: '%outname%.map',
-      dependency_mode: 'NONE',
-    }))
-        .src() // needed to force the plugin to run without gulp.src
-        .pipe(gulp.dest('./bin')));
-
-gulp.task('build-validation-verification-script-tests', () =>
-    closureCompiler(Object.assign({}, commonConfig, {
-        js: [
-            './test/unit/typing-utils.js',
-            './test/validation-verification-script/**.js',
-            // exclude externs in the binary test code
-            '!./src/externs/*.js',
-            './src/**.js',
-            '!./src/validation-verification-script/main.js',
-        ],
-        externs: [
-            ...commonConfig.externs,
-            './node_modules/google-closure-compiler/contrib/externs/jasmine-2.0.js',
-            './src/externs/omid-exports.js',
-        ],
-        js_output_file: 'Omid-Validation-Verification-Script-Tests.js',
-        create_source_map: '%outname%.map',
-        dependency_mode: 'NONE',
-    }))
-        .src() // needed to force the plugin to run without gulp.src
-        .pipe(gulp.dest('./bin')));
+gulp.task('build-validation-verification-script-tests', () => {
+  const taskConfig = {
+    js: [
+      './test/unit/typing-utils.js',
+      './test/validation-verification-script/**.js',
+      // exclude externs in the binary test code
+      '!./src/externs/*.js',
+      './src/**.js',
+      '!./src/validation-verification-script/main.js',
+    ],
+    externs: [
+      ...commonConfig.externs,
+      './node_modules/google-closure-compiler/contrib/externs/jasmine-2.0.js',
+      './src/externs/omid-exports.js',
+    ],
+    js_output_file: 'Omid-Validation-Verification-Script-Tests.js',
+    create_source_map: '%outname%.map',
+    dependency_mode: 'NONE',
+  };
+  return closureCompiler(Object.assign({}, commonConfig, taskConfig))
+      .src() // needed to force the plugin to run without gulp.src
+      .pipe(gulp.dest('./bin'))
+});

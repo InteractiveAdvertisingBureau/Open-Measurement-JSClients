@@ -1,5 +1,17 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.2.3 - 2018-07-17
+### Fixed
+- Fix JS Clients audit errors by upgrading Gulp and Karma
+- Set the adView from the creative measurement, if it's available
+
+## 1.2.2 - 2018-08-02
+### Changed
+- Update LICENSE
+
+## 1.2.1 - 2018-07-18
+- Update version to match JS Service, Android, and iOS SDKs; no changes from 1.2.0.
+
 ## 1.2.0 - 2018-07-03
 ### Fixed
 - Use direct communication instead of post message when verification script is in a friendly iframe.
