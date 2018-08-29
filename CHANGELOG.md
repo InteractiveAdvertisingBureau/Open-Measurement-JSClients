@@ -1,5 +1,9 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.2.4 - 2018-08-29
+### Fixed
+- Make sure cached loaded event has session ID when republishing
+
 ## 1.2.3 - 2018-07-17
 ### Fixed
 - Fix JS Clients audit errors by upgrading Gulp and Karma
