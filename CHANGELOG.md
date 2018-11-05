@@ -1,5 +1,10 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.2.6 - 2018-11-01
+### Fixed
+- Added logic to support older Chromium versions
+- 'const' changed to 'var' in verification client for IE<11
+
 ## 1.2.5 - 2018-10-10
 - Update version to match JS Service, Android, and iOS SDKs; no changes from 1.2.4.
 

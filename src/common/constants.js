@@ -179,7 +179,9 @@ const VideoPlayerState = {
 /** @enum {string} */
 const NativeViewKeys = {
   X: 'x',
+  LEFT: 'left', // From DOMRect
   Y: 'y',
+  TOP: 'top', // From DOMRect
   WIDTH: 'width',
   HEIGHT: 'height',
   AD_SESSION_ID: 'adSessionId',

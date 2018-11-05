@@ -7,7 +7,7 @@
   // global context.
   } else {
     var exports = {};
-    const version = '${semVersionString}-${buildVersion}';
+    var version = '${semVersionString}-${buildVersion}';
     factory(omidGlobal, exports);
 
     function deepFreeze(object) {
