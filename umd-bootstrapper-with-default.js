@@ -7,8 +7,8 @@
   // global context.
   } else {
     var exports = {};
-    var versions = ['${semVersionString}-${buildVersion}'];
-    var additionalVersionString = '${additionalVersionString}';
+    var versions = ['1.2.7-iab643'];
+    var additionalVersionString = 'default';
     if (!!additionalVersionString) {
        versions.push(additionalVersionString);
     }

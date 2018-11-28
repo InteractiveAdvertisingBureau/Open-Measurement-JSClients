@@ -17,6 +17,7 @@ const commonConfig = {
 };
 
 const UMD_BOOTSTRAPPER = './umd-bootstrapper.js';
+const UMD_BOOTSTRAPPER_WITH_DEFAULT = './umd-bootstrapper-with-default.js';
 
 // Package files into directory with version number.
 const VERSION_NUMBER = process.env.VERSION_NUMBER;
@@ -32,7 +33,7 @@ gulp.task('build-session-client', () => {
   const taskConfig = {
     js: SESSION_CLIENT_SRC,
     js_output_file: 'omid-session-client-v1.js',
-    output_wrapper_file: UMD_BOOTSTRAPPER,
+    output_wrapper_file: UMD_BOOTSTRAPPER_WITH_DEFAULT,
     externs: [
       ...commonConfig.externs,
       './src/externs/omid-exports.js',

@@ -1,5 +1,10 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.2.7 - 2018-11-27
+### Fixed
+- Allow elementBounds to be passed for non-IFrame cases
+- OmidSessionClient to include 'default' version key
+
 ## 1.2.6 - 2018-11-01
 ### Fixed
 - Added logic to support older Chromium versions

@@ -12,21 +12,30 @@ const generateFilesSpec = [
     templatePath: 'templates/umd-bootstrapper-js.template',
     outputPath: 'umd-bootstrapper.js',
   },
+  {
+    templatePath: 'templates/umd-bootstrapper-js.template',
+    outputPath: 'umd-bootstrapper-with-default.js',
+    additionalVersionString: 'default',
+  },
 ];
 
-buildFileOutput = (semVersionString, buildVersion, template) => {
+buildFileOutput = (semVersionString, additionalVersionString, buildVersion, template) => {
   const compiled = compile(template);
-  return resolveToString(compiled, {semVersionString, buildVersion});
+  return resolveToString(compiled, {
+    semVersionString,
+    additionalVersionString,
+    buildVersion,
+  });
 };
 
-generateFile = (semVersionString, templateFile, outputFile) => {
+generateFile = (semVersionString, additionalVersionString, templateFile, outputFile) => {
   const buildVersion = process.env['BUILD_VERSION'] || 'dev';
   fs.exists(outputFile, (exists) => {
     if (exists) return console.log(`${outputFile} exists. Exiting...`);
     fs.readFile(templateFile, 'utf8', (error, contents) => {
       if (error) return console.log(error);
       const outputFileContents = buildFileOutput(
-          semVersionString, buildVersion, contents);
+          semVersionString, additionalVersionString, buildVersion, contents);
       fs.writeFile(outputFile, outputFileContents, (error) => {
         if (error) return console.log(error);
         console.log(`Wrote ${outputFile} file!`);
@@ -39,7 +48,8 @@ generateFiles = (filesSpec, semVersionString) => {
   filesSpec.forEach((fileSpec) => {
     const templateFile = fileSpec.templatePath;
     const outputFile = fileSpec.outputPath;
-    generateFile(semVersionString, templateFile, outputFile);
+    const additionalVersionString = fileSpec.additionalVersionString;
+    generateFile(semVersionString, additionalVersionString, templateFile, outputFile);
   });
 };
 
