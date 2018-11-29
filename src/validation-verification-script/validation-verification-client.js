@@ -35,24 +35,12 @@ class ValidationVerificationClient {
     }
 
     /**
-     * Log message to the server
-     * Message will have the format: <Date> :: <Message>
-     * For example: 10/8/2017, 10:41:11 AM::"OmidSupported[true]"
+     * Log message to the console.
      * @param {Object|string} message to send to the server
      * @param {number} timestamp of the event
      */
     logMessage_(message, timestamp) {
-        const log = (new Date(timestamp)).toLocaleString()+ '::' + JSON.stringify(message);
-        this.sendUrl_(log);
-    }
-
-    /**
-     * Call verificationClient sendUrl for message with the correct logServer
-     * @param {string} message to send to the server
-     */
-    sendUrl_(message) {
-        const url = (DefaultLogServer + encodeURIComponent(message));
-        this.verificationClient_.sendUrl(url);
+        console.log('[' + new Date(timestamp).toISOString() + ']', message);
     }
 
     /**
