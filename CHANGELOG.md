@@ -1,5 +1,8 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.2.8 - 2018-12-05
+- Update version to match JS Service, Android, and iOS SDKs; no changes from 1.2.7.
+
 ## 1.2.7 - 2018-11-27
 ### Fixed
 - Allow elementBounds to be passed for non-IFrame cases
