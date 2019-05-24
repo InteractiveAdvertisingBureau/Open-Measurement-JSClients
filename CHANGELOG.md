@@ -1,5 +1,38 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.2.15 - 2019-05-24
+### Fixed
+- Rename Environment.MOBILE to Environment.APP.
+- Add Environment.WEB and fix environment at compile time
+- Split out SessionService communication into OmidJsBridge
+- Refactor fullstack tests
+- Split build process in two for app and web
+
+## 1.2.14 - 2019-04-11
+### Fixed
+- Refactor how full-stack tests are configured
+- Cache all video events then re-publish once session starts
+
+## 1.2.13 - 2019-03-22
+- Update version to match JS Service, Android, and iOS SDKs; no changes from 1.2.12.
+
+## 1.2.12 - 2019-02-13
+### Fixed
+- Additional non-zero area check for IntersectionObserver
+- Remove non-deterministic behavior for IntersectionObserver
+
+## 1.2.11 - 2019-01-23
+### Fixed
+- Start IntersectionObserver after creative has non-zero area
+
+## 1.2.10 - 2019-01-11
+### Fixed
+- VerificationClient crashes on creation inside cross-domain iframe on iOS 9
+
+## 1.2.9 - 2018-12-10
+### Fixed
+- Fix crash related to resolveTopWindowContext on IE11.
+
 ## 1.2.8 - 2018-12-05
 - Update version to match JS Service, Android, and iOS SDKs; no changes from 1.2.7.
 

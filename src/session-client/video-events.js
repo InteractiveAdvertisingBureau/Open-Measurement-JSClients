@@ -46,16 +46,6 @@ class VideoEvents {
     this.adSession.sendOneWayMessage('loaded', vastProperties);
   }
 
-  /**
-   * Asserts that the session is running
-   * @param {string} method Method name to send in the message to the service.
-   * @param {...?} args Arguments to pass to the service method.
-   * @private
-   */
-  assertReadyAndSendMessage_(method, ...args) {
-    this.adSession.assertSessionRunning();
-    this.adSession.sendOneWayMessage(method, ...args);
-  }
 
   /**
    * Notifies all video listeners that video content has started playing.
@@ -64,116 +54,94 @@ class VideoEvents {
    *   range between 0 and 1.
    * @throws error if an invalid duration or videoPlayerVolume has been
    *   supplied.
-   * @throws error if the ad session has not been started or the impression
-   *   event has not been triggered.
    */
   start(duration, videoPlayerVolume) {
     argsChecker.assertNumber('VideoEvents.start.duration', duration);
     argsChecker.assertNumberBetween('VideoEvents.start.videoPlayerVolume',
         videoPlayerVolume, 0, 1);
-    this.assertReadyAndSendMessage_('start', duration, videoPlayerVolume);
+    this.adSession.sendOneWayMessage('start', duration, videoPlayerVolume);
   }
 
   /**
    * Notifies all video listeners that video playback has reached the first
    * quartile.
-   * @throws error if the ad session has not been started or the impression
-   *   event has not been triggered.
    */
   firstQuartile() {
-    this.assertReadyAndSendMessage_('firstQuartile');
+    this.adSession.sendOneWayMessage('firstQuartile');
   }
 
   /**
    * Notifies all video listeners that video playback has reached the midpoint.
-   * @throws error if the ad session has not been started or the impression
-   *   event has not been triggered.
    */
   midpoint() {
-    this.assertReadyAndSendMessage_('midpoint');
+    this.adSession.sendOneWayMessage('midpoint');
   }
 
   /**
    * Notifies all video listeners that video playback has reached the third
    * quartile.
-   * @throws error if the ad session has not been started or the impression
-   *   event has not been triggered.
    */
   thirdQuartile() {
-    this.assertReadyAndSendMessage_('thirdQuartile');
+    this.adSession.sendOneWayMessage('thirdQuartile');
   }
 
   /**
    * Notifies all video listeners that video playback is complete.
-   * @throws error if the ad session has not been started or the impression
-   *   event has not been triggered.
    */
   complete() {
-    this.assertReadyAndSendMessage_('complete');
+    this.adSession.sendOneWayMessage('complete');
   }
 
   /**
    * Notifies all video listeners that video playback has paused after a user
    * interaction.
-   * @throws error if the ad session has not been started or the impression
-   *   event has not been triggered.
    */
   pause() {
-    this.assertReadyAndSendMessage_('pause');
+    this.adSession.sendOneWayMessage('pause');
   }
 
   /**
    * Notifies all video listeners that video playback has resumed (after being
    * paused) after a user interaction.
-   * @throws error if the ad session has not been started or the impression
-   *   event has not been triggered.
    */
   resume() {
-    this.assertReadyAndSendMessage_('resume');
+    this.adSession.sendOneWayMessage('resume');
   }
 
   /**
    * Notifies all video listeners that video playback has stopped and started
    * buffering.
-   * @throws error if the ad session has not been started or the impression
-   *   event has not been triggered.
    */
   bufferStart() {
-    this.assertReadyAndSendMessage_('bufferStart');
+    this.adSession.sendOneWayMessage('bufferStart');
   }
 
   /**
    * Notifies all video listeners that buffering has finished and video playback
    * has resumed.
-   * @throws error if the ad session has not been started or the impression
-   *   event has not been triggered.
    */
   bufferFinish() {
-    this.assertReadyAndSendMessage_('bufferFinish');
+    this.adSession.sendOneWayMessage('bufferFinish');
   }
 
   /**
    * Notifies all video listeners that video playback has stopped as a user skip
    * interaction. Once skipped video it should not be possible for the video to
    * resume playing content.
-   * @throws error if the ad session has not been started or the impression
-   *   event has not been triggered.
    */
   skipped() {
-    this.assertReadyAndSendMessage_('skipped');
+    this.adSession.sendOneWayMessage('skipped');
   }
 
   /**
    * Notifies all video listeners that the video player volume has changed.
    * @param {number} videoPlayerVolume from the native video player.
    * @throws error if an invalid videoPlayerVolume has been supplied.
-   * @throws error if the ad session has not been started or the impression
-   *   event has not been triggered.
    */
   volumeChange(videoPlayerVolume) {
     argsChecker.assertNumberBetween(
         'VideoEvents.volumeChange.videoPlayerVolume', videoPlayerVolume, 0, 1);
-    this.assertReadyAndSendMessage_('volumeChange', videoPlayerVolume);
+    this.adSession.sendOneWayMessage('volumeChange', videoPlayerVolume);
   }
 
   /**
@@ -181,14 +149,12 @@ class VideoEvents {
    * @param {!VideoPlayerState} playerState to signal the latest video player
    *   state
    * @throws error if the supplied player state is undefined or null.
-   * @throws error if the ad session has not been started or the impression
-   *   event has not been triggered.
    * @see PlayerState
    */
   playerStateChange(playerState) {
     argsChecker.assertNotNullObject(
         'VideoEvents.playerStateChange.playerState', playerState);
-    this.assertReadyAndSendMessage_('playerStateChange', playerState);
+    this.adSession.sendOneWayMessage('playerStateChange', playerState);
   }
 
   /**
@@ -196,13 +162,11 @@ class VideoEvents {
    * @param {!InteractionType} interactionType to signal the latest user
    *   integration
    * @throws error if the supplied interaction type is undefined or null.
-   * @throws error if the ad session has not been started or the impression
-   *   event has not been triggered.
    */
   adUserInteraction(interactionType) {
     argsChecker.assertNotNullObject(
         'VideoEvents.adUserInteraction.interactionType', interactionType);
-    this.assertReadyAndSendMessage_('adUserInteraction', interactionType);
+    this.adSession.sendOneWayMessage('adUserInteraction', interactionType);
   }
 }
 

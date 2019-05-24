@@ -38,11 +38,23 @@ function resolveTopWindowContext(currentWindow = undefined) {
   // If no exception is thrown, then we are in a friendly iframe, so the correct window context
   // is window.top.
   try {
-    const trap = currentWindow.top.location.hostname;
-    // We don't want a simple "truthiness" check on the variable because hostname can be an empty
-    // string. If it's undefined, this is an unexpected situation, so use the current window
-    // context to be safe.
-    return (typeof trap === 'undefined' ? currentWindow : currentWindow.top);
+    const top = currentWindow.top;
+    // This check is tricky and subtle. We want to confirm that arbitrary properties on the top
+    // window are safely accessible, but we don't care what the value of the particular property
+    // we choose to check is. Compilation could remove this check if it is thought to not have
+    // side effects.
+    //  Bugs that have affected this code previously:
+    //    OMSDK-467: IE<=11 will return 'undefined' for typeof top.unaccessibleProperty, instead of
+    //               throwing an error. We must access and test properties directly.
+    //    OMSDK-469: iOS<=9 will not throw an error for accessing/reading top.unaccessibleProperty,
+    //               and will simply return undefined (and log an uncatchable console error).
+    //
+    if (typeof top.location.hostname === 'undefined') {
+      // This check catches top inaccessibility for most browsers, including old Safari/iOS.
+      return currentWindow;
+    }
+    // This check is explicitly for IE 11 and below, which will not be properly caught above.
+    return (top['x'] === '' || top['x'] !== '') ? top : currentWindow;
   } catch (e) {
     return currentWindow;
   }

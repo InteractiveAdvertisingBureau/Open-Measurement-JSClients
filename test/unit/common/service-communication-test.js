@@ -55,7 +55,30 @@ describe('serviceCommunication', () => {
       expect(topWindowContext).toEqual(omidGlobal);
     });
 
-    it('returns window when access to window.top is not permitted from the current context', () => {
+    it('returns currentWindow when accessing window.top properties throws an error', () => {
+      // This test is intended to cover the fix for OMSDK-467 (where IE11 will not throw an error
+      // when computing "typeof top.<inaccessible property>").
+      const mockWindow = /** @type {!Window} */ ({
+        top: /** @type {!Window} */ ({
+          location: {
+            hostname: 'omid.com',
+          },
+        }),
+      });
+      // resolveTopWindowContext tries to read top.x to check for access.
+      Object.defineProperty(mockWindow.top, 'x', {
+        get: () => {
+          throw new Error;
+        },
+      });
+      const topWindowContext = resolveTopWindowContext(mockWindow);
+      expect(topWindowContext).toEqual(mockWindow);
+    });
+
+    it('returns currentWindow when properties on window.top that should be defined when ' +
+       'window.top is accessible are undefined', () => {
+      // This test is intended to cover the fix for OMSDK-469 (where iOS <= 9 and older Safari will
+      // not throw an error when accessing "top.<inaccessible property>").
       const mockWindow = /** @type {!Window} */ ({
         top: /** @type {!Window} */ ({
         }),

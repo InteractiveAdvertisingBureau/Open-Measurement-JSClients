@@ -1,6 +1,6 @@
 {
   "name": "open-measurement-jsclients",
-  "version": "1.2.8",
+  "version": "1.2.15",
   "description": "JavaScript common and client components of OM SDK",
   "watch": {
     "test-unit": {
@@ -57,8 +57,8 @@
     "ajv": "^6.5.2",
     "chromedriver": "2.35.0",
     "es6-template-strings": "^2.0.1",
-    "eslint": "4.6.1",
-    "eslint-config-google": "0.9.1",
+    "eslint": "5.16.0",
+    "eslint-config-google": "0.13.0",
     "google-closure-compiler": "^20170626.0.0",
     "gulp": "^4.0.0",
     "gulp-cli": "^2.0.1",

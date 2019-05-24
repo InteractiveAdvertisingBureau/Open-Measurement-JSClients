@@ -6,6 +6,7 @@ src/common/version.js
 
 # Generated prod bootstrapper
 umd-bootstrapper.js
+umd-bootstrapper-with-default.js
 
 npm-debug.log
 *.orig

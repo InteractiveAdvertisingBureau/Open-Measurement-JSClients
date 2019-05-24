@@ -5,7 +5,9 @@
   "rules": {
     "valid-jsdoc": "warn",
     "no-unused-vars": "off",
-    "max-len": "warn"
+    "max-len": "warn",
+    "indent": "off",
+    "prefer-const": "off"
   },
   "overrides": {
     "files": "test/**/*.js",

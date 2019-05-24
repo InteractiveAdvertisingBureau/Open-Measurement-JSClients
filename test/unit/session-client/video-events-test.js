@@ -20,13 +20,6 @@ let mockAdSession;
  * @param  {...?} args Array of arguments to pass to the function.
  */
 function testForwardingFunction(methodName, f, ...args) {
-  it('throws if the session is not running yet', () => {
-    asSpy(mockAdSession.assertSessionRunning).and.callFake(() => {
-      throw new Error();
-    });
-    expect(() => f.apply(videoEvents, args)).toThrow();
-  });
-
   it('should be relayed to the service', () => {
     f.apply(videoEvents, args);
 

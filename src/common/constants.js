@@ -110,7 +110,8 @@ const AppState = {
  * @enum {string}
  */
 const Environment = {
-  MOBILE: 'app',
+  APP: 'app',
+  WEB: 'web',
 };
 
 /**
