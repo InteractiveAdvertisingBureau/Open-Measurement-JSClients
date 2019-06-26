@@ -26,18 +26,6 @@ describe('Communication', () => {
     });
   });
 
-  describe('generateGuid', () => {
-    it('generated guid has the correct format', () => {
-      const uuidV4Regex =
-          /[a-f\d]{8}-[a-f\d]{4}-4[a-f\d]{3}-[a-f\d]{4}-[a-f\d]{12}/i;
-      expect(communication.generateGuid().match(uuidV4Regex)).toBeTruthy();
-    });
-    it('generated guids do not collide', () => {
-      expect(communication.generateGuid())
-          .not.toEqual(communication.generateGuid());
-    });
-  });
-
   describe('serialize', () => {
     it('serializes to JSON', () => {
       let x = {test: 123};

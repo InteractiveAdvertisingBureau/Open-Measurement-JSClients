@@ -1,5 +1,10 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.2.16 - 2019-06-24
+### Fixed
+- Remove ES6 arrow from JavaScript library wrapper, ensuring that verification
+  and session client libraries run on iOS 8 and Android API 16-23.
+
 ## 1.2.15 - 2019-05-24
 ### Fixed
 - Rename Environment.MOBILE to Environment.APP.

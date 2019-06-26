@@ -47,6 +47,16 @@ let OmidJsInfo;
  */
 let OmidNativeInfo;
 
+/**
+ * Identifies the device the native layer of the OM SDK is running on.
+ * @typedef {{
+  *   deviceType: string,
+  *   os: string,
+  *   osVersion: string,
+  * }}
+  */
+ let DeviceInfo;
+
 // All of the keys of the following object are undefined initially, except for
 // omidJsInfo which will contain the version number of the service.
 /**
@@ -59,6 +69,7 @@ let OmidNativeInfo;
  *   omidNativeInfo: (!OmidNativeInfo|undefined),
  *   omidJsInfo: !OmidJsInfo,
  *   app: (!App|undefined),
+ *   deviceInfo: (!DeviceInfo|undefined),
  *   customReferenceData: (?Object|undefined),
  * }}
  */
@@ -290,12 +301,24 @@ let EventData;
  */
 let AdViewEventData;
 
+/**
+ * Represents a single verification vendor script.
+ * @typedef {{
+  *   resourceUrl: string,
+  *   vendorKey: (string|undefined),
+  *   verificationParameters: (string|undefined),
+  *   accessMode: (string|undefined),
+  * }}
+  */
+ let VerificationScriptResource;
+
 exports = {
   AdSessionConfiguration,
   AdViewEventData,
   App,
   OmidJsInfo,
   OmidNativeInfo,
+  DeviceInfo,
   Context,
   Event,
   GeometryChangeEventData,
@@ -323,4 +346,5 @@ exports = {
   ImpressionEvent,
   VideoEvent,
   EventData,
+  VerificationScriptResource,
 };

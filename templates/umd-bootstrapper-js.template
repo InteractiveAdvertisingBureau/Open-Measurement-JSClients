@@ -33,7 +33,7 @@
             value: {},
           });
         }
-        versions.forEach((version) => {
+        versions.forEach(function(version) {
           if (Object.getOwnPropertyDescriptor(omidGlobal[key], version) == null) {
             var frozenObject = deepFreeze(exports[key]);
             // Define the object exports keyed-off versions

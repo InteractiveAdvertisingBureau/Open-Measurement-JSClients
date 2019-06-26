@@ -9,10 +9,11 @@ const VerificationScriptResource = goog.require('omid.sessionClient.Verification
 const Rectangle = goog.require('omid.common.Rectangle');
 const {AdEventType, ErrorType} = goog.require('omid.common.constants');
 const {Event} = goog.require('omid.common.eventTypedefs');
+const {Version} = goog.require('omid.common.version');
+const {generateGuid} = goog.require('omid.common.guid');
 const {packageExport} = goog.require('omid.common.exporter');
 const {serializeMessageArgs, deserializeMessageArgs} = goog.require('omid.common.ArgsSerDe');
 const {startServiceCommunication, resolveTopWindowContext} = goog.require('omid.common.serviceCommunication');
-const {Version} = goog.require('omid.common.version');
 
 const SESSION_CLIENT_VERSION = Version;
 
@@ -158,7 +159,7 @@ class AdSession {
   sendMessage(method, responseCallback, ...args) {
     if (!this.isSupported()) return;
 
-    const guid = this.communication_.generateGuid();
+    const guid = generateGuid();
     if (responseCallback) {
       this.callbackMap_[guid] = responseCallback;
     }

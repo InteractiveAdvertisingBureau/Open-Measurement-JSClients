@@ -5,11 +5,12 @@ const InternalMessage = goog.require('omid.common.InternalMessage');
 const logger = goog.require('omid.common.logger');
 const {AdEventType} = goog.require('omid.common.constants');
 const {ImpressionCallback, GeometryChangeCallback, VideoCallback, SessionObserverCallback} = goog.require('omid.common.eventTypedefs');
+const {Version} = goog.require('omid.common.version');
 const {assertTruthyString, assertFunction, assertPositiveNumber} = goog.require('omid.common.argsChecker');
+const {generateGuid} = goog.require('omid.common.guid');
 const {startServiceCommunication, resolveTopWindowContext} = goog.require('omid.common.serviceCommunication');
 const {packageExport} = goog.require('omid.common.exporter');
 const {serializeMessageArgs, deserializeMessageArgs} = goog.require('omid.common.ArgsSerDe');
-const {Version} = goog.require('omid.common.version');
 const {omidGlobal} = goog.require('omid.common.OmidGlobalProvider');
 
 /** @type {string} */
@@ -425,7 +426,7 @@ class VerificationClient {
   sendMessage_(method, responseCallback, ...args) {
     if (!this.communication) return;
 
-    const guid = this.communication.generateGuid();
+    const guid = generateGuid();
     if (responseCallback) {
       this.callbackMap_[guid] = responseCallback;
     }

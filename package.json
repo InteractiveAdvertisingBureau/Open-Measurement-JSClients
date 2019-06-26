@@ -1,6 +1,6 @@
 {
   "name": "open-measurement-jsclients",
-  "version": "1.2.15",
+  "version": "1.2.16",
   "description": "JavaScript common and client components of OM SDK",
   "watch": {
     "test-unit": {
@@ -12,6 +12,7 @@
     }
   },
   "scripts": {
+    "clean": "rimraf ./bin && npm run purge-version",
     "lint": "eslint ./src ./test",
     "lint-fix": "eslint --fix ./src ./test",
     "test": "npm run test-unit",
@@ -19,9 +20,9 @@
     "test-unit": "karma start karma.conf.js && jasmine JASMINE_CONFIG_PATH='./jasmine.json' ./bin/Omid-Unit-Tests.js",
     "debug-tests": "karma start karma.conf-dev.js",
     "watch-unit-tests": "npm-watch test-unit",
-    "purge-version": "rimraf src/common/version.js && rimraf umd-bootstrapper.js",
+    "purge-version": "rimraf src/common/version.js && rimraf umd-bootstrapper.js && rimraf umd-bootstrapper-with-default.js",
     "generate-version": "node ./generate_version_file.js",
-    "prebuild": "rimraf ./bin && mkdirp ./bin && npm run purge-version && npm run generate-version",
+    "prebuild": "npm run clean && mkdirp ./bin && npm run generate-version",
     "build": "npm run build-session-client && npm run build-verification-client && npm run build-validation-verification-script",
     "build-session-client": "gulp build-session-client && gulp package-session-client",
     "build-verification-client": "gulp build-verification-client && gulp package-verification-client",
@@ -65,7 +66,7 @@
     "gulp-concat": "^2.6.1",
     "gulp-zip": "^4.2.0",
     "jasmine": "^2.7.0",
-    "karma": "^2.0.5",
+    "karma": "^4.1.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
