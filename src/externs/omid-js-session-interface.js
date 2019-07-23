@@ -3,7 +3,15 @@
  * client integration with the OM SDK service script.
  */
 
-const {Event} = goog.require('omid.common.eventTypedefs');
+/**
+ * @typedef {{
+ *   adSessionId: string,
+ *   timestamp: number,
+ *   type: string,
+ *   data: ?,
+ * }}
+ */
+let OmidEvent;
 
 /** @const */
 const omidSessionInterface = {};
@@ -31,7 +39,7 @@ omidSessionInterface.setClientInfo =
  *   - Unregister all verification scripts and session clients from further
  *     events.
  *   - Reset the slot or video elements, and the element bounds.
- * @param {function(!Event)} sessionEventsCallback A
+ * @param {function(!OmidEvent)} sessionEventsCallback A
  *     callback for receiving session events.
  */
 omidSessionInterface.registerSessionObserver =

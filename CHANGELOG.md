@@ -1,5 +1,11 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.2.17 - 2019-07-22
+### Fixed
+- Implement ResizeObserver to listen for size changes if the ad is 0-area.
+- Remove 'goog.require' from omid-js-session-interface.js from externs file.
+- Add resource-level isolation in service script.
+
 ## 1.2.16 - 2019-06-24
 ### Fixed
 - Remove ES6 arrow from JavaScript library wrapper, ensuring that verification
