@@ -138,7 +138,7 @@ gulp.task('build-unit-tests', () => {
     ],
     js_output_file: 'Omid-Unit-Tests.js',
     create_source_map: '%outname%.map',
-    dependency_mode: 'NONE',
+    dependency_mode: 'SORT_ONLY',
   };
   return closureCompiler(Object.assign({}, commonConfig, taskConfig))
       .src() // needed to force the plugin to run without gulp.src
@@ -162,7 +162,7 @@ gulp.task('build-validation-verification-script-tests', () => {
     ],
     js_output_file: 'Omid-Validation-Verification-Script-Tests.js',
     create_source_map: '%outname%.map',
-    dependency_mode: 'NONE',
+    dependency_mode: 'SORT_ONLY',
   };
   return closureCompiler(Object.assign({}, commonConfig, taskConfig))
       .src() // needed to force the plugin to run without gulp.src

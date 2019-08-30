@@ -1,5 +1,12 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.2.18 - 2019-08-29
+### Fixed
+- Update to accurately report 'hidden' or 'notFound' for non visible ad views and include geometry.
+- Add resource-level isolation in service script
+- Add JS event registration
+- Cache all video events from JS layer before Ad session is initialized from the native layer
+
 ## 1.2.17 - 2019-07-22
 ### Fixed
 - Implement ResizeObserver to listen for size changes if the ad is 0-area.

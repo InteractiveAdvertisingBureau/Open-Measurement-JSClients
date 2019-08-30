@@ -1,18 +1,19 @@
 goog.module('omid.test.sessionClient.AdSession');
 
 const AdSession = goog.require('omid.sessionClient.AdSession');
-const argsChecker = goog.require('omid.common.argsChecker');
 const Communication = goog.require('omid.common.Communication');
-const PostMessageCommunication = goog.require('omid.common.PostMessageCommunication');
-const InternalMessage = goog.require('omid.common.InternalMessage');
 const Context = goog.require('omid.sessionClient.Context');
+const InternalMessage = goog.require('omid.common.InternalMessage');
+const OmidJsSessionInterface = goog.require('omid.sessionClient.OmidJsSessionInterface');
 const Partner = goog.require('omid.sessionClient.Partner');
+const PostMessageCommunication = goog.require('omid.common.PostMessageCommunication');
 const Rectangle = goog.require('omid.common.Rectangle');
-const {serializeMessageArgs, deserializeMessageArgs} = goog.require('omid.common.ArgsSerDe');
-const {Version} = goog.require('omid.common.version');
+const argsChecker = goog.require('omid.common.argsChecker');
 const {VERSION_COMPATABILITY_TABLE, makeVersionRespondingCommunicationClass} = goog.require('omid.test.versionUtils');
-const {asSpy} = goog.require('omid.test.typingUtils');
 const {ErrorType} = goog.require('omid.common.constants');
+const {Version} = goog.require('omid.common.version');
+const {asSpy} = goog.require('omid.test.typingUtils');
+const {serializeMessageArgs, deserializeMessageArgs} = goog.require('omid.common.ArgsSerDe');
 
 /** @type {string} */
 const CLIENT_VERSION = Version;
@@ -26,8 +27,11 @@ let context;
 /** @type {!Partner} */
 let partner;
 
-/** @type{!Communication<?>} */
+/** @type {!Communication<?>} */
 let communication;
+
+/** @type {?OmidJsSessionInterface} */
+let sessionInterface;
 
 /**
  * Checks that a message with a specified method has been sent.
@@ -56,10 +60,13 @@ describe('AdSessionTest', () => {
     communication = /** @type{!Communication<?>} */ (jasmine.createSpyObj(
         'communication', ['sendMessage', 'generateGuid', 'handleMessage',
           'isDirectCommunication']));
+    sessionInterface = jasmine.createSpyObj(
+        'sessionInterface', ['isSupported', 'sendMessage']);
+    asSpy(sessionInterface.isSupported).and.returnValue(true);
 
     partner = new Partner('partner', '1');
     context = new Context(partner, []);
-    session = new AdSession(context, communication);
+    session = new AdSession(context, communication, sessionInterface);
 
     // Send the version information to the AdSession.
     expect(communication.sendMessage).toHaveBeenCalled();
@@ -82,12 +89,22 @@ describe('AdSessionTest', () => {
   });
 
   describe('isSupported', () => {
-    it('true when communication is established', () => {
+    it(`true when the communication is supported but the sessionInterface is
+        not supported`, () => {
+      asSpy(sessionInterface.isSupported).and.returnValue(false);
+      session = new AdSession(context, communication, sessionInterface);
       expect(session.isSupported()).toBe(true);
     });
-
-    it('false when communication hasn\'t been established', () => {
-      session = new AdSession(context, null);
+    it(`true when the communication is not supported but the sessionInterface
+        is supported`, () => {
+      asSpy(sessionInterface.isSupported).and.returnValue(true);
+      session = new AdSession(context, null, sessionInterface);
+      expect(session.isSupported()).toBe(true);
+    });
+    it(`false when neither the communication nor the sessionInterface are
+        supported`, () => {
+      asSpy(sessionInterface.isSupported).and.returnValue(false);
+      session = new AdSession(context, null, sessionInterface);
       expect(session.isSupported()).toBe(false);
     });
   });
@@ -207,14 +224,14 @@ describe('AdSessionTest', () => {
       const methodToCall = testCase.method;
       const communicationMethod = testCase.comm_method;
       it('should do nothing if element is null', () => {
-        AdSession.prototype[methodToCall].call(session, null);
+        session[methodToCall](null);
         expect(communication.sendMessage).not.toHaveBeenCalledWith(
             jasmine.objectContaining({
               'method': `SessionService.${communicationMethod}`,
             }));
       });
       it('should do nothing if element is undefined', () => {
-        AdSession.prototype[methodToCall].call(session, undefined);
+        session[methodToCall](undefined);
         expect(communication.sendMessage).not.toHaveBeenCalledWith(
             jasmine.objectContaining({
               'method': `SessionService.${communicationMethod}`,
@@ -222,17 +239,25 @@ describe('AdSessionTest', () => {
       });
       it('should send element to service', () => {
         const element = /** @type {!HTMLElement} */ ({});
-        AdSession.prototype[methodToCall].call(session, element);
+        session[methodToCall](element);
         expect(communication.sendMessage).toHaveBeenCalledWith(
             jasmine.objectContaining({
               'method': `SessionService.${communicationMethod}`,
               'args': [element],
             }));
       });
+      it('should send element to service if using session interface', () => {
+        session =
+            new AdSession(context, /* communication= */ null, sessionInterface);
+        const element = /** @type {!HTMLElement} */ ({});
+        session[methodToCall](element);
+        expect(sessionInterface.sendMessage)
+            .toHaveBeenCalledWith(communicationMethod, null, [element]);
+      });
       it('should fire sessionError if communication is post message', () => {
         const element = /** @type {!HTMLElement} */ ({});
         asSpy(communication.isDirectCommunication).and.returnValue(false);
-        AdSession.prototype[methodToCall].call(session, element);
+        session[methodToCall](element);
         expect(communication.sendMessage).not.toHaveBeenCalledWith(
             jasmine.objectContaining({
               'method': `SessionService.${communicationMethod}`,
@@ -240,11 +265,7 @@ describe('AdSessionTest', () => {
         expect(communication.sendMessage).toHaveBeenCalledWith(
             jasmine.objectContaining({
               'method': 'SessionService.sessionError',
-              'args': [
-                  ErrorType.GENERIC,
-                `Session Client ${communicationMethod} called when ` +
-                'communication is not direct',
-              ],
+              'args': jasmine.arrayContaining([ErrorType.GENERIC]),
             }));
       });
     });

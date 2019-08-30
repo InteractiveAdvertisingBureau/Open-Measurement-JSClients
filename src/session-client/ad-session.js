@@ -1,20 +1,22 @@
 goog.module('omid.sessionClient.AdSession');
 
-const Context = goog.require('omid.sessionClient.Context');
 const Communication = goog.require('omid.common.Communication');
+const Context = goog.require('omid.sessionClient.Context');
 const InternalMessage = goog.require('omid.common.InternalMessage');
+const OmidJsSessionInterface = goog.require('omid.sessionClient.OmidJsSessionInterface');
+const Rectangle = goog.require('omid.common.Rectangle');
+const VerificationScriptResource = goog.require('omid.sessionClient.VerificationScriptResource');
 const argsChecker = goog.require('omid.common.argsChecker');
 const logger = goog.require('omid.common.logger');
-const VerificationScriptResource = goog.require('omid.sessionClient.VerificationScriptResource');
-const Rectangle = goog.require('omid.common.Rectangle');
 const {AdEventType, ErrorType} = goog.require('omid.common.constants');
 const {Event} = goog.require('omid.common.eventTypedefs');
 const {Version} = goog.require('omid.common.version');
+const {deserializeMessageArgs, serializeMessageArgs} = goog.require('omid.common.ArgsSerDe');
 const {generateGuid} = goog.require('omid.common.guid');
 const {packageExport} = goog.require('omid.common.exporter');
-const {serializeMessageArgs, deserializeMessageArgs} = goog.require('omid.common.ArgsSerDe');
-const {startServiceCommunication, resolveTopWindowContext} = goog.require('omid.common.serviceCommunication');
+const {resolveGlobalContext, startSessionServiceCommunication} = goog.require('omid.common.serviceCommunication');
 
+/** @const {string} */
 const SESSION_CLIENT_VERSION = Version;
 
 /**
@@ -36,29 +38,35 @@ class AdSession {
    *     VerificationClient will use to talk to the VerificationService. This
    *     parameter is useful for testing. If left unspecified, the correct
    *     Communication will be constructed and used.
+   * @param {?OmidJsSessionInterface=} sessionInterface Communicates with the
+   *     OMID JS Session Interface. Used for testing, and defaults to a
+   *     newly constructed value.
    * @throws error if the supplied context is undefined or null.
    */
   constructor(
-      context,
-      communication = startServiceCommunication(
-          resolveTopWindowContext(window), ['omid', 'v1_SessionServiceCommunication'])) {
+      context, communication = undefined, sessionInterface = undefined) {
     argsChecker.assertNotNullObject('AdSession.context', context);
 
-    this.context = context;
+    /** @private @const {!Context} */
+    this.context_ = context;
 
-    /** @private */
+    /** @private {boolean} */
     this.impressionOccurred_ = false;
 
-    /** @private */
-    this.communication_ = communication;
+    /** @private @const {?Communication} */
+    this.communication_ = communication ||
+        startSessionServiceCommunication(resolveGlobalContext());
 
-    /** @private */
+    /** @private @const {!OmidJsSessionInterface} */
+    this.sessionInterface_ = sessionInterface || new OmidJsSessionInterface();
+
+    /** @private {boolean} */
     this.hasAdEvents_ = false;
 
-    /** @private */
+    /** @private {boolean} */
     this.hasVideoEvents_ = false;
 
-    /** @private */
+    /** @private {boolean} */
     this.isSessionRunning_ = false;
 
     /**
@@ -68,13 +76,11 @@ class AdSession {
      */
     this.callbackMap_ = {};
 
-    // List to the message received event of the comminucation.
+    // Listen to messages sent by the OMID SessionService communication.
     if (this.communication_) {
-      this.communication_.onMessage = this.handleMessage_.bind(this);
-      this.sendOneWayMessage('setClientInfo', SESSION_CLIENT_VERSION,
-          this.context.partner.name, this.context.partner.version);
+      this.communication_.onMessage = this.handleInternalMessage_.bind(this);
     }
-
+    this.setClientInfo_();
     this.injectVerificationScripts_(context.verificationScriptResources);
     this.sendSlotElement_(context.slotElement);
     this.sendVideoElement_(context.videoElement);
@@ -88,7 +94,18 @@ class AdSession {
    * @return {boolean}
    */
   isSupported() {
-    return Boolean(this.communication_);
+    return Boolean(this.communication_) || this.sessionInterface_.isSupported();
+  }
+
+  /**
+   * Returns true if sending elements to the service is supported, which is the
+   * case when communication is between same-origin contexts.
+   * @return {boolean}
+   * @private
+   */
+  isSendingElementsSupported_() {
+    return this.communication_ ? this.communication_.isDirectCommunication() :
+                                 this.sessionInterface_.isSupported();
   }
 
   /**
@@ -157,28 +174,40 @@ class AdSession {
    * @param {...?} args Arguments to use when invoking the remote function.
    */
   sendMessage(method, responseCallback, ...args) {
-    if (!this.isSupported()) return;
+    if (this.communication_) {
+      this.sendInternalMessage_(method, responseCallback, args);
+    } else if (this.sessionInterface_.isSupported()) {
+      this.sendInterfaceMessage_(method, responseCallback, args);
+    }
+  }
 
+  /**
+   * Sends a message to the OMID SessionService via internal OM SDK
+   * communication.
+   * @param {string} method The name of the method to call.
+   * @param {?function(...?)} responseCallback A callback invoked on certain
+   *     messages that send responses back.
+   * @param {!Array<?>} args The arguments of the method.
+   * @private
+   */
+  sendInternalMessage_(method, responseCallback, args) {
     const guid = generateGuid();
     if (responseCallback) {
       this.callbackMap_[guid] = responseCallback;
     }
-
     const message = new InternalMessage(
-        guid,
-        `SessionService.${method}`,
-        SESSION_CLIENT_VERSION,
+        guid, `SessionService.${method}`, SESSION_CLIENT_VERSION,
         serializeMessageArgs(SESSION_CLIENT_VERSION, args));
     this.communication_.sendMessage(message);
   }
 
   /**
-   * Handles an incomming post message.
-   * @param {!InternalMessage} message
-   * @param {?} from Who sent the message.
+   * Handles an incoming internal OM SDK message from the OMID SessionService.
+   * @param {!InternalMessage} message The incoming message.
+   * @param {?} from The sender of the message.
    * @private
    */
-  handleMessage_(message, from) {
+  handleInternalMessage_(message, from) {
     const {method, guid, args} = message;
     if (method === 'response' && this.callbackMap_[guid]) {
       // Clients deserialize messages based on their own version, which is this
@@ -194,6 +223,23 @@ class AdSession {
   }
 
   /**
+   * Sends a message to the OMID SessionService via the JS Session Interface.
+   * @param {string} method The name of the method to call.
+   * @param {?function(...?)} responseCallback A callback invoked on certain
+   *     messages that send responses back.
+   * @param {!Array<?>} args The arguments of the method.
+   * @private
+   */
+  sendInterfaceMessage_(method, responseCallback, args) {
+    try {
+      this.sessionInterface_.sendMessage(method, responseCallback, args);
+    } catch (error) {
+      logger.error('Failed to communicate with SessionInterface with error:');
+      logger.error(error);
+    }
+  }
+
+  /**
    * Throws an error if the session is not running.
    * NOTE: This method is friend scoped. Therefore it should not be exported
    * beyond obfuscation.
@@ -201,7 +247,7 @@ class AdSession {
   assertSessionRunning() {
     if (!this.isSessionRunning_) {
       throw new Error('Session not started.');
-    };
+    }
   }
 
   /**
@@ -213,6 +259,12 @@ class AdSession {
    */
   impressionOccurred() {
     this.impressionOccurred_ = true;
+  }
+
+  /** Sends initial information about the session client to the JS service. */
+  setClientInfo_() {
+    this.sendOneWayMessage('setClientInfo', SESSION_CLIENT_VERSION,
+        this.context_.partner.name, this.context_.partner.version);
   }
 
   /**
@@ -237,38 +289,42 @@ class AdSession {
   }
 
   /**
-   * Sends the ad creative DOM element to the service, if the communication is
-   * direct.
+   * Sends the ad creative DOM element to the service, if sending elements is
+   * supported.
    * @param {?HTMLElement} element The ad creative DOM element
    * @private
    */
   sendSlotElement_(element) {
-    if (element != null) {
-      if (this.communication_.isDirectCommunication()) {
-        this.sendOneWayMessage('setSlotElement', element);
-      } else {
-        this.error(ErrorType.GENERIC,
-            'Session Client setSlotElement called when communication is ' +
-            'not direct');
-      }
-    }
+    this.sendElement_(element, 'setSlotElement');
   }
 
   /**
-   * Sends the video DOM element to the service, if the communication is direct.
+   * Sends the video DOM element to the service, if sending elements is
+   * supported.
    * @param {?HTMLVideoElement} element The video DOM element
    * @private
    */
   sendVideoElement_(element) {
-    if (element != null) {
-      if (this.communication_.isDirectCommunication()) {
-        this.sendOneWayMessage('setVideoElement', element);
-      } else {
-        this.error(ErrorType.GENERIC,
-            'Session Client setVideoElement called when communication is ' +
-            'not direct');
-      }
+    this.sendElement_(element, 'setVideoElement');
+  }
+
+  /**
+   * Sends the given DOM element to the service with the given method, if
+   * sending elements is supported.
+   * @param {?HTMLElement} element The DOM element to send.
+   * @param {string} method The method with which to send the element.
+   * @private
+   */
+  sendElement_(element, method) {
+    if (!element) {
+      return;
     }
+    if (!this.isSendingElementsSupported_()) {
+      this.error(ErrorType.GENERIC,
+          `Session Client ${method} called when communication is cross-origin`);
+      return;
+    }
+    this.sendOneWayMessage(method, element);
   }
 
   /**
@@ -288,8 +344,6 @@ class AdSession {
    * @private
    */
   watchSessionEvents_() {
-    if (!this.isSupported) return;
-
     // Watch for session events.
     this.registerSessionObserver((event) => {
       if (event['type'] === AdEventType.SESSION_START) {

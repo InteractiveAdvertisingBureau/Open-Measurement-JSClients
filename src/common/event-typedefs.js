@@ -168,6 +168,7 @@ let Viewport;
  *   adSessionId: (string|undefined),
  *   isFriendlyObstructionFor: (string|undefined),
  *   clipToBounds: (boolean|undefined),
+ *   notVisibleReason: (string|undefined),
  *   childViews: (Array<!NativeViewInfo>|undefined),
  * }}
  */

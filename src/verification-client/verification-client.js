@@ -4,16 +4,16 @@ const Communication = goog.require('omid.common.Communication');
 const InternalMessage = goog.require('omid.common.InternalMessage');
 const logger = goog.require('omid.common.logger');
 const {AdEventType} = goog.require('omid.common.constants');
-const {ImpressionCallback, GeometryChangeCallback, VideoCallback, SessionObserverCallback} = goog.require('omid.common.eventTypedefs');
+const {GeometryChangeCallback, ImpressionCallback, SessionObserverCallback, VideoCallback} = goog.require('omid.common.eventTypedefs');
 const {Version} = goog.require('omid.common.version');
-const {assertTruthyString, assertFunction, assertPositiveNumber} = goog.require('omid.common.argsChecker');
+const {assertFunction, assertPositiveNumber, assertTruthyString} = goog.require('omid.common.argsChecker');
+const {deserializeMessageArgs, serializeMessageArgs} = goog.require('omid.common.ArgsSerDe');
 const {generateGuid} = goog.require('omid.common.guid');
-const {startServiceCommunication, resolveTopWindowContext} = goog.require('omid.common.serviceCommunication');
-const {packageExport} = goog.require('omid.common.exporter');
-const {serializeMessageArgs, deserializeMessageArgs} = goog.require('omid.common.ArgsSerDe');
 const {omidGlobal} = goog.require('omid.common.OmidGlobalProvider');
+const {packageExport} = goog.require('omid.common.exporter');
+const {resolveGlobalContext, startVerificationServiceCommunication} = goog.require('omid.common.serviceCommunication');
 
-/** @type {string} */
+/** @const {string} */
 const VERIFICATION_CLIENT_VERSION = Version;
 
 /**
@@ -44,15 +44,14 @@ function getThirdPartyOmid() {
  */
 class VerificationClient {
   /**
-   * @param {?Communication<?>} communication Communication object that the
+   * @param {?Communication<?>=} communication Communication object that the
    *     VerificationClient will use to talk to the VerificationService. This
    *     parameter is useful for testing. If left unspecified, the correct
    *     Communication will be constructed and used.
    */
-  constructor(
-      communication = startServiceCommunication(
-          resolveTopWindowContext(), ['omid', 'v1_VerificationServiceCommunication'])) {
-    this.communication = communication;
+  constructor(communication = undefined) {
+    this.communication = communication ||
+        startVerificationServiceCommunication(resolveGlobalContext());
     if (this.communication) {
       this.communication.onMessage = this.handleMessage_.bind(this);
     } else {
