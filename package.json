@@ -1,6 +1,6 @@
 {
   "name": "open-measurement-jsclients",
-  "version": "1.2.18",
+  "version": "1.2.19",
   "description": "JavaScript common and client components of OM SDK",
   "watch": {
     "test-unit": {
@@ -13,7 +13,6 @@
   },
   "scripts": {
     "clean": "rimraf ./bin && npm run purge-version",
-    "preinstall": "git config clangFormat.binary node_modules/.bin/clang-format && git config clangFormat.style file",
     "format": "git-clang-format ./src/**/*.js ./test/**/*.js",
     "lint": "eslint ./src ./test",
     "lint-fix": "eslint --fix ./src ./test",

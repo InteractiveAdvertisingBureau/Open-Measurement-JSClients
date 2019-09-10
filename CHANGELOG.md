@@ -1,5 +1,10 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.2.19 - 2019-09-10
+### Fixed
+- Measure window.top viewport in GeometricViewabilityListener
+- Update IntersectionObserverViewabilityListener to capture measurement when using same element in subsequent session
+
 ## 1.2.18 - 2019-08-29
 ### Fixed
 - Update to accurately report 'hidden' or 'notFound' for non visible ad views and include geometry.
