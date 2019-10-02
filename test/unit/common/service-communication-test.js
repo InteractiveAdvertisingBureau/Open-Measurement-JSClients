@@ -2,7 +2,7 @@ goog.module('omid.test.common.serviceCommunication');
 
 const DirectCommunication = goog.require('omid.common.DirectCommunication');
 const PostMessageCommunication = goog.require('omid.common.PostMessageCommunication');
-const {isCrossOrigin, resolveGlobalContext, startSessionServiceCommunication, startVerificationServiceCommunication} = goog.require('omid.common.serviceCommunication');
+const {startSessionServiceCommunication, startVerificationServiceCommunication} = goog.require('omid.common.serviceCommunication');
 const {omidGlobal} = goog.require('omid.common.OmidGlobalProvider');
 
 describe('serviceCommunication', () => {
@@ -130,52 +130,6 @@ describe('serviceCommunication', () => {
       const communication = startVerificationServiceCommunication(mockWindow);
       expect(communication).toBe(null);
     });
-  });
-
-  describe('resolveGlobalContext', () => {
-    it('returns window when there is a valid window object', () => {
-      const mockWindow = createMockSameOriginWindow();
-      mockWindow['top'] = createMockCrossOriginTopWindow();
-      expect(resolveGlobalContext(mockWindow)).toEqual(mockWindow);
-    });
-
-    it('returns omidGlobal when there is no valid window object', () => {
-      expect(resolveGlobalContext(undefined)).toEqual(omidGlobal);
-    });
-
-    it('returns window.top when the current context is window.top', () => {
-      const mockWindow = createMockSameOriginTopWindow();
-      expect(resolveGlobalContext(mockWindow)).toEqual(mockWindow);
-    });
-  });
-
-  describe('isCrossOrigin', () => {
-    it('returns true when accessing window properties throws an error', () => {
-      // This test is intended to cover the fix for OMSDK-467 (where IE11 will
-      // not throw an error when computing "typeof top.<inaccessible
-      // property>").
-      const mockWindow = createMockSameOriginWindow();
-      const mockTopWindow = createMockSameOriginTopWindow();
-      mockWindow['top'] = mockTopWindow;
-      // isCrossOrigin tries to read top.x to check for access.
-      Object.defineProperty(mockTopWindow, 'x', {
-        get: () => {
-          throw new Error;
-        },
-      });
-      expect(isCrossOrigin(mockTopWindow)).toBe(true);
-    });
-
-    it(`returns false when properties on window that should be defined when it's
-        accessible are undefined`,
-       () => {
-         // This test is intended to cover the fix for OMSDK-469 (where iOS <= 9
-         // and older Safari will not throw an error when accessing
-         // "window.<inaccessible property>").
-         const mockWindow = createMockSameOriginWindow();
-         mockWindow['top'] = createMockCrossOriginTopWindow();
-         expect(isCrossOrigin(mockWindow['top'])).toBe(true);
-       });
   });
 });
 

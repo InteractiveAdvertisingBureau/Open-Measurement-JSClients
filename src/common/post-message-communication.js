@@ -1,8 +1,9 @@
 goog.module('omid.common.PostMessageCommunication');
 
 const Communication = goog.require('omid.common.Communication');
-const {CommunicationType} = goog.require('omid.common.constants');
 const InternalMessage = goog.require('omid.common.InternalMessage');
+const {CommunicationType} = goog.require('omid.common.constants');
+const {isCrossOrigin} = goog.require('omid.common.windowUtils');
 const {omidGlobal} = goog.require('omid.common.OmidGlobalProvider');
 
 /**
@@ -59,6 +60,14 @@ class PostMessageCommunication extends Communication {
     }
 
     to.postMessage(message.serialize(), '*');
+  }
+
+  /** @override */
+  isCrossOrigin() {
+    if (!this.to) {
+      return true;
+    }
+    return isCrossOrigin(this.to);
   }
 }
 

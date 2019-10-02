@@ -44,6 +44,11 @@ class DirectCommunication extends Communication {
     if (!InternalMessage.isValidSerializedMessage(exportedMessage)) return;
     this.handleMessage(InternalMessage.deserialize(exportedMessage), from);
   }
+
+  /** @override */
+  isCrossOrigin() {
+    return false;
+  }
 }
 
 exports = DirectCommunication;

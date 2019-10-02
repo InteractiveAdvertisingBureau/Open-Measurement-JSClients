@@ -14,7 +14,8 @@ const {Version} = goog.require('omid.common.version');
 const {deserializeMessageArgs, serializeMessageArgs} = goog.require('omid.common.ArgsSerDe');
 const {generateGuid} = goog.require('omid.common.guid');
 const {packageExport} = goog.require('omid.common.exporter');
-const {resolveGlobalContext, startSessionServiceCommunication} = goog.require('omid.common.serviceCommunication');
+const {resolveGlobalContext} = goog.require('omid.common.windowUtils');
+const {startSessionServiceCommunication} = goog.require('omid.common.serviceCommunication');
 
 /** @const {string} */
 const SESSION_CLIENT_VERSION = Version;
@@ -104,7 +105,7 @@ class AdSession {
    * @private
    */
   isSendingElementsSupported_() {
-    return this.communication_ ? this.communication_.isDirectCommunication() :
+    return this.communication_ ? !this.communication_.isCrossOrigin() :
                                  this.sessionInterface_.isSupported();
   }
 

@@ -63,13 +63,11 @@ class Communication {
   }
 
   /**
-   * Returns true if the concrete instance of this object is a
-   * DirectCommunication one, false otherwise.
+   * Returns true if the communication is occuring across origin boundaries.
    * @return {boolean}
+   * @abstract
    */
-  isDirectCommunication() {
-    return this.communicationType_ === CommunicationType.DIRECT;
-  }
+  isCrossOrigin() { }
 }
 
 exports = Communication;

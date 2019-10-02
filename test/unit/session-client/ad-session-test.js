@@ -58,8 +58,8 @@ describe('AdSessionTest', () => {
     // of the SessionService, and therefore is unit tested in the SessionService
     // code, instead of here.
     communication = /** @type{!Communication<?>} */ (jasmine.createSpyObj(
-        'communication', ['sendMessage', 'generateGuid', 'handleMessage',
-          'isDirectCommunication']));
+        'communication',
+        ['sendMessage', 'generateGuid', 'handleMessage', 'isCrossOrigin']));
     sessionInterface = jasmine.createSpyObj(
         'sessionInterface', ['isSupported', 'sendMessage']);
     asSpy(sessionInterface.isSupported).and.returnValue(true);
@@ -70,7 +70,7 @@ describe('AdSessionTest', () => {
 
     // Send the version information to the AdSession.
     expect(communication.sendMessage).toHaveBeenCalled();
-    asSpy(communication.isDirectCommunication).and.returnValue(true);
+    asSpy(communication.isCrossOrigin).and.returnValue(false);
     const {guid} = asSpy(communication.sendMessage).calls.mostRecent().args[0];
     communication.onMessage(
         new InternalMessage(guid, 'response', CLIENT_VERSION,
@@ -254,9 +254,9 @@ describe('AdSessionTest', () => {
         expect(sessionInterface.sendMessage)
             .toHaveBeenCalledWith(communicationMethod, null, [element]);
       });
-      it('should fire sessionError if communication is post message', () => {
+      it('should fire sessionError if communication is cross origin', () => {
         const element = /** @type {!HTMLElement} */ ({});
-        asSpy(communication.isDirectCommunication).and.returnValue(false);
+        asSpy(communication.isCrossOrigin).and.returnValue(true);
         session[methodToCall](element);
         expect(communication.sendMessage).not.toHaveBeenCalledWith(
             jasmine.objectContaining({

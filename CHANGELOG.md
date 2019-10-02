@@ -1,5 +1,9 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.2.20 - 2019-09-30
+### Fixed
+- Send video/slotElement to verification scripts in creative access mode.
+
 ## 1.2.19 - 2019-09-10
 ### Fixed
 - Measure window.top viewport in GeometricViewabilityListener
