@@ -1,5 +1,11 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.2.21 - 2019-11-11
+### Fixed
+- Use injectionId on sessionStart when available
+- Capture injectedResources from native layer
+- Inject and store injectionId
+
 ## 1.2.20 - 2019-09-30
 ### Fixed
 - Send video/slotElement to verification scripts in creative access mode.

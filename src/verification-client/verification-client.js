@@ -14,13 +14,17 @@ const {packageExport} = goog.require('omid.common.exporter');
 const {resolveGlobalContext} = goog.require('omid.common.windowUtils');
 const {startVerificationServiceCommunication} = goog.require('omid.common.serviceCommunication');
 
-/** @const {string} */
+/**
+ * @const {string}
+ * @ignore
+ */
 const VERIFICATION_CLIENT_VERSION = Version;
 
 /**
  * @typedef {!ImpressionCallback|
  *           !GeometryChangeCallback|
  *           !VideoCallback}
+ * @ignore
  */
 let EventCallback;
 
@@ -28,6 +32,7 @@ let EventCallback;
  * Checks for and returns the window.omid3p object, if it exists.
  * @return {?{registerSessionObserver: !Function,
  *           addEventListener: !Function}} The omid3p object.
+ * @ignore
  */
 function getThirdPartyOmid() {
   const omid3p = omidGlobal['omid3p'];
@@ -83,6 +88,16 @@ class VerificationClient {
      * @private
      */
     this.imgCache_ = [];
+
+    const verificationProperties = omidGlobal['omidVerificationProperties'];
+
+    /**
+     * An ID injected by the OM SDK to uniquely identify this script.
+     * @private @const {string|undefined}
+     */
+    this.injectionId_ = verificationProperties ?
+        verificationProperties['injectionId'] :
+        undefined;
   }
 
   /**
@@ -109,10 +124,12 @@ class VerificationClient {
   registerSessionObserver(functionToExecute, vendorKey = undefined) {
     assertFunction('functionToExecute', functionToExecute);
     if (this.omid3p) {
-      this.omid3p['registerSessionObserver'](functionToExecute, vendorKey);
+      this.omid3p['registerSessionObserver'](
+          functionToExecute, vendorKey, this.injectionId_);
       return;
     }
-    this.sendMessage_('addSessionListener', functionToExecute, vendorKey);
+    this.sendMessage_(
+        'addSessionListener', functionToExecute, vendorKey, this.injectionId_);
   }
 
   /**

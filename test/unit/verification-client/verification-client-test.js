@@ -19,6 +19,9 @@ let communication;
 /** @type {?Object} */
 let omid3p;
 
+const VENDOR_KEY = 'vendor.com-omid';
+const INJECTION_ID = 'abc123';
+
 class NoIntrinsicTimingClient extends VerificationClient {
   /** @override */
   hasTimeoutMethods_() {
@@ -57,12 +60,15 @@ function expectValidatesString(f) {
   expect(() => f('string')).not.toThrow();
 }
 
-function expectCommunication(methodName) {
+function expectCommunication(methodName, args = undefined) {
   expect(communication.sendMessage).toHaveBeenCalled();
   const callArgs = asSpy(communication.sendMessage).calls.mostRecent().args;
   const [message] = callArgs;
   expect(message).toBeTruthy();
   expect(message.method).toEqual(methodName);
+  if (args) {
+    expect(message.args).toEqual(args);
+  }
 }
 
 function expectCalledWithArgs(f, args) {
@@ -218,6 +224,9 @@ describe('VerificationClient', () => {
     omidGlobal.clearTimeout = (timeoutId) => {};
     omidGlobal.setInterval = (callback, timeInMillis) => {};
     omidGlobal.clearInterval = (intervalId) => {};
+    omidGlobal.omidVerificationProperties = {
+      injectionId: INJECTION_ID,
+    };
     // Spy on the intrinsic methods that will be used when available.
     spyOn(omidGlobal, 'setTimeout').and.callThrough();
     spyOn(omidGlobal, 'clearTimeout').and.callThrough();
@@ -286,13 +295,23 @@ describe('VerificationClient', () => {
 
     describe('addSessionListener', () => {
       it('proxies to the service', () => {
-        const vendorKey = 'abc123';
-        client.registerSessionObserver(doNothing, vendorKey);
-        expectCommunication('VerificationService.addSessionListener');
+        client.registerSessionObserver(doNothing, VENDOR_KEY);
+        expectCommunication(
+            'VerificationService.addSessionListener',
+            [VENDOR_KEY, INJECTION_ID]);
+      });
+      it('works when injectionId is unavailable', () => {
+        omidGlobal.omidVerificationProperties = undefined;
+        client = new VerificationClient(communication);
+        client.registerSessionObserver(doNothing, VENDOR_KEY);
+        expectCommunication(
+            'VerificationService.addSessionListener', [VENDOR_KEY, undefined]);
       });
       it('works when vendor key is not provided', () => {
         client.registerSessionObserver(doNothing);
-        expectCommunication('VerificationService.addSessionListener');
+        expectCommunication(
+          'VerificationService.addSessionListener',
+          [undefined, INJECTION_ID]);
       });
     });
 
@@ -392,15 +411,23 @@ describe('VerificationClient', () => {
 
     describe('registerSessionObserver', () => {
       it('should pass arguments to the omid3p implementation', () => {
-        const vendorKey = 'vendor.com-omid';
-        client.registerSessionObserver(doNothing, vendorKey);
+        client.registerSessionObserver(doNothing, VENDOR_KEY);
         expectCalledWithArgs(
-            omid3p.registerSessionObserver, [doNothing, vendorKey]);
+          omid3p.registerSessionObserver,
+          [doNothing, VENDOR_KEY, INJECTION_ID]);
+      });
+      it('should pass arguments when injectionId is unavailable', () => {
+        omidGlobal.omidVerificationProperties = undefined;
+        client = new VerificationClient();
+        client.registerSessionObserver(doNothing, VENDOR_KEY);
+        expectCalledWithArgs(
+            omid3p.registerSessionObserver, [doNothing, VENDOR_KEY, undefined]);
       });
       it('should pass arguments when no vendorKey is used', () => {
         client.registerSessionObserver(doNothing);
         expectCalledWithArgs(
-            omid3p.registerSessionObserver, [doNothing, undefined]);
+            omid3p.registerSessionObserver,
+            [doNothing, undefined, INJECTION_ID]);
       });
     });
 

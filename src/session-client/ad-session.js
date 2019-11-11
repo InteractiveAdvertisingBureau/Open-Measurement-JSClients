@@ -17,7 +17,10 @@ const {packageExport} = goog.require('omid.common.exporter');
 const {resolveGlobalContext} = goog.require('omid.common.windowUtils');
 const {startSessionServiceCommunication} = goog.require('omid.common.serviceCommunication');
 
-/** @const {string} */
+/**
+ * @const {string}
+ * @ignore
+ */
 const SESSION_CLIENT_VERSION = Version;
 
 /**

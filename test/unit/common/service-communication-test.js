@@ -116,7 +116,9 @@ describe('serviceCommunication', () => {
          mockWindow['top'] = mockTopWindow;
 
          // Simulate the service specifying the parent window as its location.
-         mockWindow['omid'] = {'serviceWindow': mockParentWindow};
+         mockWindow['omidVerificationProperties'] = {
+           'serviceWindow': mockParentWindow,
+         };
          const isOmidPresent = (window) => window == mockParentWindow;
 
          const communication =

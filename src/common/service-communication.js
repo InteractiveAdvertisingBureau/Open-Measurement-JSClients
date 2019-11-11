@@ -29,7 +29,8 @@ const EXPORTED_VERIFICATION_COMMUNICATION_NAME =
  * VerificationService in omid.service.VerificationInjector.
  * @const {!Array<string>}
  */
-const EXPORTED_SERVICE_WINDOW_NAME = ['omid', 'serviceWindow'];
+const EXPORTED_SERVICE_WINDOW_NAME =
+    ['omidVerificationProperties', 'serviceWindow'];
 
 /**
  * Gets the value for an unobfuscated keypath of an object. The key may be
