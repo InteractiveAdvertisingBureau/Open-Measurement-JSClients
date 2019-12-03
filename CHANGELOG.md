@@ -1,5 +1,9 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.2.22 - 2019-12-01
+### Changed
+- Stop clearing session events on finish for native AdSessionTypes to allow late loading verification scrips to receive past events.
+
 ## 1.2.21 - 2019-11-11
 ### Fixed
 - Use injectionId on sessionStart when available
