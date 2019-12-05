@@ -26,11 +26,14 @@ class ValidationVerificationClient {
         const isSupported = this.verificationClient_.isSupported();
         this.logMessage_('OmidSupported['+isSupported+']', (new Date()).getTime());
         if (isSupported) {
-            const self = this;
             this.verificationClient_.registerSessionObserver((event) => this.sessionObserverCallback_(event), vendorKey);
-            Object.keys(AdEventType).filter((el) => el !== 'VIDEO').forEach( function(el) {
-                self.verificationClient_.addEventListener(AdEventType[el], (event) => self.omidEventListenerCallback_(event));
-            });
+            Object.keys(AdEventType)
+              .filter((el) => el !== 'VIDEO')
+              .forEach((el) => {
+                this.verificationClient_.addEventListener(AdEventType[el], (event) => {
+                  this.omidEventListenerCallback_(event)
+                });
+              });
         }
     }
 
