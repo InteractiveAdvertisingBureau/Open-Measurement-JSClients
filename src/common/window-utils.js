@@ -107,7 +107,30 @@ function resolveTopWindowContext(win) {
   return win.top;
 }
 
+/**
+ * Returns the URL of the top-level web page as determined by
+ * the OMSDK JS service. Returns null when service is running
+ * in cross-domain iframe.
+ * @param {!Window} globalObject the Window or other global object
+ * where OMSDK JS is running.
+ * @return {?string}
+ */
+function evaluatePageUrl(globalObject) {
+  if (!isValidWindow(globalObject)) {
+    return null;
+  }
+
+  try {
+    const top = globalObject.top;
+    return isCrossOrigin(top) ? null : top.location.href;
+  } catch (error) {
+    // location access is blocked, so in cross-domain.
+    return null;
+  }
+};
+
 exports = {
+  evaluatePageUrl,
   isCrossOrigin,
   resolveGlobalContext,
   resolveTopWindowContext,

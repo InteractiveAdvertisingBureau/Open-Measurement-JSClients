@@ -81,7 +81,11 @@ let Context;
  * below;
  * @typedef {{
  *   impressionOwner: !constants.EventOwner,
- *   videoEventsOwner: !constants.EventOwner,
+ *   videoEventsOwner: (!constants.EventOwner|undefined),
+ *   mediaEventsOwner: (!constants.EventOwner|undefined),
+ *   creativeType: (!constants.CreativeType|undefined),
+ *   impressionType: (!constants.ImpressionType|undefined),
+ *   isolateVerificationScripts: !boolean,
  * }}
  */
 let AdSessionConfiguration;
@@ -102,6 +106,7 @@ let GeometryChangeEventData;
  *   y: number,
  *   width: number,
  *   height : number,
+ *   pixels: number,
  * }}
  */
 let Geometry;
@@ -110,9 +115,11 @@ let Geometry;
  * @typedef {{
  *   eventViewport: !Viewport,
  *   eventAdView: !AdViewEventData,
+ *   creativeType: !constants.CreativeType,
  *   mediaType: !constants.MediaType,
  *   videoEventAdaptorType: (string|undefined),
  *   videoEventAdaptorVersion: (string|undefined),
+ *   impressionType: !constants.ImpressionType,
  * }}
  */
 let ImpressionEventData;
@@ -125,6 +132,7 @@ let ImpressionEventData;
  *   y: number,
  *   width: number,
  *   height: number,
+ *   pixels: number,
  *   obstructions: !Array,
  * }}
  */
@@ -134,6 +142,12 @@ let OnScreenGeometry;
  * @typedef {{
  *   context: !Context,
  *   verificationParameters: (string|undefined),
+ *   supportsLoadedEvent: (boolean|undefined),
+ *   impressionType: !constants.ImpressionType,
+ *   creativeType: !constants.CreativeType,
+ *   mediaType: !constants.MediaType,
+ *   pageUrl: ?string,
+ *   contentUrl: ?string,
  * }}
  */
 let SessionStartEventData;
@@ -180,13 +194,26 @@ let NativeViewInfo;
  *   skipOffset: (number|undefined),
  *   autoPlay: boolean,
  *   position: !constants.VideoPosition,
+ *   creativeType: !constants.CreativeType,
+ *   mediaType: !constants.MediaType,
+ *   impressionType: !constants.ImpressionType,
  * }}
  */
 let LoadedVideoEventData;
 
 /**
  * @typedef {{
+ *   creativeType: !constants.CreativeType,
+ *   mediaType: !constants.MediaType,
+ *   impressionType: !constants.ImpressionType,
+ * }}
+ */
+let LoadedDisplayEventData;
+
+/**
+ * @typedef {{
  *   duration: number,
+ *   mediaPlayerVolume: number,
  *   videoPlayerVolume: number,
  *   deviceVolume: number,
  * }}
@@ -195,6 +222,7 @@ let StartVideoEventData;
 
 /**
  * @typedef {{
+ *   mediaPlayerVolume: number,
  *   videoPlayerVolume: number,
  *   deviceVolume: number,
  * }}
@@ -285,6 +313,7 @@ let VideoEvent;
  *   !AdViewEventData|
  *   !SessionStartEventData|
  *   !GeometryChangeEventData|
+ *   !LoadedDisplayEventData|
  *   !ImpressionEventData|
  *   !VideoEventData|
  *   undefined
@@ -330,6 +359,7 @@ exports = {
   VastProperties,
   Viewport,
   NativeViewInfo,
+  LoadedDisplayEventData,
   LoadedVideoEventData,
   StartVideoEventData,
   VolumeChangedEventData,

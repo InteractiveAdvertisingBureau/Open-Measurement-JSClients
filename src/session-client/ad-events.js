@@ -3,6 +3,7 @@ goog.module('omid.sessionClient.AdEvents');
 const AdSession = goog.require('omid.sessionClient.AdSession');
 const argsChecker = goog.require('omid.common.argsChecker');
 const {packageExport} = goog.require('omid.common.exporter');
+const {VastProperties} = goog.require('omid.common.eventTypedefs');
 
 /**
  * Ad event API enabling the JS component to signal to all verification
@@ -37,6 +38,25 @@ class AdEvents {
     this.adSession.assertSessionRunning();
     this.adSession.impressionOccurred();
     this.adSession.sendOneWayMessage('impressionOccurred');
+  }
+
+  /**
+   * Notifies all verification providers that a loaded event should be
+   * recorded. Video/audio creatives should supply non-null vastProperties.
+   * Display creatives should supply a null argument.
+   *
+   * @param {?VastProperties=} vastProperties containing static information
+   * about the video placement. This is non-null for video/audio creatives and null
+   * for display creatives.
+   *
+   */
+  loaded(vastProperties = null) {
+    this.adSession.creativeLoaded();
+    if (vastProperties) {
+      this.adSession.sendOneWayMessage('loaded', vastProperties);
+    } else {
+      this.adSession.sendOneWayMessage('loaded');
+    }
   }
 }
 

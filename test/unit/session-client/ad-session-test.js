@@ -10,7 +10,7 @@ const PostMessageCommunication = goog.require('omid.common.PostMessageCommunicat
 const Rectangle = goog.require('omid.common.Rectangle');
 const argsChecker = goog.require('omid.common.argsChecker');
 const {VERSION_COMPATABILITY_TABLE, makeVersionRespondingCommunicationClass} = goog.require('omid.test.versionUtils');
-const {ErrorType} = goog.require('omid.common.constants');
+const {CreativeType, ErrorType, ImpressionType} = goog.require('omid.common.constants');
 const {Version} = goog.require('omid.common.version');
 const {asSpy} = goog.require('omid.test.typingUtils');
 const {serializeMessageArgs, deserializeMessageArgs} = goog.require('omid.common.ArgsSerDe');
@@ -88,6 +88,112 @@ describe('AdSessionTest', () => {
     });
   });
 
+  describe('setCreativeType', () => {
+    it('throws if setting creative type to ' + CreativeType.DEFINED_BY_JAVASCRIPT, () => {
+      expect(() =>
+       session.setCreativeType(CreativeType.DEFINED_BY_JAVASCRIPT))
+        .toThrow(new Error('Creative type cannot be redefined with value ' +
+          CreativeType.DEFINED_BY_JAVASCRIPT));
+    });
+    it('throws if impression has already occurred', () => {
+      session.impressionOccurred_ = true;
+      expect(() =>
+        session.setCreativeType(CreativeType.HTML_DISPLAY))
+          .toThrow(new Error('Impression has already occurred'));
+    });
+    it('throws if creative has already loaded', () => {
+      session.creativeLoaded_ = true;
+      expect(() =>
+        session.setCreativeType(CreativeType.HTML_DISPLAY))
+          .toThrow(new Error('Creative has already loaded'));
+    });
+    it('throws if creative has been defined to something other than ' +
+      CreativeType.DEFINED_BY_JAVASCRIPT, () => {
+      session.creativeType_ = CreativeType.NATIVE_DISPLAY;
+      expect(() =>
+      session.setCreativeType(CreativeType.HTML_DISPLAY))
+        .toThrow(new Error('Creative type cannot be redefined'));
+    });
+    it('throws if impression type has been set to undefined by session start', () => {
+      session.creativeType_ = undefined;
+      expect(() => session.setCreativeType(CreativeType.HTML_VIDEO))
+        .toThrow(new Error('Native integration is using OMID 1.2 or earlier'));
+    });
+    it('relays creativeType to the service by sending a message if creativeType was undefined',
+      () => {
+      expect(session.creativeType_).toBe(null);
+      session.setCreativeType(CreativeType.HTML_DISPLAY);
+      expect(communication.sendMessage).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          'method': `SessionService.setCreativeType`,
+          'args': [CreativeType.HTML_DISPLAY],
+      }));
+    });
+    it('relays creativeType to the service by sending a message if creativeType was defined as '
+      + CreativeType.DEFINED_BY_JAVASCRIPT, () => {
+      session.creativeType_ = CreativeType.DEFINED_BY_JAVASCRIPT;
+      session.setCreativeType(CreativeType.VIDEO);
+      expect(communication.sendMessage).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          'method': `SessionService.setCreativeType`,
+          'args': [CreativeType.VIDEO],
+      }));
+    });
+  });
+
+  describe('setImpressionType', () => {
+    it('throws if setting impression type to ' + ImpressionType.DEFINED_BY_JAVASCRIPT, () => {
+      expect(() =>
+       session.setImpressionType(ImpressionType.DEFINED_BY_JAVASCRIPT))
+        .toThrow(new Error('Impression type cannot be redefined with value ' +
+          CreativeType.DEFINED_BY_JAVASCRIPT));
+    });
+    it('throws if impression has already occurred', () => {
+      session.impressionOccurred_ = true;
+      expect(() =>
+        session.setImpressionType(ImpressionType.BEGIN_TO_RENDER))
+          .toThrow(new Error('Impression has already occurred'));
+    });
+    it('throws if creative has already loaded', () => {
+      session.creativeLoaded_ = true;
+      expect(() =>
+        session.setImpressionType(ImpressionType.BEGIN_TO_RENDER))
+          .toThrow(new Error('Creative has already loaded'));
+    });
+    it('throws if impression type has been defined to something other than ' +
+      ImpressionType.DEFINED_BY_JAVASCRIPT, () => {
+      session.impressionType_ = ImpressionType.ONE_PIXEL;
+      expect(() =>
+      session.setImpressionType(ImpressionType.ONE_PIXEL))
+        .toThrow(new Error('Impression type cannot be redefined'));
+    });
+    it('throws if impression type has been set to undefined by session start', () => {
+      session.impressionType_ = undefined;
+      expect(() => session.setImpressionType(ImpressionType.ONE_PIXEL))
+        .toThrow(new Error('Native integration is using OMID 1.2 or earlier'));
+    });
+    it('relays impressionType to the service by sending a message if impressionType was undefined',
+      () => {
+      expect(session.impressionType_).toBe(null);
+      session.setImpressionType(ImpressionType.ONE_PIXEL);
+      expect(communication.sendMessage).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          'method': `SessionService.setImpressionType`,
+          'args': [ImpressionType.ONE_PIXEL],
+      }));
+    });
+    it('relays impressionType to the service by sending a message if impressionType was defined as '
+      + ImpressionType.DEFINED_BY_JAVASCRIPT, () => {
+      session.impressionType_ = ImpressionType.DEFINED_BY_JAVASCRIPT;
+      session.setImpressionType(ImpressionType.BEGIN_TO_RENDER);
+      expect(communication.sendMessage).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          'method': `SessionService.setImpressionType`,
+          'args': [ImpressionType.BEGIN_TO_RENDER],
+      }));
+    });
+  });
+
   describe('isSupported', () => {
     it(`true when the communication is supported but the sessionInterface is
         not supported`, () => {
@@ -129,15 +235,15 @@ describe('AdSessionTest', () => {
     });
   });
 
-  describe('registerVideoEvents', () => {
-    it('checks if video events have already been registered', () => {
-      expect(() => session.registerVideoEvents()).not.toThrow();
-      expect(() => session.registerVideoEvents()).toThrow();
+  describe('registerMediaEvents', () => {
+    it('checks if media events have already been registered', () => {
+      expect(() => session.registerMediaEvents()).not.toThrow();
+      expect(() => session.registerMediaEvents()).toThrow();
     });
 
     it('relays registration to the service', () => {
-      session.registerVideoEvents();
-      expectMessage('SessionService.registerVideoEvents');
+      session.registerMediaEvents();
+      expectMessage('SessionService.registerMediaEvents');
     });
   });
 

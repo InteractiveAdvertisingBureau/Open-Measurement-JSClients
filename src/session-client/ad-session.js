@@ -8,7 +8,7 @@ const Rectangle = goog.require('omid.common.Rectangle');
 const VerificationScriptResource = goog.require('omid.sessionClient.VerificationScriptResource');
 const argsChecker = goog.require('omid.common.argsChecker');
 const logger = goog.require('omid.common.logger');
-const {AdEventType, ErrorType} = goog.require('omid.common.constants');
+const {AdEventType, CreativeType, ImpressionType, ErrorType} = goog.require('omid.common.constants');
 const {Event} = goog.require('omid.common.eventTypedefs');
 const {Version} = goog.require('omid.common.version');
 const {deserializeMessageArgs, serializeMessageArgs} = goog.require('omid.common.ArgsSerDe');
@@ -68,10 +68,19 @@ class AdSession {
     this.hasAdEvents_ = false;
 
     /** @private {boolean} */
-    this.hasVideoEvents_ = false;
+    this.hasMediaEvents_ = false;
 
     /** @private {boolean} */
     this.isSessionRunning_ = false;
+
+    /** @private {?CreativeType} */
+    this.creativeType_ = null;
+
+    /** @private {?ImpressionType} */
+    this.impressionType_ = null;
+
+    /** @private */
+    this.creativeLoaded_ = false;
 
     /**
      * Map of callback guids to callbacks.
@@ -88,9 +97,73 @@ class AdSession {
     this.injectVerificationScripts_(context.verificationScriptResources);
     this.sendSlotElement_(context.slotElement);
     this.sendVideoElement_(context.videoElement);
+    this.sendContentUrl_(context.contentUrl);
 
     // Start watching session events so we know when the session is running.
     this.watchSessionEvents_();
+  }
+
+  /**
+   * @param {!CreativeType} creativeType
+   * @throws error if arg type is DEFINED_BY_JAVASCRIPT.
+   * @throws error if impression has already occured.
+   * @throws error if creative has already loaded.
+   * @throws error if creativeType was already defined to something
+   * other than DEFINED_BY_JAVASCRIPT.
+   * @throws error if native integration has started and
+   * is using OMID 1.2 or earlier.
+   */
+  setCreativeType(creativeType) {
+    if (creativeType === CreativeType.DEFINED_BY_JAVASCRIPT) {
+      throw new Error('Creative type cannot be redefined with value ' +
+        CreativeType.DEFINED_BY_JAVASCRIPT);
+    }
+    if (this.impressionOccurred_) {
+      throw new Error('Impression has already occurred');
+    }
+    if (this.creativeLoaded_) {
+      throw new Error('Creative has already loaded');
+    }
+    if (this.creativeType_ &&
+      this.creativeType_ !== CreativeType.DEFINED_BY_JAVASCRIPT) {
+      throw new Error('Creative type cannot be redefined');
+    }
+    if (this.creativeType_ === undefined) {
+      throw new Error('Native integration is using OMID 1.2 or earlier');
+    }
+    this.sendOneWayMessage('setCreativeType', creativeType);
+    this.creativeType_ = creativeType;
+  }
+
+  /**
+   * @param {!ImpressionType} impressionType
+   * @throws error if arg type is DEFINED_BY_JAVASCRIPT
+   * @throws error if impression has already occurred
+   * @throws error if impressionType was already defined to something
+   * other than DEFINED_BY_JAVASCRIPT.
+   * @throws error if native integration has started and is
+   * using OMID 1.2 or earlier.
+   */
+  setImpressionType(impressionType) {
+    if (impressionType === ImpressionType.DEFINED_BY_JAVASCRIPT) {
+      throw new Error('Impression type cannot be redefined with value ' +
+        ImpressionType.DEFINED_BY_JAVASCRIPT);
+    }
+    if (this.impressionOccurred_) {
+      throw new Error('Impression has already occurred');
+    }
+    if (this.creativeLoaded_) {
+      throw new Error('Creative has already loaded');
+    }
+    if (this.impressionType_ &&
+      this.impressionType_ !== ImpressionType.DEFINED_BY_JAVASCRIPT) {
+      throw new Error('Impression type cannot be redefined');
+    }
+    if (this.impressionType_ === undefined) {
+      throw new Error('Native integration is using OMID 1.2 or earlier');
+    }
+    this.sendOneWayMessage('setImpressionType', impressionType);
+    this.impressionType_ = impressionType;
   }
 
   /**
@@ -123,7 +196,7 @@ class AdSession {
 
   /**
    * Allows JS ad session clients to notify verification clients of any errors.
-   * Possible errorType values include; “GENERIC” and “VIDEO”.
+   * Possible errorType values include; “GENERIC”, “VIDEO”, "MEDIA".
    *
    * When calling this method all verification clients will be notified via the
    * sessionError session observer event.
@@ -146,14 +219,14 @@ class AdSession {
   }
 
   /**
-   * Registers the existence of an VideoEvents instance.
+   * Registers the existence of an MediaEvents instance.
    */
-  registerVideoEvents() {
-    if (this.hasVideoEvents_) {
-      throw new Error('VideoEvents already registered.');
+  registerMediaEvents() {
+    if (this.hasMediaEvents_) {
+      throw new Error('MediaEvents already registered.');
     }
-    this.hasVideoEvents_ = true;
-    this.sendOneWayMessage('registerVideoEvents');
+    this.hasMediaEvents_ = true;
+    this.sendOneWayMessage('registerMediaEvents');
   }
 
   /**
@@ -255,17 +328,49 @@ class AdSession {
   }
 
   /**
-   * Handles when an impression has occured.
+   * Handles when an impression has occurred.
    * Sets a flag of this class so that it can remember that an impression has
    * occured.
    * NOTE: This method is friend scoped. Therefore it should not be exported
    * beyond obfuscation.
+   * @throws error if creativeType or impressionType has not be redefined
+   * from the JS layer. Both the creative and impression types must be redefined
+   * by the JS layer before the impression event can be sent from the JS layer.
    */
   impressionOccurred() {
+    if (this.creativeType_ === CreativeType.DEFINED_BY_JAVASCRIPT) {
+      throw new Error('Creative type has not been redefined');
+    }
+    if (this.impressionType_ === ImpressionType.DEFINED_BY_JAVASCRIPT) {
+      throw new Error('Impression type has not been redefined');
+    }
     this.impressionOccurred_ = true;
   }
 
-  /** Sends initial information about the session client to the JS service. */
+  /**
+   * Handles when a load event has occurred.
+   * Sets a flag of this class so that it can remember that a loaded event
+   * has occured.
+   * NOTE: This method is friend scoped. Therefore it should not be exported
+   * beyond obfuscation.
+   * @throws error if creativeType or impressionType has not be redefined
+   * from the JS layer. Both the creative and impression types must be redefined
+   * by the JS layer before the loaded event can be sent from the JS layer.
+   */
+   creativeLoaded() {
+    if (this.creativeType_ === CreativeType.DEFINED_BY_JAVASCRIPT) {
+      throw new Error('Creative type has not been redefined');
+    }
+    if (this.impressionType_ === ImpressionType.DEFINED_BY_JAVASCRIPT) {
+      throw new Error('Impression type has not been redefined');
+    }
+    this.creativeLoaded_ = true;
+   }
+
+  /**
+   * Sends initial information about the session client to the JS service.
+   * @private
+   */
   setClientInfo_() {
     this.sendOneWayMessage('setClientInfo', SESSION_CLIENT_VERSION,
         this.context_.partner.name, this.context_.partner.version);
@@ -332,6 +437,22 @@ class AdSession {
   }
 
   /**
+   * Sends the provided contentUrl to the service, only if communication
+   * is direct.
+   * @param {?string} contentUrl
+   * @private
+   */
+  sendContentUrl_(contentUrl) {
+    if (this.isSendingElementsSupported_()) {
+      this.sendOneWayMessage('setContentUrl', contentUrl);
+    } else {
+      this.error(ErrorType.GENERIC,
+          'Session Client setContentUrl called when communication '
+          + 'is not direct');
+    }
+  }
+
+  /**
    * Set the DOM element's geometry relative to the geometry of either the
    * slotElement or the cross domain iframe the creative's DOM element is in.
    * @param {?Rectangle} elementBounds
@@ -352,6 +473,10 @@ class AdSession {
     this.registerSessionObserver((event) => {
       if (event['type'] === AdEventType.SESSION_START) {
         this.isSessionRunning_ = true;
+        // OMID 1.2 integrations and earlier will not include this data.
+        // In this case, both creativeType/impressionType will be undefined.
+        this.creativeType_ = event['data']['creativeType'];
+        this.impressionType_ = event['data']['impressionType'];
       }
       if (event['type'] === AdEventType.SESSION_FINISH) {
         this.isSessionRunning_ = false;

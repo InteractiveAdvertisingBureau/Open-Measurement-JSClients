@@ -5,6 +5,7 @@ const argsChecker = goog.require('omid.common.argsChecker');
 const {InteractionType, VideoPlayerState} = goog.require('omid.common.constants');
 const {VastProperties} = goog.require('omid.common.eventTypedefs');
 const {packageExport} = goog.require('omid.common.exporter');
+const MediaEvents = goog.require('omid.sessionClient.MediaEvents');
 
 /**
  * Provides a complete list of supported JS video events. Using this event API
@@ -14,6 +15,9 @@ const {packageExport} = goog.require('omid.common.exporter');
  * will result in an error. The same rules apply to both multiple JS video
  * events and any attempt to register a JS video events instance when a native
  * instance has already been registered via the native bridge.
+ *
+ * Note: This class will be deprecated in OMSDK 1.3.2 release.
+ *
  */
 class VideoEvents {
   /**
@@ -21,18 +25,13 @@ class VideoEvents {
    * @throws error if the supplied ad session is undefined or null.
    */
   constructor(adSession) {
-    argsChecker.assertNotNullObject('VideoEvents.adSession', adSession);
-
-    try {
-      adSession.registerVideoEvents();
-      this.adSession = adSession;
-    } catch (error) {
-      throw new Error(
-          'AdSession already has a video events instance registered');
-    }
+    this.mediaEvents = new MediaEvents(adSession);
   }
 
   /**
+   * Note: This method will be deprecated in OMSDK 1.3.2 release.
+   * Use AdEvents.loaded().
+   *
    * Notifies all video listeners that video content has been loaded and ready
    * to start playing.
    * @param {!VastProperties} vastProperties containing static information
@@ -41,11 +40,8 @@ class VideoEvents {
    * @see VastProperties
    */
   loaded(vastProperties) {
-    argsChecker.assertNotNullObject(
-        'VideoEvents.loaded.vastProperties', vastProperties);
-    this.adSession.sendOneWayMessage('loaded', vastProperties);
+      this.mediaEvents.loaded(vastProperties);
   }
-
 
   /**
    * Notifies all video listeners that video content has started playing.
@@ -56,10 +52,7 @@ class VideoEvents {
    *   supplied.
    */
   start(duration, videoPlayerVolume) {
-    argsChecker.assertNumber('VideoEvents.start.duration', duration);
-    argsChecker.assertNumberBetween('VideoEvents.start.videoPlayerVolume',
-        videoPlayerVolume, 0, 1);
-    this.adSession.sendOneWayMessage('start', duration, videoPlayerVolume);
+    this.mediaEvents.start(duration, videoPlayerVolume);
   }
 
   /**
@@ -67,14 +60,14 @@ class VideoEvents {
    * quartile.
    */
   firstQuartile() {
-    this.adSession.sendOneWayMessage('firstQuartile');
+    this.mediaEvents.firstQuartile();
   }
 
   /**
    * Notifies all video listeners that video playback has reached the midpoint.
    */
   midpoint() {
-    this.adSession.sendOneWayMessage('midpoint');
+    this.mediaEvents.midpoint();
   }
 
   /**
@@ -82,14 +75,14 @@ class VideoEvents {
    * quartile.
    */
   thirdQuartile() {
-    this.adSession.sendOneWayMessage('thirdQuartile');
+    this.mediaEvents.thirdQuartile();
   }
 
   /**
    * Notifies all video listeners that video playback is complete.
    */
   complete() {
-    this.adSession.sendOneWayMessage('complete');
+    this.mediaEvents.complete();
   }
 
   /**
@@ -97,7 +90,7 @@ class VideoEvents {
    * interaction.
    */
   pause() {
-    this.adSession.sendOneWayMessage('pause');
+    this.mediaEvents.pause();
   }
 
   /**
@@ -105,7 +98,7 @@ class VideoEvents {
    * paused) after a user interaction.
    */
   resume() {
-    this.adSession.sendOneWayMessage('resume');
+    this.mediaEvents.resume();
   }
 
   /**
@@ -113,7 +106,7 @@ class VideoEvents {
    * buffering.
    */
   bufferStart() {
-    this.adSession.sendOneWayMessage('bufferStart');
+    this.mediaEvents.bufferStart();
   }
 
   /**
@@ -121,7 +114,7 @@ class VideoEvents {
    * has resumed.
    */
   bufferFinish() {
-    this.adSession.sendOneWayMessage('bufferFinish');
+    this.mediaEvents.bufferFinish();
   }
 
   /**
@@ -130,7 +123,7 @@ class VideoEvents {
    * resume playing content.
    */
   skipped() {
-    this.adSession.sendOneWayMessage('skipped');
+    this.mediaEvents.skipped();
   }
 
   /**
@@ -139,9 +132,7 @@ class VideoEvents {
    * @throws error if an invalid videoPlayerVolume has been supplied.
    */
   volumeChange(videoPlayerVolume) {
-    argsChecker.assertNumberBetween(
-        'VideoEvents.volumeChange.videoPlayerVolume', videoPlayerVolume, 0, 1);
-    this.adSession.sendOneWayMessage('volumeChange', videoPlayerVolume);
+    this.mediaEvents.volumeChange(videoPlayerVolume);
   }
 
   /**
@@ -152,9 +143,7 @@ class VideoEvents {
    * @see PlayerState
    */
   playerStateChange(playerState) {
-    argsChecker.assertNotNullObject(
-        'VideoEvents.playerStateChange.playerState', playerState);
-    this.adSession.sendOneWayMessage('playerStateChange', playerState);
+    this.mediaEvents.playerStateChange(playerState);
   }
 
   /**
@@ -164,9 +153,7 @@ class VideoEvents {
    * @throws error if the supplied interaction type is undefined or null.
    */
   adUserInteraction(interactionType) {
-    argsChecker.assertNotNullObject(
-        'VideoEvents.adUserInteraction.interactionType', interactionType);
-    this.adSession.sendOneWayMessage('adUserInteraction', interactionType);
+    this.mediaEvents.adUserInteraction(interactionType);
   }
 }
 

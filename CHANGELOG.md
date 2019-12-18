@@ -1,5 +1,26 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.3.0 - 2019-12-17
+OM SDK 1.3 is a signficant update.  It adds support for some key new use cases for OMID 1.3 while allowing scripts using OMID 1.2 to run correctly.  Integrations (apps and SDKs) using OM SDK will need to make code changes.  See the Migration Guide included in the Android and iOS releases.
+
+This changelog covers features common to verification scripts and session scripts.  See [the service changelog](../CHANGELOG.md) for changes specific to session scripts.
+
+### Changed
+The following features changed their API from OM SDK 1.2 to 1.3.  The old 1.2 APIs are still supported, but scripts running in OMID 1.3 apps are encouraged to use the new APIs.
+
+- Event `loaded` will occur on display ad sessions
+- Atribute `adSessionType` can have value `javascript`
+- Attribute `mediaType` replaced by `creativeType`
+- Event type `video` replaced by `media`
+- Error events can have a `media` event type
+
+### Added
+
+- Event `sessionStart` has new attributes `supportsLoadedEvent`, `contentUrl`
+- Event `loaded` has new attributes `creativeType`, `mediaType`, `impressionType`
+- Event `impression` has new attributes `creativeType`, `impressionType`
+- Event `geometryChange` has new attributes `pixels`, `friendlyObstructions`, `declaredFriendlyObstructions`
+
 ## 1.2.22 - 2019-12-01
 ### Changed
 - Stop clearing session events on finish for native AdSessionTypes to allow late loading verification scrips to receive past events.

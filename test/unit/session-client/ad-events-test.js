@@ -2,7 +2,9 @@ goog.module('omid.test.sessionClient.AdEvents');
 
 const AdEvents = goog.require('omid.sessionClient.AdEvents');
 const AdSession = goog.require('omid.sessionClient.AdSession');
+const VastProperties = goog.require('omid.common.VastProperties');
 const argsChecker = goog.require('omid.common.argsChecker');
+const {VideoPosition} = goog.require('omid.common.constants');
 const {asSpy} = goog.require('omid.test.typingUtils');
 
 describe('AdEventsTest', () => {
@@ -12,11 +14,12 @@ describe('AdEventsTest', () => {
   beforeEach(() => {
     mockAdSession = jasmine.createSpyObj(
         'AdSession', [
-          'registerVideoEvents',
+          'registerMediaEvents',
           'registerAdEvents',
           'sendOneWayMessage',
           'assertSessionRunning',
-          'impressionOccurred']);
+          'impressionOccurred',
+          'creativeLoaded']);
     spyOn(argsChecker, 'assertTruthyString');
     spyOn(argsChecker, 'assertNotNullObject');
   });
@@ -50,6 +53,39 @@ describe('AdEventsTest', () => {
       const adEvents = new AdEvents(mockAdSession);
       adEvents.impressionOccurred();
       expect(mockAdSession.impressionOccurred).toHaveBeenCalled();
+    });
+  });
+
+  describe('loaded', () => {
+    it('should call AdSession.creativeLoaded', () => {
+      const adEvents = new AdEvents(mockAdSession);
+      adEvents.loaded();
+      expect(mockAdSession.creativeLoaded).toHaveBeenCalled();
+    });
+
+    it('display creatives should send a message to the SessionService' +
+      'with null', () => {
+      const adEvents = new AdEvents(mockAdSession);
+      adEvents.loaded(null);
+      expect(mockAdSession.sendOneWayMessage)
+          .toHaveBeenCalledWith('loaded');
+    });
+
+    it('video creatives should send a message to the SessionService' +
+      'with VastProperties', () => {
+      const vastProperties = new VastProperties(
+          false /* isSkippable */, 0 /* skipOffset */,
+          false /* isAutoPlay */, VideoPosition.PREROLL /* position */);
+      const adEvents = new AdEvents(mockAdSession);
+      adEvents.loaded(vastProperties);
+      expect(mockAdSession.sendOneWayMessage)
+          .toHaveBeenCalledWith('loaded', vastProperties);
+    });
+
+    it('should flag the AdSession with the loaded event', () => {
+      const adEvents = new AdEvents(mockAdSession);
+      adEvents.loaded();
+      expect(mockAdSession.creativeLoaded).toHaveBeenCalled();
     });
   });
 });

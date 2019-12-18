@@ -16,7 +16,8 @@ const AdEventType = {
   SESSION_FINISH: 'sessionFinish',
 
 
-  // Video ad event types
+  // Media ad event types
+  MEDIA: 'media',
   VIDEO: 'video',
   LOADED: 'loaded',
   START: 'start',
@@ -35,11 +36,12 @@ const AdEventType = {
 };
 
 /**
- * Enum for ad events type representing video events.
+ * Enum for ad events type representing media events.
  * @enum {string}
  */
-const VideoEventType = {
-  // Video ad event types
+
+const MediaEventType = {
+  // Media ad event types
   LOADED: 'loaded',
   START: 'start',
   FIRST_QUARTILE: 'firstQuartile',
@@ -54,6 +56,39 @@ const VideoEventType = {
   VOLUME_CHANGE: 'volumeChange',
   PLAYER_STATE_CHANGE: 'playerStateChange',
   AD_USER_INTERACTION: 'adUserInteraction',
+};
+
+/**
+ * @enum {string}
+ */
+
+ const VideoEventType = MediaEventType;
+
+/**
+ * Enum for impression type
+ * @enum {string}
+ */
+const ImpressionType = {
+  // Impression type needs to be set by JavaScript session script.
+  DEFINED_BY_JAVASCRIPT: 'definedByJavaScript',
+  /* The integration is not declaring the criteria for the OMID impression.
+  This is the default impression type for OMID 1.2 and for integrations that
+  don't set an impression type in an ad session.*/
+  UNSPECIFIED: 'unspecified',
+  // The integration is using count-on-download criteria for the OMID impression.
+  LOADED: 'loaded',
+  // The integration is uing begin-to-render criteria for the OMID impression.
+  BEGIN_TO_RENDER: 'beginToRender',
+  // The integration is using one-pixel criteria for the OMID impression.
+  ONE_PIXEL: 'onePixel',
+  /* The integration is using viewable criteria (1 second for display, 2 seconds
+  for video) for the OMID impression. */
+  VIEWABLE: 'viewable',
+  /* The integration is using audible criteria (2 seconds of playback with
+  non-zero volume) for the OMID impression. */
+  AUDIBLE: 'audible',
+  // The integration's criteria uses none the above for the OMID impression.
+  OTHER: 'other',
 };
 
 /**
@@ -63,15 +98,18 @@ const VideoEventType = {
 const ErrorType = {
   GENERIC: 'generic',
   VIDEO: 'video',
+  MEDIA: 'media',
 };
 
 /**
  * Enum for Ad Session Type. Possible values include; "native" or "html"
+ * or "javascript".
  * @enum {string}
  */
 const AdSessionType = {
   NATIVE: 'native',
   HTML: 'html',
+  JAVASCRIPT: 'javascript',
 };
 
 /**
@@ -121,6 +159,20 @@ const Environment = {
 const InteractionType = {
   CLICK: 'click',
   INVITATION_ACCEPT: 'invitationAccept',
+};
+
+/**
+ * Type of Ad creative.
+ * @enum {string}
+ */
+const CreativeType = {
+  // Creative type needs to be set by JavaScript session script.
+  DEFINED_BY_JAVASCRIPT: 'definedByJavaScript',
+  // Remaining values set creative type in native or JavaScript layer.
+  HTML_DISPLAY: 'htmlDisplay',
+  NATIVE_DISPLAY: 'nativeDisplay',
+  VIDEO: 'video',
+  AUDIO: 'audio',
 };
 
 /**
@@ -192,6 +244,10 @@ const NativeViewKeys = {
   END_X: 'endX',
   END_Y: 'endY',
   OBSTRUCTIONS: 'obstructions',
+  OBSTRUCTION_CLASS: 'obstructionClass',
+  OBSTRUCTION_PURPOSE: 'obstructionPurpose',
+  OBSTRUCTION_REASON: 'obstructionReason',
+  PIXELS: 'pixels',
 };
 
 /**
@@ -232,10 +288,12 @@ exports = {
   AdSessionType,
   AppState,
   CommunicationType,
+  CreativeType,
   ElementMarkup,
   Environment,
   EventOwner,
   ErrorType,
+  ImpressionType,
   InteractionType,
   MeasurementStateChangeSource,
   MediaType,
@@ -243,6 +301,7 @@ exports = {
   OmidImplementer,
   Reason,
   SupportedFeatures,
+  MediaEventType,
   VideoEventType,
   VideoPosition,
   VideoPlayerState,

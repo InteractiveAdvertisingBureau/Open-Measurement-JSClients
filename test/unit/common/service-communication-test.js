@@ -146,6 +146,7 @@ function createMockSameOriginWindow() {
     // Simulate a same-origin window by making properties accessible.
     'location': {
       'hostname': 'example.com',
+      'href': 'https://www.example.com/omsdk',
     },
   });
   return window;

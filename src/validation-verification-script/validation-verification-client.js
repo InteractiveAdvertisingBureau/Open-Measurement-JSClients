@@ -16,7 +16,7 @@ class ValidationVerificationClient {
      * Simple ValidationVerificationClient
      *  - log if support is true
      *  - register to sessionObserver
-     *  - register a callback to all AdEventType, except additional registration to video events
+     *  - register a callback to all AdEventType, except additional registration to media events
      * @param {VerificationClient} verificationClient instance for communication with OMID server
      * @param {string} vendorKey - should be the same when calling sessionStart in order to get verificationParameters
      */
@@ -26,11 +26,15 @@ class ValidationVerificationClient {
         const isSupported = this.verificationClient_.isSupported();
         this.logMessage_('OmidSupported['+isSupported+']', (new Date()).getTime());
         if (isSupported) {
-            const self = this;
             this.verificationClient_.registerSessionObserver((event) => this.sessionObserverCallback_(event), vendorKey);
-            Object.keys(AdEventType).filter((el) => el !== 'VIDEO').forEach( function(el) {
-                self.verificationClient_.addEventListener(AdEventType[el], (event) => self.omidEventListenerCallback_(event));
-            });
+            Object.keys(AdEventType)
+                .filter(
+                    (el) => AdEventType[el] !== AdEventType.MEDIA &&
+                    AdEventType[el] !== AdEventType.VIDEO)
+                .forEach(
+                    (el) => this.verificationClient_.addEventListener(
+                        AdEventType[el],
+                        (event) => this.omidEventListenerCallback_(event)));
         }
     }
 

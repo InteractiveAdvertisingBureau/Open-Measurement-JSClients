@@ -1,6 +1,6 @@
 goog.module('omid.test.common.windowUtils');
 
-const {isCrossOrigin, resolveGlobalContext} = goog.require('omid.common.windowUtils');
+const {evaluatePageUrl, isCrossOrigin, resolveGlobalContext} = goog.require('omid.common.windowUtils');
 const {omidGlobal} = goog.require('omid.common.OmidGlobalProvider');
 
 describe('serviceCommunication', () => {
@@ -48,6 +48,53 @@ describe('serviceCommunication', () => {
          mockWindow['top'] = createMockCrossOriginTopWindow();
          expect(isCrossOrigin(mockWindow['top'])).toBe(true);
        });
+  });
+
+  describe('evaluatePageUrl', () => {
+    it('should be null if OMSDK is in cross-domain iframe where window.top is blocked', () => {
+      const omsdkFrame = createMockCrossOriginTopWindow();
+      omsdkFrame.location = {
+        'href': () => {
+          throw new Error('Blocked a frame from accessing a cross origin frame');
+        },
+      };
+
+      expect(evaluatePageUrl(omsdkFrame)).toBe(null);
+    });
+
+    it('should be null if OMSDK is a cross-domain iframe', () => {
+      const omsdkFrame = createMockCrossOriginTopWindow();
+
+      expect(evaluatePageUrl(omsdkFrame)).toBe(null);
+    });
+
+    it('should be null if OMSDK is in a cross-domain iframe', () => {
+      const topFrame = createMockCrossOriginTopWindow();
+
+      const omsdkFrame = createMockSameOriginWindow();
+      omsdkFrame.top = topFrame;
+      omsdkFrame.parent = topFrame;
+      omsdkFrame.location.href = 'https://www.example.com/child';
+
+      expect(evaluatePageUrl(omsdkFrame)).toBe(null);
+    });
+
+    it('should return pageUrl if OMSDK is NOT in iframe', () => {
+      const omsdkFrame = createMockSameOriginTopWindow();
+      expect(evaluatePageUrl(omsdkFrame))
+        .toBe(omsdkFrame.location.href);
+    });
+
+    it('should return pageUrl if OMSDK is in same-domain iframe', () => {
+      const topFrame = createMockSameOriginTopWindow();
+
+      const omsdkFrame = createMockSameOriginWindow();
+      omsdkFrame.top = topFrame;
+      omsdkFrame.parent = topFrame;
+      omsdkFrame.location.href = 'https://www.example.com/child';
+
+      expect(evaluatePageUrl(omsdkFrame)).toBe(topFrame.location.href);
+    });
   });
 });
 

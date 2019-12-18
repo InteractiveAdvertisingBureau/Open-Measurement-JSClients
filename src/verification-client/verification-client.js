@@ -139,7 +139,7 @@ class VerificationClient {
    *  - stateChange
    *  - impression
    *  - geometryChange
-   *  - video
+   *  - media
    * @param {!AdEventType} eventType Event type to listen to.
    * @param {!EventCallback} functionToExecute Callback to execute when the
    *     event fires.
