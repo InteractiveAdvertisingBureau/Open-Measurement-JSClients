@@ -61,8 +61,10 @@ describe('MediaEventsTest', () => {
   describe('loaded', () => {
     it('should verify vastProperties by calling the argsChecker', () => {
       const vastProperties = new VastProperties(
-          false /* isSkippable */, 0 /* skipOffset */,
-          false /* isAutoPlay */, VideoPosition.PREROLL /* position */);
+        /* isSkippable= */ false,
+        /* skipOffset= */ 0,
+        /* isAutoPlay= */ false,
+        /* position= */ VideoPosition.PREROLL);
       mediaEvents.loaded(vastProperties);
 
       expect(argsChecker.assertNotNullObject).toHaveBeenCalledWith(
@@ -70,13 +72,18 @@ describe('MediaEventsTest', () => {
     });
 
     it('should be relayed to the service', () => {
-      const vastProperties = new VastProperties(
-          false /* isSkippable */, 0 /* skipOffset */,
-          false /* isAutoPlay */, VideoPosition.PREROLL /* position */);
-      mediaEvents.loaded(vastProperties);
+      mediaEvents.loaded(new VastProperties(
+          /* isSkippable= */ true,
+          /* skipOffset= */ 10,
+          /* isAutoPlay= */ true,
+          /* position= */ VideoPosition.PREROLL));
 
-      expect(mockAdSession.sendOneWayMessage).toHaveBeenCalledWith(
-          'loaded', vastProperties);
+      expect(mockAdSession.sendOneWayMessage).toHaveBeenCalledWith('loaded', {
+        isSkippable: true,
+        skipOffset: 10,
+        isAutoPlay: true,
+        position: 'preroll',
+      });
     });
   });
 

@@ -1,5 +1,10 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.3.1 - 2020-1-17
+### Fixed
+- Allow sending contentUrl from cross-domain iframed session scripts.
+- Modify fullstack test case to sandbox session scripts.
+
 ## 1.3.0 - 2019-12-17
 OM SDK 1.3 is a signficant update.  It adds support for some key new use cases for OMID 1.3 while allowing scripts using OMID 1.2 to run correctly.  Integrations (apps and SDKs) using OM SDK will need to make code changes.  See the Migration Guide included in the Android and iOS releases.
 

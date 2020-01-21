@@ -71,15 +71,21 @@ describe('AdEventsTest', () => {
           .toHaveBeenCalledWith('loaded');
     });
 
-    it('video creatives should send a message to the SessionService' +
-      'with VastProperties', () => {
-      const vastProperties = new VastProperties(
-          false /* isSkippable */, 0 /* skipOffset */,
-          false /* isAutoPlay */, VideoPosition.PREROLL /* position */);
+    it(`video creatives should send a message to the SessionService with
+        VastProperties`, () => {
       const adEvents = new AdEvents(mockAdSession);
-      adEvents.loaded(vastProperties);
-      expect(mockAdSession.sendOneWayMessage)
-          .toHaveBeenCalledWith('loaded', vastProperties);
+      adEvents.loaded(new VastProperties(
+          /* isSkippable= */ true,
+          /* skipOffset= */ 10,
+          /* isAutoPlay= */ true,
+          /* position= */ VideoPosition.PREROLL));
+
+      expect(mockAdSession.sendOneWayMessage).toHaveBeenCalledWith('loaded', {
+        isSkippable: true,
+        skipOffset: 10,
+        isAutoPlay: true,
+        position: 'preroll',
+      });
     });
 
     it('should flag the AdSession with the loaded event', () => {

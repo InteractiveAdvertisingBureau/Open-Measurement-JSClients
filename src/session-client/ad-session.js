@@ -181,7 +181,7 @@ class AdSession {
    * @private
    */
   isSendingElementsSupported_() {
-    return this.communication_ ? !this.communication_.isCrossOrigin() :
+    return this.communication_ ? this.communication_.isDirectCommunication() :
                                  this.sessionInterface_.isSupported();
   }
 
@@ -387,14 +387,8 @@ class AdSession {
    */
   injectVerificationScripts_(verificationScriptResources) {
     if (!verificationScriptResources) return;
-    const resourceUrls = verificationScriptResources.map(
-        (resource) => ({
-          'resourceUrl': resource.resourceUrl,
-          'vendorKey': resource.vendorKey,
-          'verificationParameters': resource.verificationParameters,
-        }));
-    this.sendOneWayMessage(
-        'injectVerificationScriptResources', resourceUrls);
+    const resources = verificationScriptResources.map((r) => r.toJSON());
+    this.sendOneWayMessage('injectVerificationScriptResources', resources);
   }
 
   /**
@@ -437,19 +431,15 @@ class AdSession {
   }
 
   /**
-   * Sends the provided contentUrl to the service, only if communication
-   * is direct.
+   * Sends the provided contentUrl to the service.
    * @param {?string} contentUrl
    * @private
    */
   sendContentUrl_(contentUrl) {
-    if (this.isSendingElementsSupported_()) {
-      this.sendOneWayMessage('setContentUrl', contentUrl);
-    } else {
-      this.error(ErrorType.GENERIC,
-          'Session Client setContentUrl called when communication '
-          + 'is not direct');
+    if (!contentUrl) {
+      return;
     }
+    this.sendOneWayMessage('setContentUrl', contentUrl);
   }
 
   /**

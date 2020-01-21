@@ -26,6 +26,15 @@ class VerificationScriptResource {
     this.vendorKey = vendorKey;
     this.verificationParameters = verificationParameters;
   }
+
+  /** @return {!Object} */
+  toJSON() {
+    return {
+      'resourceUrl': this.resourceUrl,
+      'vendorKey': this.vendorKey,
+      'verificationParameters': this.verificationParameters,
+    };
+  }
 }
 
 packageExport('OmidSessionClient.VerificationScriptResource',

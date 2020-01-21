@@ -63,6 +63,15 @@ class Communication {
   }
 
   /**
+   * Return true if the concrete instance of this object is a
+   * DirectCommunication one, false otherwise.
+   * @return {boolean}
+   */
+  isDirectCommunication() {
+    return this.communicationType_ === CommunicationType.DIRECT;
+  }
+
+  /**
    * Returns true if the communication is occuring across origin boundaries.
    * @return {boolean}
    * @abstract

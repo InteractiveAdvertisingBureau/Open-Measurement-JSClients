@@ -53,7 +53,7 @@ class AdEvents {
   loaded(vastProperties = null) {
     this.adSession.creativeLoaded();
     if (vastProperties) {
-      this.adSession.sendOneWayMessage('loaded', vastProperties);
+      this.adSession.sendOneWayMessage('loaded', vastProperties.toJSON());
     } else {
       this.adSession.sendOneWayMessage('loaded');
     }

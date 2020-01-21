@@ -22,6 +22,16 @@ class VastProperties {
     this.isAutoPlay = isAutoPlay;
     this.position = position;
   }
+
+  /** @return {!Object} */
+  toJSON() {
+    return {
+      'isSkippable': this.isSkippable,
+      'skipOffset': this.skipOffset,
+      'isAutoPlay': this.isAutoPlay,
+      'position': this.position,
+    };
+  }
 }
 
 exports = VastProperties;

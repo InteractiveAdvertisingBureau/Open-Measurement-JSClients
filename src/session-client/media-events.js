@@ -46,7 +46,7 @@ class MediaEvents {
   loaded(vastProperties) {
     argsChecker.assertNotNullObject(
         'MediaEvents.loaded.vastProperties', vastProperties);
-    this.adSession.sendOneWayMessage('loaded', vastProperties);
+    this.adSession.sendOneWayMessage('loaded', vastProperties.toJSON());
   }
 
 
