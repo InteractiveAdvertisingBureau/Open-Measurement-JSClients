@@ -27,7 +27,10 @@ class VerificationScriptResource {
     this.verificationParameters = verificationParameters;
   }
 
-  /** @return {!Object} */
+  /**
+   * @override
+   * @return {!Object}
+   */
   toJSON() {
     return {
       'resourceUrl': this.resourceUrl,

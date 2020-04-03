@@ -1,5 +1,9 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.3.2 - 2020-04-02
+### Changed
+- Modified JavaScript type annotations to better catch transpiler warnings.
+
 ## 1.3.1 - 2020-1-17
 ### Fixed
 - Allow sending contentUrl from cross-domain iframed session scripts.

@@ -1,9 +1,9 @@
 goog.module('omid.sessionClient.MediaEvents');
 
 const AdSession = goog.require('omid.sessionClient.AdSession');
+const VastProperties = goog.require('omid.common.VastProperties');
 const argsChecker = goog.require('omid.common.argsChecker');
 const {InteractionType, VideoPlayerState} = goog.require('omid.common.constants');
-const {VastProperties} = goog.require('omid.common.eventTypedefs');
 const {packageExport} = goog.require('omid.common.exporter');
 
 /**

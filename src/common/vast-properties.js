@@ -23,7 +23,10 @@ class VastProperties {
     this.position = position;
   }
 
-  /** @return {!Object} */
+  /**
+   * @override
+   * @return {!Object}
+   */
   toJSON() {
     return {
       'isSkippable': this.isSkippable,

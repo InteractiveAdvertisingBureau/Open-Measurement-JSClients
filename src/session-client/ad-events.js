@@ -1,9 +1,9 @@
 goog.module('omid.sessionClient.AdEvents');
 
 const AdSession = goog.require('omid.sessionClient.AdSession');
+const VastProperties = goog.require('omid.common.VastProperties');
 const argsChecker = goog.require('omid.common.argsChecker');
 const {packageExport} = goog.require('omid.common.exporter');
-const {VastProperties} = goog.require('omid.common.eventTypedefs');
 
 /**
  * Ad event API enabling the JS component to signal to all verification

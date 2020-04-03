@@ -1,11 +1,11 @@
 goog.module('omid.sessionClient.VideoEvents');
 
 const AdSession = goog.require('omid.sessionClient.AdSession');
+const MediaEvents = goog.require('omid.sessionClient.MediaEvents');
+const VastProperties = goog.require('omid.common.VastProperties');
 const argsChecker = goog.require('omid.common.argsChecker');
 const {InteractionType, VideoPlayerState} = goog.require('omid.common.constants');
-const {VastProperties} = goog.require('omid.common.eventTypedefs');
 const {packageExport} = goog.require('omid.common.exporter');
-const MediaEvents = goog.require('omid.sessionClient.MediaEvents');
 
 /**
  * Provides a complete list of supported JS video events. Using this event API
