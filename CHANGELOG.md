@@ -1,5 +1,8 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.3.3 - 2020-04-15
+- Update version to match JS Service, Android, and iOS SDKs; no changes from 1.3.2
+
 ## 1.3.2 - 2020-04-02
 ### Changed
 - Modified JavaScript type annotations to better catch transpiler warnings.
