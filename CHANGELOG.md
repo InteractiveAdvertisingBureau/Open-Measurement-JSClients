@@ -1,5 +1,12 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.3.4 - 2020-04-23
+Session client APIs that were deprecated in 1.3.0 have been fully removed.  
+See [the service changelog](../CHANGELOG.md) for changes visible to session scripts.
+
+There are no changes to the verification client API.
+Verification scripts using the client library for 1.2.x or 1.3.x continue to fully interoperate with any version of the OM SDK JavaScript service, including old releases and this new release.
+
 ## 1.3.3 - 2020-04-15
 - Update version to match JS Service, Android, and iOS SDKs; no changes from 1.3.2
 

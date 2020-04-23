@@ -2,7 +2,7 @@ goog.module('omid.test.sessionClient.OmidJsSessionInterface');
 
 const OmidJsSessionInterface = goog.require('omid.sessionClient.OmidJsSessionInterface');
 const VastProperties = goog.require('omid.common.VastProperties');
-const {ErrorType, VideoEventType, VideoPosition} = goog.require('omid.common.constants');
+const {ErrorType, MediaEventType, VideoPosition} = goog.require('omid.common.constants');
 
 /** @private {?OmidJsSessionInterface} */
 let omidJsSessionInterface;
@@ -32,10 +32,10 @@ describe('OmidJsSessionInterface', () => {
   });
   describe('sendMessage', () => {
     beforeEach(() => {
-      const mockVideoEvents = {};
-      for (const videoEventType in VideoEventType) {
-        const videoEventName = VideoEventType[videoEventType];
-        mockVideoEvents[videoEventName] = jasmine.createSpy(videoEventName);
+      const mockMediaEvents = {};
+      for (const mediaEventType in MediaEventType) {
+        const mediaEventName = MediaEventType[mediaEventType];
+        mockMediaEvents[mediaEventName] = jasmine.createSpy(mediaEventName);
       }
       mockInterface = {
         'registerSessionObserver': jasmine.createSpy('registerSessionObserver'),
@@ -43,7 +43,7 @@ describe('OmidJsSessionInterface', () => {
         'adEvents': {
           'impressionOccurred': jasmine.createSpy('impressionOccurred'),
         },
-        'videoEvents': mockVideoEvents,
+        'mediaEvents': mockMediaEvents,
       };
       mockScope = /** @type {!Window} */ ({
         'omidSessionInterface': mockInterface,
@@ -63,12 +63,12 @@ describe('OmidJsSessionInterface', () => {
       expect(mockInterface['reportError']).toHaveBeenCalledWith(
           ErrorType.VIDEO, 'Could not load video.');
     });
-    it('routes videoEvents to the videoEvents node', () => {
+    it('routes mediaEvents to the mediaEvents node', () => {
       const vastProperties = new VastProperties(
         /* isSkippable= */false, /* skipOffset= */ 0, /* isAutoPlay= */ false,
         VideoPosition.PREROLL);
       omidJsSessionInterface.sendMessage('loaded', null, [vastProperties]);
-      expect(mockInterface['videoEvents']['loaded'])
+      expect(mockInterface['mediaEvents']['loaded'])
           .toHaveBeenCalledWith(vastProperties);
     });
     it('routes adEvents to the adEvents node', () => {

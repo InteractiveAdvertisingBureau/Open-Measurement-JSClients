@@ -59,12 +59,6 @@ const MediaEventType = {
 };
 
 /**
- * @enum {string}
- */
-
- const VideoEventType = MediaEventType;
-
-/**
  * Enum for impression type
  * @enum {string}
  */
@@ -302,7 +296,6 @@ exports = {
   Reason,
   SupportedFeatures,
   MediaEventType,
-  VideoEventType,
   VideoPosition,
   VideoPlayerState,
 };

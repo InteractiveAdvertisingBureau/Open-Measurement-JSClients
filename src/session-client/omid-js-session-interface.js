@@ -1,6 +1,6 @@
 goog.module('omid.sessionClient.OmidJsSessionInterface');
 
-const {VideoEventType} = goog.require('omid.common.constants');
+const {MediaEventType} = goog.require('omid.common.constants');
 const {omidGlobal} = goog.require('omid.common.OmidGlobalProvider');
 
 /**
@@ -10,7 +10,7 @@ const {omidGlobal} = goog.require('omid.common.OmidGlobalProvider');
 const ExportedNodeKeys = {
   ROOT: 'omidSessionInterface',
   AD_EVENTS: 'adEvents',
-  VIDEO_EVENTS: 'videoEvents',
+  MEDIA_EVENTS: 'mediaEvents',
 };
 
 /**
@@ -22,11 +22,11 @@ const MethodNameMap = {
 };
 
 /**
- * A list of method names that fall under the VideoEvents key.
+ * A list of method names that fall under the MediaEvents key.
  * @const {!Array<string>}
  */
-const VideoEventMethodNames =
-    Object.keys(VideoEventType).map((key) => VideoEventType[key]);
+const MediaEventMethodNames =
+    Object.keys(MediaEventType).map((key) => MediaEventType[key]);
 
 /**
  * A list of method names that fall under the AdEvents key.
@@ -81,8 +81,8 @@ class OmidJsSessionInterface {
     if (AdEventMethodNames.indexOf(method) >= 0) {
       interfaceNode = interfaceNode[ExportedNodeKeys.AD_EVENTS];
     }
-    if (VideoEventMethodNames.indexOf(method) >= 0) {
-      interfaceNode = interfaceNode[ExportedNodeKeys.VIDEO_EVENTS];
+    if (MediaEventMethodNames.indexOf(method) >= 0) {
+      interfaceNode = interfaceNode[ExportedNodeKeys.MEDIA_EVENTS];
     }
     const interfaceMethod = interfaceNode[method];
     if (!interfaceMethod) {

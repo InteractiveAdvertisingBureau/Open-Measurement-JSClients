@@ -33,24 +33,6 @@ class MediaEvents {
   }
 
   /**
-   * Note: This method will be deprecated in OMSDK 1.3.2 release.
-   * Use AdEvents.loaded().
-   *
-   * Notifies all media listeners that media content has been loaded and ready
-   * to start playing.
-   * @param {!VastProperties} vastProperties containing static information
-   *   about the media placement.
-   * @throws error if the supplied VAST properties is undefined or null.
-   * @see VastProperties
-   */
-  loaded(vastProperties) {
-    argsChecker.assertNotNullObject(
-        'MediaEvents.loaded.vastProperties', vastProperties);
-    this.adSession.sendOneWayMessage('loaded', vastProperties.toJSON());
-  }
-
-
-  /**
    * Notifies all media listeners that media content has started playing.
    * @param {number} duration of the selected media media (in seconds).
    * @param {number} mediaPlayerVolume from the native media player with a
