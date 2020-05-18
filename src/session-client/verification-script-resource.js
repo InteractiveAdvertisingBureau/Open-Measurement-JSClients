@@ -6,6 +6,7 @@ const {packageExport} = goog.require('omid.common.exporter');
 /**
  * Represents a verification script resource that comes in a VAST extension for
  * VAST versions <= 3 or a verification node for VAST versions >= 4
+ * @public
  */
 class VerificationScriptResource {
   /**

@@ -6,15 +6,19 @@ const {VideoPosition} = goog.require('omid.common.constants');
  * Captures key VAST properties so they can be shared with all registered
  * verification providers.
  * @unrestricted
+ * @public
  */
 class VastProperties {
   /**
-   * @param {boolean} isSkippable indicating whether the video player will
-   *   allow the video content to be skipped.
-   * @param {number} skipOffset indicating when the skip button will be
-   *   displayed if the video content is skippable.
-   * @param {boolean} isAutoPlay whether the video will auto-play content,
-   * @param {!VideoPosition} position of the video in relation to other content.
+   * @param {boolean} isSkippable Whether the ad can be skipped by the user.
+   * @param {number} skipOffset The number of seconds after which the player
+   *     makes the UI to skip the ad available to the user. Corresponds to the
+   *     'skipoffset' attribute from VAST.
+   *     Required when skippable is true. Otherwise should be set to zero.
+   * @param {boolean} isAutoPlay Whether the ad playback will be automatically
+   *     started without input from the user.
+   * @param {!VideoPosition} position Position of the ad in relation to other
+   *     content.
    */
   constructor(isSkippable, skipOffset, isAutoPlay, position) {
     this.isSkippable = isSkippable;

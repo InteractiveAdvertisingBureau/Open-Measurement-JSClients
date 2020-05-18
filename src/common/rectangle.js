@@ -2,6 +2,7 @@ goog.module('omid.common.Rectangle');
 
 /**
  * A class which holds rectangle data.
+ * @public
  */
 class Rectangle {
   /**

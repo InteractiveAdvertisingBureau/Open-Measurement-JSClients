@@ -327,6 +327,7 @@ let EventData;
   *   geometry: !Geometry,
   *   onScreenGeometry: !OnScreenGeometry,
   *   reasons: !Array<!constants.Reason>,
+  *   measuringElement: (boolean|undefined),
   * }}
  */
 let AdViewEventData;

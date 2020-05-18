@@ -39,6 +39,9 @@ npm run lint
 { fancyPrint "Running unit tests for public OMSDK components"; } 2>/dev/null
 npm run test
 
+{ fancyPrint "Ensuring that documentation can be generated"; } 2>/dev/null
+npm run jsdoc
+
 # Run the build to produce final deliverables
 { fancyPrint "Building and packaging final deliverables for public OMSDK components"; } 2>/dev/null
 npm run build

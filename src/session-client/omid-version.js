@@ -3,6 +3,9 @@ goog.module('omid.sessionClient.OmidVersion');
 const argsChecker = goog.require('omid.common.argsChecker');
 const {packageExport} = goog.require('omid.common.exporter');
 
+// TODO(OMSDK-715): This class seems to be unused, so it should be removed from
+// the next version of OM SDK.
+
 /**
  * Represents the Version of OMID Session Client.
  */

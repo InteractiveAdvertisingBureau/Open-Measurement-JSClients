@@ -1,6 +1,6 @@
 {
   "name": "open-measurement-jsclients",
-  "version": "1.3.4",
+  "version": "1.3.5",
   "description": "JavaScript common and client components of OM SDK",
   "watch": {
     "test-unit": {
@@ -35,7 +35,8 @@
     "pretest-validation-verification-script": "npm run build-validation-verification-script-tests",
     "test-validation-verification-script": "npm run validation-verification-script-tests",
     "validation-verification-script-tests": "npm run jasmine-validation-verification-script",
-    "jasmine-validation-verification-script": "jasmine ./bin/Omid-Validation-Verification-Script-Tests.js"
+    "jasmine-validation-verification-script": "jasmine ./bin/Omid-Validation-Verification-Script-Tests.js",
+    "jsdoc": "rimraf jsdoc/ && jsdoc -c jsdoc.json -d jsdoc/"
   },
   "repository": {
     "type": "git",
@@ -68,6 +69,7 @@
     "gulp-concat": "^2.6.1",
     "gulp-zip": "^4.2.0",
     "jasmine": "^2.7.0",
+    "jsdoc": "^3.6.4",
     "karma": "^4.1.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^1.1.0",

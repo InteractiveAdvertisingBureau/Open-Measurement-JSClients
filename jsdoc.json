@@ -1,0 +1,28 @@
+{
+  "opts": {
+    "access": "public"
+  },
+  "source": {
+      "include": [
+        "src/common/constants.js",
+        "src/common/rectangle.js",
+        "src/common/vast-properties.js",
+        "src/session-client/ad-events.js",
+        "src/session-client/ad-session.js",
+        "src/session-client/context.js",
+        "src/session-client/media-events.js",
+        "src/session-client/partner.js",
+        "src/session-client/verification-script-resource.js",
+        "src/verification-client/verification-client.js"
+      ]
+  },
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc", "closure"]
+  },
+  "templates": {
+    "default": {
+      "outputSourceFiles": false
+    }
+  }
+}

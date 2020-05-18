@@ -10,10 +10,11 @@ const {packageExport} = goog.require('omid.common.exporter');
  * providers when key events have occurred. The OM SDK JS service will allow
  * only one ad events instance to be associated with the ad session and any
  * attempt to create multiple instances will result in an error.
+ * @public
  */
 class AdEvents {
   /**
-   * @param {!AdSession} adSession instance to be associated with the ad events.
+   * @param {!AdSession} adSession The ad session instance for sending events.
    * @throws error if the supplied ad session is null.
    * @throws error if an ad events instance has already been registered with
    *   the ad session.
@@ -33,6 +34,7 @@ class AdEvents {
    * Notifies all verification providers that an impression event should be
    * recorded.
    * @throws error if the native ad session has not been started.
+   * @public
    */
   impressionOccurred() {
     this.adSession.assertSessionRunning();
@@ -48,7 +50,7 @@ class AdEvents {
    * @param {?VastProperties=} vastProperties containing static information
    * about the video placement. This is non-null for video/audio creatives and null
    * for display creatives.
-   *
+   * @public
    */
   loaded(vastProperties = null) {
     this.adSession.creativeLoaded();

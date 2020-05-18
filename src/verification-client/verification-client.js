@@ -45,17 +45,20 @@ function getThirdPartyOmid() {
 }
 
 /**
- * OMID VerificationClient.
  * Allows verification scripts to interact with the OM SDK Service.
+ * @public
  */
 class VerificationClient {
   /**
-   * @param {?Communication<?>=} communication Communication object that the
-   *     VerificationClient will use to talk to the VerificationService. This
-   *     parameter is useful for testing. If left unspecified, the correct
-   *     Communication will be constructed and used.
+   * @param {?Communication<?>=} communication This parameter is for OM SDK
+   *    internal use only and should be omitted.
    */
   constructor(communication = undefined) {
+    /**
+     * Communication object that the VerificationClient will use to talk to the
+     * VerificationService. This parameter is useful for testing. If left
+     * unspecified, the correct Communication will be constructed and used.
+     */
     this.communication = communication ||
         startVerificationServiceCommunication(resolveGlobalContext());
     if (this.communication) {
@@ -103,23 +106,32 @@ class VerificationClient {
   /**
    * Checks if OMID is available.
    * @return {boolean}
+   * @public
    */
   isSupported() {
     return Boolean(this.communication || this.omid3p);
   }
 
+  // TODO(OMSDK-718): Make the declarations in event-typedef.js compatible with
+  // JSDoc, and remove the event handler field descriptions below.
+
   /**
-   * Registers a callback for  session start and finish events triggered by the
-   * native ad session.
-   *
-   * This enables the JS component to keep in sync with the native layer - for
-   * example, ensure that the ad session has started prior to recording the
-   * impression event.
-   * @param {SessionObserverCallback} functionToExecute Called once
-   *     either the session start or finish has been received.
+   * Subscribes to all session events ('sessionStart', 'sessionError', and
+   * 'sessionFinish'). This method also signals that the verification script has
+   * loaded and is ready to receive events, so it should be called upon
+   * initialization.
+   * The event handler will be called with a single argument that has the
+   * following fields:
+   *   'adSessionId': string,
+   *   'timestamp': number,
+   *   'type': string,
+   *   'data': object
+   * @param {SessionObserverCallback} functionToExecute An event handler which
+   *     will be invoked on session events.
    * @param {string=} vendorKey
    * @throws error if the function to execute is undefined or null.
    * @throws error if the vendor key is undefined, null or blank.
+   * @public
    */
   registerSessionObserver(functionToExecute, vendorKey = undefined) {
     assertFunction('functionToExecute', functionToExecute);
@@ -133,18 +145,20 @@ class VerificationClient {
   }
 
   /**
-   * Registers an event listener.
-   *
-   * Possible event types include:
-   *  - stateChange
-   *  - impression
-   *  - geometryChange
-   *  - media
-   * @param {!AdEventType} eventType Event type to listen to.
-   * @param {!EventCallback} functionToExecute Callback to execute when the
-   *     event fires.
+   * Subscribes to ad lifecycle and metric events.
+   * The event handler will be called with a single argument that has the
+   * following fields:
+   *   'adSessionId': string,
+   *   'timestamp': number,
+   *   'type': string,
+   *   'data': object
+   * @param {!AdEventType} eventType The event type to subscribe this listener
+   *     to.
+   * @param {!EventCallback} functionToExecute An event handler to be invoked
+   *     when the given event type is triggered.
    * @throws error if the event type is undefined, null or blank.
    * @throws error if the function to execute is undefined or null.
+   * @public
    */
   addEventListener(eventType, functionToExecute) {
     assertTruthyString('eventType', eventType);
@@ -161,12 +175,14 @@ class VerificationClient {
    *
    * This can be used to transmit data to a remote server by requesting a URL
    * with the payload embeded into the URL as query arg(s).
-   * @param {string} url which should be requested.
-   * @param {function()=} successCallback function to be executed when the
-   *     request has been successful.
-   * @param {function()=} failureCallback function to be executed when the
-   *     request has failed.
+   * @param {string} url The URL to be requested.
+   * @param {function()=} successCallback Optional callback to be executed if
+   *     the request was successfully received (2xx response code).
+   * @param {function()=} failureCallback Optional callback to be executed if
+   *     the request was not successfully received (non-success response code or
+   *     other error).
    * @throws error if the url is undefined, null or blank.
+   * @public
    */
   sendUrl(url, successCallback = undefined, failureCallback = undefined) {
     assertTruthyString('url', url);
@@ -218,17 +234,19 @@ class VerificationClient {
    * environment as the verification provider.
    *
    * For all DOM based environments (incl. Android native ad sessions) this will
-   * append <script> elements to the DOM.
+   * append `script` elements to the DOM.
    * For native ad sessions this will delegate responsibility to the OM SDK
    * library which will be responsible for downloading and injecting the
    * JavaScript content into the execution environment.
-   * @param {string} url of the JavaScript resource you would like injected into
-   *     the execution environment.
-   * @param {function()=} successCallback Called when the HTTP request is
-   *     successful. Does not indicate whether the script evaluation was
-   *     successful.
-   * @param {function()=} failureCallback
+   * @param {string} url The URL of the JavaScript resource to load into the
+   *     environment.
+   * @param {function()=} successCallback Optional callback to be executed if
+   *     the HTTP request was successful. Does not indicate whether the script
+   *     evaluation was successful.
+   * @param {function()=} failureCallback Optional callback to be executed if
+   *     the script failed to load.
    * @throws error if the supplied URL is undefined, null or blank.
+   * @public
    */
   injectJavaScriptResource(
       url, successCallback, failureCallback) {
@@ -294,16 +312,18 @@ class VerificationClient {
   }
 
   /**
-   * Calls a function after the specified time has elapsed.
-   * @param {function()} functionToExecute which should be executed once the
-   *     timeout has been reached.
-   * @param {number} timeInMillis which you would like to wait before the
-   *     callback function will be executed
-   * @return {number} a unique timeout id which can be used with clearTimeout to
-   *     cancel the function execution.
+   * Schedules a function to be called a function after the specified delay.
+   * Provides behavior equivalent to the window.setTimeout web API method.
+   * @param {function()} functionToExecute The callback to execute after the
+   *     delay.
+   * @param {number} timeInMillis The number of milliseconds to wait before
+   *     invoking the callback.
+   * @return {number} A unique ID which can be used with clearTimeout to cancel
+   *     the function execution.
    * @throws error if the function to execute is undefined or null.
    * @throws error if the time in millis is undefined, null or a non-positive
    *     number.
+   * @public
    */
   setTimeout(functionToExecute, timeInMillis) {
     assertFunction('functionToExecute', functionToExecute);
@@ -319,10 +339,13 @@ class VerificationClient {
   }
 
   /**
-   * Cancels a timeout before it has been executed.
-   * @param {number} timeoutId which should be canceled.
-   * @throws error if the timeout id is undefined, null or a non-positive
+   * Cancels a timeout before its callback has been executed.
+   * Provides behavior equivalent to the window.clearTimeout web API method.
+   * @param {number} timeoutId The ID returned from setTimeout of the callback
+   *     to cancel.
+   * @throws error if the timeout ID is undefined, null or a non-positive
    *     number.
+   * @public
    */
   clearTimeout(timeoutId) {
     assertPositiveNumber('timeoutId', timeoutId);
@@ -337,15 +360,16 @@ class VerificationClient {
 
   /**
    * Schedules a function to be called repeatedly at a specified interval.
-   * @param {function()} functionToExecute which should be executed once the
-   *     interval has been reached.
-   * @param {number} timeInMillis which you would like to wait before the
-   *     callback function will be executed
-   * @return {number} a unique interval id which can be used to cancel the
-   *     function execution.
+   * Provides behavior equivalent to the window.setInterval web API method.
+   * @param {function()} functionToExecute The callback to execute repeatedly.
+   * @param {number} timeInMillis The number of milliseconds to wait between
+   *     callback invocations.
+   * @return {number} A unique ID which can be used with clearInterval to cancel
+   *     the function execution.
    * @throws error if the function to execute is undefined or null.
    * @throws error if the time in millis is undefined, null or a non-positive
    *     number.
+   * @public
    */
   setInterval(functionToExecute, timeInMillis) {
     assertFunction('functionToExecute', functionToExecute);
@@ -361,10 +385,12 @@ class VerificationClient {
   }
 
   /**
-   * Stops a function execution interval set by `setInterval`.
-   * @param {number} intervalId which should be stopped.
-   * @throws error if the timeout id is undefined, null or a non-positive
+   * Cancels further execution of a repeated callback.
+   * @param {number} intervalId The ID returned from setInterval of the callback
+   *     to cancel.
+   * @throws error if the interval ID is undefined, null or a non-positive
    *     number.
+   * @public
    */
   clearInterval(intervalId) {
     assertPositiveNumber('intervalId', intervalId);

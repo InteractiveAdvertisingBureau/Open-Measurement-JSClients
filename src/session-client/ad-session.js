@@ -33,18 +33,16 @@ const SESSION_CLIENT_VERSION = Version;
  *    verification script resources and/or publishing OMID video events.
  *  - display ad session relying on a separate JS component to handle the
  *    impression event.
+ * @public
  */
 class AdSession {
   /**
    * @param {!Context} context that provides the required information for
    *   initialising the JS ad session.
-   * @param {?Communication<?>=} communication Communication object that the
-   *     VerificationClient will use to talk to the VerificationService. This
-   *     parameter is useful for testing. If left unspecified, the correct
-   *     Communication will be constructed and used.
-   * @param {?OmidJsSessionInterface=} sessionInterface Communicates with the
-   *     OMID JS Session Interface. Used for testing, and defaults to a
-   *     newly constructed value.
+   * @param {?Communication<?>=} communication This parameter is for OM SDK
+   *    internal use only and should be omitted.
+   * @param {?OmidJsSessionInterface=} sessionInterface This parameter is for
+   *    OM SDK internal use only and should be omitted.
    * @throws error if the supplied context is undefined or null.
    */
   constructor(
@@ -57,11 +55,22 @@ class AdSession {
     /** @private {boolean} */
     this.impressionOccurred_ = false;
 
-    /** @private @const {?Communication} */
+    /**
+     * Communication object that the VerificationClient will use to talk to the
+     * VerificationService. This parameter is used for testing.  If left
+     * unspecified, the correct Communication will be constructed and used.
+     * @const {?Communication}
+     * @private
+     */
     this.communication_ = communication ||
         startSessionServiceCommunication(resolveGlobalContext());
 
-    /** @private @const {!OmidJsSessionInterface} */
+    /**
+     * Communicates with the OMID JS Session Interface. Used for testing, and
+     * defaults to a newly constructed value.
+     * @const {!OmidJsSessionInterface}
+     * @private
+     */
     this.sessionInterface_ = sessionInterface || new OmidJsSessionInterface();
 
     /** @private {boolean} */
@@ -104,7 +113,10 @@ class AdSession {
   }
 
   /**
-   * @param {!CreativeType} creativeType
+   * Specifies the type of creative to be rendered in this session.
+   * Requires that the native layer set the creative type to
+   * DEFINED_BY_JAVASCRIPT.
+   * @param {!CreativeType} creativeType The type of creative.
    * @throws error if arg type is DEFINED_BY_JAVASCRIPT.
    * @throws error if impression has already occured.
    * @throws error if creative has already loaded.
@@ -112,6 +124,7 @@ class AdSession {
    * other than DEFINED_BY_JAVASCRIPT.
    * @throws error if native integration has started and
    * is using OMID 1.2 or earlier.
+   * @public
    */
   setCreativeType(creativeType) {
     if (creativeType === CreativeType.DEFINED_BY_JAVASCRIPT) {
@@ -136,13 +149,17 @@ class AdSession {
   }
 
   /**
-   * @param {!ImpressionType} impressionType
+   * Specifies the type of impression to be triggered in this session.
+   * Requires that the native layer set the impression type to
+   * DEFINED_BY_JAVASCRIPT.
+   * @param {!ImpressionType} impressionType The type of impression.
    * @throws error if arg type is DEFINED_BY_JAVASCRIPT
    * @throws error if impression has already occurred
    * @throws error if impressionType was already defined to something
    * other than DEFINED_BY_JAVASCRIPT.
    * @throws error if native integration has started and is
    * using OMID 1.2 or earlier.
+   * @public
    */
   setImpressionType(impressionType) {
     if (impressionType === ImpressionType.DEFINED_BY_JAVASCRIPT) {
@@ -169,6 +186,7 @@ class AdSession {
   /**
    * Returns true if OMID is available, false otherwise.
    * @return {boolean}
+   * @public
    */
   isSupported() {
     return Boolean(this.communication_) || this.sessionInterface_.isSupported();
@@ -185,23 +203,33 @@ class AdSession {
                                  this.sessionInterface_.isSupported();
   }
 
+  // TODO(OMSDK-718): Make the declarations in event-typedef.js compatible with
+  // JSDoc, and remove the event handler field descriptions below.
+
   /**
-   * Registers new observer for session events. The registered observer will be
-   * notified for any session start or session finish events.
-   * @param {function(!Event)} functionToExecute
+   * Subscribes to all session events ('sessionStart', 'sessionError', and
+   * 'sessionFinish').
+   * The event handler will be called with a single argument that has the
+   * following fields:
+   *   'adSessionId': string,
+   *   'timestamp': number,
+   *   'type': string,
+   *   'data': object
+   * @param {function(!Event)} functionToExecute An event handler which will be
+   *     invoked on session events.
+   * @public
    */
   registerSessionObserver(functionToExecute) {
     this.sendMessage('registerSessionObserver', functionToExecute);
   }
 
   /**
-   * Allows JS ad session clients to notify verification clients of any errors.
-   * Possible errorType values include; “GENERIC”, “VIDEO”, "MEDIA".
-   *
-   * When calling this method all verification clients will be notified via the
-   * sessionError session observer event.
-   * @param {!ErrorType} errorType
-   * @param {string} message
+   * Notifies that an error has occurred on the ad session.
+   * All verification clients will be notified via the 'sessionError' session
+   * observer event.
+   * @param {!ErrorType} errorType High level error type.
+   * @param {string} message Description of the session error.
+   * @public
    */
   error(errorType, message) {
     this.sendOneWayMessage('sessionError', errorType, message);
@@ -447,6 +475,7 @@ class AdSession {
    * slotElement or the cross domain iframe the creative's DOM element is in.
    * @param {?Rectangle} elementBounds
    * @throws Error if the elementBounds parameter is null or undefined.
+   * @public
    */
   setElementBounds(elementBounds) {
     argsChecker.assertNotNullObject('AdSession.elementBounds', elementBounds);

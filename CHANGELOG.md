@@ -1,6 +1,11 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.3.5 - 2020-05-07
+### Changed
+- Updated JSDoc for SessionClient and VerificationClient with full OMID API documentation.  No changes to code behavior.
+
 ## 1.3.4 - 2020-04-23
+### Removed
 Session client APIs that were deprecated in 1.3.0 have been fully removed.  
 See [the service changelog](../CHANGELOG.md) for changes visible to session scripts.
 

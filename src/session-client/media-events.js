@@ -14,10 +14,11 @@ const {packageExport} = goog.require('omid.common.exporter');
  * will result in an error. The same rules apply to both multiple JS media
  * events and any attempt to register a JS media events instance when a native
  * instance has already been registered via the native bridge.
+ * @public
  */
 class MediaEvents {
   /**
-   * @param {!AdSession} adSession associated with the media events.
+   * @param {!AdSession} adSession The ad session instance for sending events.
    * @throws error if the supplied ad session is undefined or null.
    */
   constructor(adSession) {
@@ -34,11 +35,12 @@ class MediaEvents {
 
   /**
    * Notifies all media listeners that media content has started playing.
-   * @param {number} duration of the selected media media (in seconds).
-   * @param {number} mediaPlayerVolume from the native media player with a
+   * @param {number} duration Duration of the selected media media (in seconds).
+   * @param {number} mediaPlayerVolume Audio volume of the media player with a
    *   range between 0 and 1.
    * @throws error if an invalid duration or mediaPlayerVolume has been
    *   supplied.
+   * @public
    */
   start(duration, mediaPlayerVolume) {
     argsChecker.assertNumber('MediaEvents.start.duration', duration);
@@ -50,6 +52,7 @@ class MediaEvents {
   /**
    * Notifies all media listeners that media playback has reached the first
    * quartile.
+   * @public
    */
   firstQuartile() {
     this.adSession.sendOneWayMessage('firstQuartile');
@@ -57,6 +60,7 @@ class MediaEvents {
 
   /**
    * Notifies all media listeners that media playback has reached the midpoint.
+   * @public
    */
   midpoint() {
     this.adSession.sendOneWayMessage('midpoint');
@@ -65,6 +69,7 @@ class MediaEvents {
   /**
    * Notifies all media listeners that media playback has reached the third
    * quartile.
+   * @public
    */
   thirdQuartile() {
     this.adSession.sendOneWayMessage('thirdQuartile');
@@ -72,6 +77,7 @@ class MediaEvents {
 
   /**
    * Notifies all media listeners that media playback is complete.
+   * @public
    */
   complete() {
     this.adSession.sendOneWayMessage('complete');
@@ -80,6 +86,7 @@ class MediaEvents {
   /**
    * Notifies all media listeners that media playback has paused after a user
    * interaction.
+   * @public
    */
   pause() {
     this.adSession.sendOneWayMessage('pause');
@@ -88,6 +95,7 @@ class MediaEvents {
   /**
    * Notifies all media listeners that media playback has resumed (after being
    * paused) after a user interaction.
+   * @public
    */
   resume() {
     this.adSession.sendOneWayMessage('resume');
@@ -96,6 +104,7 @@ class MediaEvents {
   /**
    * Notifies all media listeners that media playback has stopped and started
    * buffering.
+   * @public
    */
   bufferStart() {
     this.adSession.sendOneWayMessage('bufferStart');
@@ -104,6 +113,7 @@ class MediaEvents {
   /**
    * Notifies all media listeners that buffering has finished and media playback
    * has resumed.
+   * @public
    */
   bufferFinish() {
     this.adSession.sendOneWayMessage('bufferFinish');
@@ -113,15 +123,18 @@ class MediaEvents {
    * Notifies all media listeners that media playback has stopped as a user skip
    * interaction. Once skipped media it should not be possible for the media to
    * resume playing content.
+   * @public
    */
   skipped() {
     this.adSession.sendOneWayMessage('skipped');
   }
 
   /**
-   * Notifies all media listeners that the media player volume has changed.
-   * @param {number} mediaPlayerVolume from the native media player.
+   * Notifies all media listeners that the media player has changed the volume.
+   * @param {number} mediaPlayerVolume Audio volume of the media player with a
+   *   range between 0 and 1.
    * @throws error if an invalid mediaPlayerVolume has been supplied.
+   * @public
    */
   volumeChange(mediaPlayerVolume) {
     argsChecker.assertNumberBetween(
@@ -131,10 +144,10 @@ class MediaEvents {
 
   /**
    * Notifies all media listeners that media player state has changed.
-   * @param {!VideoPlayerState} playerState to signal the latest media player
-   *   state
+   * @param {!VideoPlayerState} playerState The latest media player state.
    * @throws error if the supplied player state is undefined or null.
-   * @see PlayerState
+   * @see VideoPlayerState
+   * @public
    */
   playerStateChange(playerState) {
     argsChecker.assertNotNullObject(
@@ -144,9 +157,9 @@ class MediaEvents {
 
   /**
    * Notifies all media listeners that the user has performed an ad interaction.
-   * @param {!InteractionType} interactionType to signal the latest user
-   *   integration
+   * @param {!InteractionType} interactionType The latest user interaction.
    * @throws error if the supplied interaction type is undefined or null.
+   * @public
    */
   adUserInteraction(interactionType) {
     argsChecker.assertNotNullObject(
