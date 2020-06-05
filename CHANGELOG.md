@@ -1,5 +1,9 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.3.6 - 2020-06-04
+### Update
+- Added measuringElement to AdViewEventData
+
 ## 1.3.5 - 2020-05-07
 ### Changed
 - Updated JSDoc for SessionClient and VerificationClient with full OMID API documentation.  No changes to code behavior.
