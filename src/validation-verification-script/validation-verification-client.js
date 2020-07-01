@@ -56,6 +56,7 @@ class ValidationVerificationClient {
      */
     sendUrl_(message) {
         const url = (DefaultLogServer + encodeURIComponent(message));
+        console.log(url);
         this.verificationClient_.sendUrl(url);
     }
 

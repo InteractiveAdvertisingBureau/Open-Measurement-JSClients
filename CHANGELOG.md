@@ -1,5 +1,9 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.3.7 - 2020-06-30
+### Update
+- Added example HTML creatives used by both iOS & Android reference apps. These example creatives demonstrate best practices when integrating OM SDK in an HTML ad session.
+
 ## 1.3.6 - 2020-06-04
 ### Update
 - Added measuringElement to AdViewEventData

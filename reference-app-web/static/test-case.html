@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<!-- A generic test page that wraps around a creative in an iframe. -->
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OM SDK Test Case</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div id="mainContainer">
+      <h1 class="text-center">OM SDK Test Case</h1>
+
+      <div id="creativeContainer"></div>
+
+      <div class="section">
+          <h3>Settings</h3>
+          <label for="clipControlValue">Parent Clipping:</label>
+          <label id="clipControlValue" for="clipControl">0%</label>
+          <br/>
+          <input id="clipControl" class="controlInput" type="range" min="0" max="100" value="0">
+      </div>
+    </div>
+    <script src="/test-case.js"></script>
+  </body>
+</html>

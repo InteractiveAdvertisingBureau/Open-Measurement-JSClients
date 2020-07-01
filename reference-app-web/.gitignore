@@ -1,0 +1,18 @@
+bin/
+dist/
+node_modules/
+package-lock.json
+
+npm-debug.log
+*.orig
+*err_pid*.log
+
+# Intellij stuff
+.idea/*
+*.iml
+
+# Backup files
+*.swp
+*.swo
+*.bak
+.DS_Store

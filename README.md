@@ -45,6 +45,15 @@ into the `omid-validation-verification-script-v1.js` binary.
 Contains all source code files that comprise the OMID JS Verification Client and
 go into the `omid-verification-client-v1.js` binary.
 
+### `creatives/`
+Contains all source code files that comprise the HTML creatives used by reference Apps.
+
+### `creatives/display/`
+Contains all source code files that comprise the display HTML creative used by reference Apps.
+
+### `creatives/video/`
+Contains all source code files that comprise the video HTML creative used by reference Apps.
+
 ### `test/unit/`
 Contains utility files as well as subdirectories of source code files used for
 unit tests.
@@ -111,10 +120,10 @@ After this step, the repo is ready to be built.
 
 ## Building
 
-Running the following command builds `omid-session-client-v1.js` and
-`omid-verification-client-v1.js` locally in a new `./bin/` folder. Note
-that running `build` will always first remove any and all existing content in
-`./bin/` prior to producing the output bundles.
+Running the following command builds `omid-session-client-v1.js`, 
+`omid-verification-client-v1.js`, and `omid-compliance-verification-client-v1.js`, 
+locally in a new `./bin/` folder. Note that running `build` will always first remove any and all 
+existing content in`./bin/` prior to producing the output bundles.
 
 ```sh
 npm run build
@@ -181,6 +190,21 @@ following:
 ```js
 const OmidVerificationClient =
     OmidVerificationClient && OmidVerificationClient['4.0.0'];
+```
+
+## Example HTML Creatives
+
+The html creatives are built as part of the main build script(`npm run build`), but can be built separately.
+
+To build display creative:
+
+```sh
+npm run build-display-creative
+```
+
+To build video creative:
+```sh
+npm run build-video-creative
 ```
 
 ## Testing

@@ -1,0 +1,15 @@
+{
+  "extends": "google",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "env": { "es6": true },
+  "rules": {
+    "valid-jsdoc": "warn",
+    /** Some modules are imported for type annotation only.  */
+    "no-unused-vars": "off",
+    /** Doesn't match Clang-Format exactly. */
+    "indent": "off"
+  }
+}

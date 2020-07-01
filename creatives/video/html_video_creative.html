@@ -1,0 +1,24 @@
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="initial-scale=1" />
+    <title>Example Ad</title>
+    <style type="text/css">
+        html * {
+            padding: 0;
+            margin: auto 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!--This is where the ad element will be string injected-->
+    <video width="400" id="player" controls>
+        <source src="https://omsdk-files.s3-us-west-2.amazonaws.com/ra_1.3/IABTL_VAST_Intro_30s.mp4" type="video/mp4">
+    </video>
+    <!-- for uncompiled version of the session script please look at code 
+        inside of: /Open-Measurement-JSClients/src/creatives/video/-->
+    <!-- inject:creative:session:script:js -->
+    <!-- endinject -->
+</body>
+</html>

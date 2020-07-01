@@ -9,13 +9,15 @@
     "indent": "off",
     "prefer-const": "off"
   },
-  "overrides": {
-    "files": "test/**/*.js",
-    "rules" : {
-      "require-jsdoc": "off",
-      "valid-jsdoc": "off",
-      "guard-for-in": "off",
-      "prefer-spread": "off"
+  "overrides": [
+    {
+      "files": "test/**/*.js",
+      "rules" : {
+        "require-jsdoc": "off",
+        "valid-jsdoc": "off",
+        "guard-for-in": "off",
+        "prefer-spread": "off"
+      }
     }
-  }
+  ]
 }
