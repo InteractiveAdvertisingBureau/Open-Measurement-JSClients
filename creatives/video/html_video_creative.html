@@ -12,13 +12,19 @@
     </style>
 </head>
 <body>
-    <!--This is where the ad element will be string injected-->
-    <video width="400" class="omid-element" id="player" controls>
-        <source src="https://omsdk-files.s3-us-west-2.amazonaws.com/ra_1.3/IABTL_VAST_Intro_30s.mp4" type="video/mp4">
-    </video>
-    <!-- for uncompiled version of the session script please look at code 
-        inside of: /Open-Measurement-JSClients/src/creatives/video/-->
-    <!-- inject:creative:session:script:js -->
-    <!-- endinject -->
+    <!-- this margin styling is to enable vertical scrolling in the webView so that the element percentageInView can be monitored easily -->
+    <div style="margin-bottom: 800px;">
+        <!--This is where the ad element will be string injected-->
+        <video width="300" class="omid-element" id="player" controls playsinline autoplay muted>
+            <source src="https://omsdk-files.s3-us-west-2.amazonaws.com/ra_1.3/IABTL_VAST_Intro_30s.mp4" type="video/mp4">
+        </video>
+        <ul>
+            <li id="percentageInView">-%</li>
+        </ul>
+        <!-- for uncompiled version of the session script please look at code 
+            inside of: /Open-Measurement-JSClients/src/creatives/video/-->
+        <!-- inject:creative:session:script:js -->
+        <!-- endinject -->
+    </div>
 </body>
 </html>

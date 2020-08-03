@@ -4,10 +4,17 @@
         <title>HTML display Creative</title>
     </head>
     <body>
-        <img class="omid-element" alt="HTML Display Reference Ad" src="https://omsdk-files.s3-us-west-2.amazonaws.com/ra_1.3/iab-ref-image-creative.jpg">
-        <!-- for uncompiled version of the session script please look at code 
-            inside of: /Open-Measurement-JSClients/src/creatives/display/-->
-        <!-- inject:creative:session:script:js -->
-        <!-- endinject -->
+        <!-- this margin styling is to enable vertical scrolling in the webView so that the element percentageInView can be monitored easily -->
+        <div style="margin-bottom: 800px;">
+            <img alt="HTML Display Reference Ad" class="omid-element" src="https://omsdk-files.s3-us-west-2.amazonaws.com/ra_1.3/iab-ref-image-creative.jpg">
+            <ul>
+                <li id="percentageInView">-%</li>
+            </ul>
+            <div id="omidId"></div>
+            <!-- for uncompiled version of the session script please look at code 
+                inside of: /Open-Measurement-JSClients/src/creatives/display/-->
+            <!-- inject:creative:session:script:js -->
+            <!-- endinject -->
+        </div>
     </body>
 </html>

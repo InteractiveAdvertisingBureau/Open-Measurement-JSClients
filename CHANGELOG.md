@@ -1,5 +1,10 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.3.9 - 2020-07-31
+### Update
+- Fix HTML creative type
+- Modify creatives to show percentageInView value
+
 ## 1.3.8 - 2020-07-16
 ### Update
 Added omid-element attribute to creative element

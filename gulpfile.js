@@ -273,3 +273,24 @@ gulp.task('inject-video-creative-session-script', () => {
       }))
       .pipe(gulp.dest('./bin')); 
 });
+
+gulp.task('build-visibility-measurement-script', () => {
+  const taskConfig = {
+    js: [
+      './creatives/measurement/**.js',
+      './src/verification-client/**.js',
+      './src/common/**.js'
+    ],
+    js_output_file: 'visibility-measurement-script.js',
+    output_wrapper_file: UMD_BOOTSTRAPPER_WITH_DEFAULT,
+    entry_point: 'goog:omid.creatives.VisibilityMeasurementClientMain',
+    externs: [
+      ...commonConfig.externs,
+      './src/externs/omid-exports.js',
+      './src/externs/omid-jasmine.js',
+    ],
+  };
+  return closureCompiler(Object.assign({}, commonConfig, taskConfig))
+      .src() // needed to force the plugin to run without gulp.src
+      .pipe(gulp.dest('./bin'))
+});
