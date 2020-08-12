@@ -47,6 +47,7 @@ class ValidationVerificationClient {
      */
     logMessage_(message, timestamp) {
         const log = (new Date(timestamp)).toLocaleString()+ '::' + JSON.stringify(message);
+        console.log(log);
         this.sendUrl_(log);
     }
 

@@ -1,5 +1,11 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.3.10 - 2020-08-12
+### Update
+- Check instanceof of slot/video elements
+- Automate Web Reference App. Use Validation Script
+- Change default access mode to creative in reference app
+
 ## 1.3.9 - 2020-07-31
 ### Update
 - Fix HTML creative type

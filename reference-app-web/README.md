@@ -12,9 +12,13 @@ A sample web application built to showcase a canonical OM SDK for Web integratio
 [nvm] is recommended for installing and managing Node and NPM.
 
 ## Getting Started
-1. Copy the OM for Web SDK into `./static/omweb-v1.js`
-1. Copy the OM Domain Loader into `./static/.well-known/omid/omloader-v1.html`
 1. Install dependencies with `npm install`
+1. Copy the dependencies into `static/`:
+    - If in SDKJS repo: Run `npm buildDeps`
+    - If in JSClients repo: 
+        - Copy the OM SDK for Web into `./static/omweb-v1.js`
+        - Copy the OM Domain Loader into `./static/.well-known/omid/omloader-v1.html`
+        - Copy the Validation Verification Script into `./static/omid-validation-verification-script-v1.js`
 1. Run the dev server by running `npm run start`
 1. Open http://localhost:8080 in a browser
 
@@ -37,9 +41,7 @@ constants instead. Please refer to [IAB Tech Lab] for details regarding how
 verification resources are represented in various ad formats.
 
 # TODO
-* Automate copying of the SDK and Domain Loader
 * Use the public versions of private client APIs once they're released
-* Use the validation verification script
 
 # Additional Information
 * [Open Measurement SDK on IAB Tech Lab]

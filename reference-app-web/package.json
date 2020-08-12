@@ -4,8 +4,8 @@
   "description": "Reference app for the OMSDK for Web.",
   "main": "index.js",
   "scripts": {
-    "postinstall": "cd ../ && npm install",
-    "prebuild": "cd ../ && npm run generate-version",
+    "postinstall": "cd ../ && npm install && npm run generate-version",
+    "buildDeps": "gulp buildDeps",
     "build": "gulp build",
     "start": "gulp start",
     "test": "echo \"Error: no test specified\" && exit 1",

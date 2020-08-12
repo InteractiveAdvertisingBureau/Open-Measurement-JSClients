@@ -1,3 +1,4 @@
+const exec = require('child_process').exec;
 const fs = require('fs');
 const googleClosureCompiler = require('google-closure-compiler');
 const gulp = require('gulp');
@@ -91,6 +92,31 @@ function watch() {
   gulp.watch(STATIC_FILES, {}, copyStaticFiles);
 }
 
+/** Builds the other package dependencies. */
+function buildDependencies(callback) {
+  exec(
+      'cd ../ && ' +
+      'npm run build-validation-verification-script && ' +
+      'cd ../ && ' +
+      'npm run build-web-service && ' +
+      'npm run build-domain-loader',
+      (err) => {
+        callback(err);
+      });
+}
+
+/** Copies the other package dependencies into static. */
+function copyDependencies(callback) {
+  exec(
+      'cp ../bin/omid-validation-verification-script-v1.js static/ &&' +
+      'cp ../../bin/omweb-v1.js static/ &&' +
+      'cp ../../bin/omloader-v1.html static/.well-known/omid/',
+      (err) => {
+        callback(err);
+      });
+}
+
+exports.buildDeps = gulp.series(buildDependencies, copyDependencies);
 exports.build = gulp.series(buildScripts, buildTemplates, copyStaticFiles);
 exports.start =
     gulp.series(exports.build, gulp.parallel(servers, livereload, watch));
