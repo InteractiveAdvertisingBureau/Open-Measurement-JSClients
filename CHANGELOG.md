@@ -1,5 +1,9 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.3.11 - 2020-09-24
+### Update
+- Fix typo in isVideoElement
+
 ## 1.3.10 - 2020-08-12
 ### Update
 - Check instanceof of slot/video elements
