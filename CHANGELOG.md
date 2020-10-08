@@ -1,5 +1,9 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.3.12 - 2020-10-06
+### Update
+- Use element's window for prototype in instanceof checks
+
 ## 1.3.11 - 2020-09-24
 ### Update
 - Fix typo in isVideoElement
