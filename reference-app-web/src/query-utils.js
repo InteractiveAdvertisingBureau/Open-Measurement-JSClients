@@ -29,6 +29,7 @@ function parseVerificationSettings(queryParams) {
   const settings = {};
   const stringKeys = [
     VerificationSettingsKeys.ACCESS_MODE,
+    VerificationSettingsKeys.CONTENT_URL,
     VerificationSettingsKeys.MEDIA_URL,
     VerificationSettingsKeys.OMSDK_URL,
     VerificationSettingsKeys.TEST_CASE_PAGE_NAME,

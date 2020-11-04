@@ -78,6 +78,7 @@ class CreativeIframeHost {
       [MessageKeys.TYPE]: MessageTypes.LOAD_CREATIVE,
       [MessageKeys.DATA]: {
         [VerificationSettingsKeys.ACCESS_MODE]: settings.accessMode,
+        [VerificationSettingsKeys.CONTENT_URL]: settings.contentUrl,
         [VerificationSettingsKeys.MEDIA_URL]: settings.mediaUrl,
         [VerificationSettingsKeys.OMSDK_URL]: settings.omsdkUrl,
         [VerificationSettingsKeys.TEST_CASE_PAGE_NAME]:

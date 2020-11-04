@@ -121,6 +121,7 @@ class ComplianceVerificationClient {
      */
     fireEvent_(event) {
         let params = this.serialize_(event, undefined);
+        params += '&rawJSON=' + encodeURIComponent(JSON.stringify(event));
         let url = DefaultLogServer + params;
         this.fireURL_(url);
     }

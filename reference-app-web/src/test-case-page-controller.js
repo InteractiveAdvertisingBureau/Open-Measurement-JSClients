@@ -59,6 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!verificationSettings) {
     throw new Error('Could not parse settings from URL.');
   }
+  // Omit the query and anchor parameters.
+  verificationSettings.contentUrl = window.location.href.split(/[?#]/)[0];
 
   const viewabilityControls =
       new ViewabilityControls(clipRangeInput, clipRangeValueLabel);

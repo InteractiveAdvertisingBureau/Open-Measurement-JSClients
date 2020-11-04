@@ -9,6 +9,7 @@ export const OmidPartnerVersion = '0.0.0';
   */
 export const VerificationSettingsKeys = {
   ACCESS_MODE: 'accessMode',
+  CONTENT_URL: 'contentUrl',
   MEDIA_URL: 'mediaUrl',
   OMSDK_URL: 'omsdkUrl',
   TEST_CASE_PAGE_NAME: 'testCasePageName',

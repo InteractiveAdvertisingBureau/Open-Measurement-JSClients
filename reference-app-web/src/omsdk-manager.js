@@ -7,9 +7,7 @@ const VastProperties = goog.require('omid.common.VastProperties');
 const {AccessMode: OmidAccessMode, ErrorType, VideoPosition} = goog.require('omid.common.constants');
 const {resolveGlobalContext} = goog.require('omid.common.windowUtils');
 const {startSessionServiceCommunication} = goog.require('omid.common.serviceCommunication');
-
-import {AccessMode} from './constants.js';
-import {OmidPartnerName, OmidPartnerVersion} from './constants.js';
+import {AccessMode, OmidPartnerName, OmidPartnerVersion, VerificationSettingsKeys} from './constants.js';
 import {VerificationSettings} from './typedefs.js';
 
 /**
@@ -108,7 +106,8 @@ class OmsdkManager {
    */
   createAdSession_() {
     const partner = new Partner(OmidPartnerName, OmidPartnerVersion);
-    const context = new Context(partner, []);
+    const contentUrl = this.verificationSettings_.contentUrl || null;
+    const context = new Context(partner, [], contentUrl);
     context.setVideoElement(this.videoElement_);
     const serviceWindow = this.omsdkIframe_.contentWindow;
     if (!serviceWindow) {

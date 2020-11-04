@@ -1,5 +1,10 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.3.13 - 2020-11-04
+### Update 
+- Pass contentUrl in Web Reference App
+- Compliance Event Validation
+
 ## 1.3.12 - 2020-10-06
 ### Update
 - Use element's window for prototype in instanceof checks

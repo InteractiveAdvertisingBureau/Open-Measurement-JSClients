@@ -7,6 +7,7 @@
   *   verificationParameters: string,
   *   accessMode: string,
   *   omsdkUrl: string,
+  *   contentUrl: string,
   *   mediaUrl: string,
   *   testCasePageName: string,
   * }}
