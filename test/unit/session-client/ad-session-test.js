@@ -18,6 +18,15 @@ const {serializeMessageArgs, deserializeMessageArgs} = goog.require('omid.common
 /** @type {string} */
 const CLIENT_VERSION = Version;
 
+/** @type {string} */
+const CONTENT_URL = 'https://example.com';
+
+/** @type {string} */
+const CUSTOM_REFERENCE_DATA = 'key=val';
+
+/** @type {boolean} */
+const UNDER_EVALUATION = true;
+
 /** @type {!AdSession} */
 let session;
 
@@ -65,7 +74,8 @@ describe('AdSessionTest', () => {
     asSpy(sessionInterface.isSupported).and.returnValue(true);
 
     partner = new Partner('partner', '1');
-    context = new Context(partner, []);
+    context = new Context(partner, [], CONTENT_URL, CUSTOM_REFERENCE_DATA);
+    context.underEvaluation = UNDER_EVALUATION;
     session = new AdSession(context, communication, sessionInterface);
 
     // Send the version information to the AdSession.
@@ -296,7 +306,27 @@ describe('AdSessionTest', () => {
       expect(() => session.assertSessionRunning()).toThrow();
     });
   });
-
+  describe('start', () => {
+    it('should call the session service', () => {
+      session.start();
+      expect(communication.sendMessage)
+          .toHaveBeenCalledWith(jasmine.objectContaining({
+            'method': 'SessionService.startSession',
+            'args': [
+              {
+                'customReferenceData': CUSTOM_REFERENCE_DATA,
+                'underEvaluation': UNDER_EVALUATION,
+              },
+            ],
+          }));
+    });
+  });
+  describe('finish', () => {
+    it('should call the session service', () => {
+      session.finish();
+      expectMessage('SessionService.finishSession');
+    });
+  });
   describe('error', () => {
     it('should call the session service', () => {
       session.error(ErrorType.GENERIC, 'error');

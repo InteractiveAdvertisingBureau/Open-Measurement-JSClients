@@ -4,14 +4,13 @@ const Context = goog.require('omid.sessionClient.Context');
 const MediaEvents = goog.require('omid.sessionClient.MediaEvents');
 const Partner = goog.require('omid.sessionClient.Partner');
 const VastProperties = goog.require('omid.common.VastProperties');
-const {AccessMode: OmidAccessMode, ErrorType, VideoPosition} = goog.require('omid.common.constants');
-const {resolveGlobalContext} = goog.require('omid.common.windowUtils');
-const {startSessionServiceCommunication} = goog.require('omid.common.serviceCommunication');
-import {AccessMode, OmidPartnerName, OmidPartnerVersion, VerificationSettingsKeys} from './constants.js';
+const VerificationScriptResource = goog.require('omid.sessionClient.VerificationScriptResource');
+const {AccessMode: OmidAccessMode, CreativeType, ErrorType, VideoPosition} = goog.require('omid.common.constants');
+import {AccessMode, OmidPartnerName, OmidPartnerVersion} from './constants.js';
 import {VerificationSettings} from './typedefs.js';
 
 /**
- * HTML video element events to listen for relevent for measurement.
+ * HTML video element events to listen for relevant for measurement.
  * @const {!Array<string>}
  */
 const VIDEO_EVENT_TYPES = [
@@ -93,10 +92,10 @@ class OmsdkManager {
    */
   omsdkIframeDidLoad_() {
     this.adSession_ = this.createAdSession_();
+    this.adSession_.setCreativeType(CreativeType.VIDEO);
     this.adEvents_ = new AdEvents(this.adSession_);
     this.mediaEvents_ = new MediaEvents(this.adSession_);
-    // TODO: Use AdSession_.start when publicly released.
-    this.adSession_.sendOneWayMessage('startSession', {});
+    this.adSession_.start();
   }
 
   /**
@@ -106,33 +105,23 @@ class OmsdkManager {
    */
   createAdSession_() {
     const partner = new Partner(OmidPartnerName, OmidPartnerVersion);
+    const verificationScriptResource = new VerificationScriptResource(
+        this.verificationSettings_.verificationScriptUrl,
+        this.verificationSettings_.vendorKey,
+        this.verificationSettings_.verificationParameters,
+        this.getOmidAccessMode_());
     const contentUrl = this.verificationSettings_.contentUrl || null;
-    const context = new Context(partner, [], contentUrl);
+    const context =
+        new Context(partner, [verificationScriptResource], contentUrl);
+    context.underEvaluation = true;
     context.setVideoElement(this.videoElement_);
     const serviceWindow = this.omsdkIframe_.contentWindow;
     if (!serviceWindow) {
       throw new Error('OM SDK iframe content window not available.');
     }
+    context.setServiceWindow(serviceWindow);
 
-    // TODO: Use Context.setServiceWindow when publicly released.
-    const serviceCommunication =
-        startSessionServiceCommunication(resolveGlobalContext(), serviceWindow);
-
-    const adSession = new AdSession(context, serviceCommunication);
-
-    // TODO: Use VerificationScriptResource constructor when publicly released.
-    const injectData = [
-      {
-        'resourceUrl': this.verificationSettings_.verificationScriptUrl,
-        'vendorKey': this.verificationSettings_.vendorKey,
-        'verificationParameters':
-            this.verificationSettings_.verificationParameters,
-        'accessMode': this.getOmidAccessMode_(),
-      },
-    ];
-    adSession.sendOneWayMessage(
-        'injectVerificationScriptResources', injectData);
-
+    const adSession = new AdSession(context);
     return adSession;
   }
 
@@ -208,6 +197,10 @@ class OmsdkManager {
       this.mediaEvents_.thirdQuartile();
     } else if (this.lastVideoTime_ < 1 && currentVideoTime >= 1) {
       this.mediaEvents_.complete();
+      // Wait 3s, then finish the session.
+      setTimeout(() => {
+        this.adSession_.finish();
+      }, 3000);
     }
 
     this.lastVideoTime_ = currentVideoTime;

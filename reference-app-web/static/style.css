@@ -1,5 +1,5 @@
 body, html {
-  margin: 0px;
+  margin: 0;
   height: 100%;
 }
 
@@ -33,8 +33,8 @@ ul {
 
 .controlInput {
   width: 100%;
-  margin-top: 0px;
-  margin-bottom: 0px;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 #mainContainer {
@@ -69,10 +69,10 @@ ul {
 #startButton {
   width: 100%;
   display: block;
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   height: 50px;
-  background-color: #AAAAAA;
+  background-color: #aaaaaa;
   cursor: pointer;
 }
 

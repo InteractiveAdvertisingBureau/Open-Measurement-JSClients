@@ -329,14 +329,14 @@ const EventOwner = {
 };
 
 /**
- * Enum for sandboxing mode. The default value is LIMITED. FULL implies both
- * that verification code has access to the creative element and that OMSDK will
- * provide a reference to that creative element via video/slotElement in the
- * context.
+ * Enum for sandboxing mode. FULL implies both that verification code has access
+ * to the creative element and that OMSDK will provide a reference to that
+ * creative element via video/slotElement in the context.
  * @enum {string}
  */
 const AccessMode = {
   FULL: 'full',
+  DOMAIN: 'domain',
   LIMITED: 'limited',
 };
 
@@ -439,6 +439,7 @@ const Reason = {
   VIEWPORT: 'viewport',
   OBSTRUCTED: 'obstructed',
   CLIPPED: 'clipped',
+  UNMEASURABLE: 'unmeasurable',
 };
 
 /**

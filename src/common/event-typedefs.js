@@ -71,6 +71,8 @@ let OmidNativeInfo;
  *   app: (!App|undefined),
  *   deviceInfo: (!DeviceInfo|undefined),
  *   customReferenceData: (?Object|undefined),
+ *   canMeasureVisibility: (boolean|undefined),
+ *   underEvaluation: (boolean|undefined),
  * }}
  */
 let Context;

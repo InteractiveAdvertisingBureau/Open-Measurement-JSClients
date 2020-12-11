@@ -14,7 +14,7 @@ A sample web application built to showcase a canonical OM SDK for Web integratio
 ## Getting Started
 1. Install dependencies with `npm install`
 1. Copy the dependencies into `static/`:
-    - If in SDKJS repo: Run `npm buildDeps`
+    - If in SDKJS repo: Run `npm run buildDeps`
     - If in JSClients repo: 
         - Copy the OM SDK for Web into `./static/omweb-v1.js`
         - Copy the OM Domain Loader into `./static/.well-known/omid/omloader-v1.html`
@@ -39,9 +39,6 @@ This demo app does not implement parsing of VAST or any other ad response
 formats. Asset URLs, verification script URLs and parameters are specified as
 constants instead. Please refer to [IAB Tech Lab] for details regarding how
 verification resources are represented in various ad formats.
-
-# TODO
-* Use the public versions of private client APIs once they're released
 
 # Additional Information
 * [Open Measurement SDK on IAB Tech Lab]

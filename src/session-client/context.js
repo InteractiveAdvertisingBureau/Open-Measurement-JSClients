@@ -40,6 +40,20 @@ class Context {
     this.contentUrl = contentUrl;
     /** @type {?string} */
     this.customReferenceData = customReferenceData;
+    /**
+     * Whether or not this ad session is under evaluation, as defined by
+     * "Evaluation Flag" in the Open Measurement License for Web Video, V 1.0.
+     * Ignored in app environments. Defaults to false.
+     * @type {boolean}
+     */
+    this.underEvaluation = false;
+
+    /**
+     * If not null, the window to which service communication should be
+     * directed, overriding the default search algorithm.
+     * @type {?Window}
+     */
+    this.serviceWindow = null;
   }
 
   /**
@@ -60,6 +74,19 @@ class Context {
   setSlotElement(slotElement) {
     argsChecker.assertNotNullObject('Context.slotElement', slotElement);
     this.slotElement = slotElement;
+  }
+
+  /**
+   * By default, the OM SDK Session Client Library will assume the Service
+   * Script is present in the same frame the library is loaded in, or top. Call
+   * this method to override this default and point the library to the give
+   * window instead.
+   * @param {!Window} serviceWindow The window containing the OMID Service
+   *     Script.
+   */
+  setServiceWindow(serviceWindow) {
+    argsChecker.assertNotNullObject('Context.serviceWindow', serviceWindow);
+    this.serviceWindow = serviceWindow;
   }
 }
 

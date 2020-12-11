@@ -4,5 +4,5 @@
   "omsdkUrl": "//localhost:8081/omweb-v1.js",
   "vendorKey": "imasdk.googleapis.com-test",
   "verificationScriptUrl": "http://localhost:8081/omid-validation-verification-script-v1.js",
-  "verificationParameters": ""
+  "verificationParameters": "key1=val1"
 }

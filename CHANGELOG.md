@@ -1,5 +1,18 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.3.14 - 2020-12-11
+### Update
+- Add AdSession.start() and AdSession.finish()
+- Add omweb-v1.js Service Script for Web.
+- Add omloader-v1.html Domain Loader for Domain Access Mode.
+- Add AccessMode.Domain
+- Add Context.underEvaluation
+- Add Context.canMeasureVisibility
+- Add Context.setServiceWindow()
+- Add accessMode constructor parameter to VerificationScriptResource
+## Fixed
+- Fixed issue where contentUrl showed up twice in Context and in SessionStartEventData.
+
 ## 1.3.13 - 2020-11-04
 ### Update 
 - Pass contentUrl in Web Reference App

@@ -55,6 +55,8 @@ class AdSession {
     /** @private {boolean} */
     this.impressionOccurred_ = false;
 
+    const serviceWindow = this.context_.serviceWindow || undefined;
+
     /**
      * Communication object that the VerificationClient will use to talk to the
      * VerificationService. This parameter is used for testing.  If left
@@ -63,7 +65,7 @@ class AdSession {
      * @private
      */
     this.communication_ = communication ||
-        startSessionServiceCommunication(resolveGlobalContext());
+        startSessionServiceCommunication(resolveGlobalContext(), serviceWindow);
 
     /**
      * Communicates with the OMID JS Session Interface. Used for testing, and
@@ -221,6 +223,33 @@ class AdSession {
    */
   registerSessionObserver(functionToExecute) {
     this.sendMessage('registerSessionObserver', functionToExecute);
+  }
+
+  /**
+   * If there is no currently active ad session, this notifies all session
+   * observers that an ad session has started with a SESSION_START event.
+   * This starts ad view tracking and makes video and ad events available to
+   * send to verification scripts injected for this ad session. This method
+   * has no effect if called after the ad session has already started or in a
+   * mobile app environment.
+   */
+  start() {
+    const sessionStartContext = {
+      'customReferenceData': this.context_.customReferenceData,
+      'underEvaluation': this.context_.underEvaluation,
+    };
+    this.sendOneWayMessage('startSession', sessionStartContext);
+  }
+
+  /**
+   * If there is a currently active ad session, this notifies all session
+   * observers that the ad session has finished with a SESSION_FINISH event.
+   * This ceases ad view tracking and message sending to verification scripts
+   * injected for the ad session. This method has no effect if called if there
+   * is no active ad session or in a mobile app environment.
+   */
+  finish() {
+    this.sendOneWayMessage('finishSession');
   }
 
   /**

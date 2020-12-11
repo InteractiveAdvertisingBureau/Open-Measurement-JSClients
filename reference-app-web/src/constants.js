@@ -46,3 +46,13 @@ export const MessageTypes = {
   CREATIVE_DID_INIT: 'creativeDidInit',
   LOAD_CREATIVE: 'loadCreative',
 };
+
+/**
+ * Types of creative ad sessions.
+ * @const @enum {string}
+ */
+export const CreativeType = {
+  HTML_DISPLAY: 'htmlDisplay',
+  VIDEO: 'video',
+  AUDIO: 'audio',
+};
