@@ -1,5 +1,8 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.3.15 - 2020-12-17
+- Update version to match JS Service, Android, and iOS SDKs; no changes from 1.3.14
+
 ## 1.3.14 - 2020-12-11
 ### Update
 - Add AdSession.start() and AdSession.finish()
