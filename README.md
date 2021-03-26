@@ -18,6 +18,8 @@ integration partners to perform ad session activities in the JavaScript layer.
 It functions both at the top level of the webview and in a cross-domain iframe.
 Ad SDKs include its source code into ad HTML at build time.
 
+* For Support Questions please contact OMSDK Support <omsdksupport@iabtechlab.com> 
+
 ## Folder Structure
 
 ### `/`
