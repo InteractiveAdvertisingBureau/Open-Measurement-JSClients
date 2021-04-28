@@ -1,3 +1,5 @@
+/** @externs */
+
 /**
  * @fileoverview @externs Definition of omidSessionInterface, used for session
  * client integration with the OM SDK service script.
