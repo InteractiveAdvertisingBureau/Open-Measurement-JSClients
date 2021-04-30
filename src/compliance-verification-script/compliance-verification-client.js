@@ -89,7 +89,7 @@ class ComplianceVerificationClient {
                 if (p === 'videoElement') {
                     v = 'DOM Video Element - Present but not parsed to avoid parse error';
                 }
-                if (p === 'slotElemeent') {
+                if (p === 'slotElement') {
                     v = 'DOM Slot Element - Present but not parsed to avoid parse error';
                 }
 
