@@ -1,3 +1,5 @@
+/** @externs */
+
 /**
  * @type {!Window}
  */

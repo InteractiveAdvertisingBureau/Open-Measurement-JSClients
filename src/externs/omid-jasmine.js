@@ -1,3 +1,5 @@
+/** @externs */
+
 /**
  * This represents the value of the jasmine variable in production runs of the
  * code. In production, this variable is checked by logger.js. If the variable
