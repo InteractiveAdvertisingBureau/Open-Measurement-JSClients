@@ -15,11 +15,14 @@ const STATIC_FILES = ['./static/**/*'];
 const SETTINGS_DEFAULT_PATH = './templates/.settings.default.json';
 const COMMON_COMPILER_CONFIG = {
   compilation_level: 'SIMPLE',
-  dependency_mode: 'STRICT',
+  dependency_mode: 'PRUNE',
   formatting: 'PRETTY_PRINT',
   warning_level: 'VERBOSE',
   language_in: 'ECMASCRIPT_2017',
   language_out: 'ECMASCRIPT_2015',
+  externs: [
+    '../src/externs/closure.js',
+  ],
 };
 const JS_BINARY_CONFIGS = [
   {

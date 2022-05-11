@@ -3,7 +3,7 @@ goog.module('omid.test.verificationClient.VerificationClient');
 const Communication = goog.require('omid.common.Communication');
 const VerificationClient = goog.require('omid.verificationClient.VerificationClient');
 const MockXmlHttpRequest = goog.require('omid.test.MockXmlHttpRequest');
-const {AdEventType} = goog.require('omid.common.constants');
+const {AdEventType, Environment} = goog.require('omid.common.constants');
 const {VERSION_COMPATABILITY_TABLE, makeVersionRespondingCommunicationClass} = goog.require('omid.test.versionUtils');
 const {asSpy} = goog.require('omid.test.typingUtils');
 const {omidGlobal} = goog.require('omid.common.OmidGlobalProvider');
@@ -363,6 +363,21 @@ describe('VerificationClient', () => {
         expect(client.isSupported()).toEqual(false);
       });
     });
+
+    describe('injectionSource', () => {
+      it('should return "web" when web service injected client', () => {
+        omidGlobal.omidVerificationProperties.injectionSource = Environment.WEB;
+        expect(client.injectionSource()).toEqual('web');
+      });
+      it('should return "app" when app service injected client', () => {
+        omidGlobal.omidVerificationProperties.injectionSource = Environment.APP;
+        expect(client.injectionSource()).toEqual('app');
+      });
+      it('should return undefined when unknown service injected client', () => {
+        delete omidGlobal.omidVerificationProperties.injectionSource;
+        expect(client.injectionSource()).toBeUndefined();
+      });
+    });
   });
 
   describe('using omid3p', () => {
@@ -438,6 +453,21 @@ describe('VerificationClient', () => {
       it('omid3p is not available', () => {
         client.omid3p = undefined;
         expect(client.isSupported()).toEqual(false);
+      });
+    });
+
+    describe('injectionSource', () => {
+      it('should return "web" when web service injected client', () => {
+        omidGlobal.omidVerificationProperties.injectionSource = Environment.WEB;
+        expect(client.injectionSource()).toEqual('web');
+      });
+      it('should return "app" when app service injected client', () => {
+        omidGlobal.omidVerificationProperties.injectionSource = Environment.APP;
+        expect(client.injectionSource()).toEqual('app');
+      });
+      it('should return undefined when unknown service injected client', () => {
+        delete omidGlobal.omidVerificationProperties.injectionSource;
+        expect(client.injectionSource()).toBeUndefined();
       });
     });
   });

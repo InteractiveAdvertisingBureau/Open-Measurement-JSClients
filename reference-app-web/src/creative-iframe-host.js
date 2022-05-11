@@ -37,12 +37,12 @@ class CreativeIframeHost {
    * @private
    */
   buildCreativeIframeUrl_() {
-    // If creative or limited access, use a different port to load the creative
+    // If creative access, use a different port to load the creative
     // iframe in a separate origin. This is needed since same origin-ness is
     // lost between srcdoc iframe parent and children, even when
     // allow-same-origin is specified.
     const port =
-        this.verificationSettings_.accessMode == AccessMode.FULL ? 8080 : 8081;
+        this.verificationSettings_.accessMode == AccessMode.CREATIVE ? 8081 : 8080;
     return `//localhost:${port}/${
         this.verificationSettings_.testCasePageName}.html`;
   }

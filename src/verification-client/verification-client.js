@@ -3,7 +3,7 @@ goog.module('omid.verificationClient.VerificationClient');
 const Communication = goog.require('omid.common.Communication');
 const InternalMessage = goog.require('omid.common.InternalMessage');
 const logger = goog.require('omid.common.logger');
-const {AdEventType} = goog.require('omid.common.constants');
+const {AdEventType, Environment} = goog.require('omid.common.constants');
 const {GeometryChangeCallback, ImpressionCallback, SessionObserverCallback, VideoCallback} = goog.require('omid.common.eventTypedefs');
 const {Version} = goog.require('omid.common.version');
 const {assertFunction, assertPositiveNumber, assertTruthyString} = goog.require('omid.common.argsChecker');
@@ -110,6 +110,21 @@ class VerificationClient {
    */
   isSupported() {
     return Boolean(this.communication || this.omid3p);
+  }
+
+  /**
+   * Gets the environment type of the OM Service that injected the verification
+   * resource.
+   * @return {Environment|undefined} the injecting service's environment type or
+   * undefined if the verification resource was side-loaded or the service is a
+   * 3rd party custom service.
+   * @public
+   */
+  injectionSource() {
+    const verificationProperties = omidGlobal['omidVerificationProperties'];
+    if (verificationProperties && verificationProperties['injectionSource']) {
+      return verificationProperties['injectionSource'];
+    }
   }
 
   // TODO(OMSDK-718): Make the declarations in event-typedef.js compatible with

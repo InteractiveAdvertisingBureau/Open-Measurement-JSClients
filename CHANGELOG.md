@@ -1,5 +1,95 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.3.34 - 2022-05-03
+- [OM Web] Treat all Service DirectCommunications as from same message source.
+- [Reference apps] Fire impression and start event for video ads when video starts playing.
+
+## 1.3.33 - 2022-04-27
+- Lock down OmidJsSessionBridge in DirectCommunication too.
+- Fix Travis breakage due to chromedriver/Chrome version mismatch.
+- Use flexbox to layout the reference app controls UI.
+
+## 1.3.32 - 2022-04-19
+- Add volume changes, user interaction, pause, resume and player state example to Web reference app.
+
+## 1.3.31 - 2022-03-01
+- Add volume changes, user interaction and player state info to Web documentation.
+
+## 1.3.30 - 2022-02-18
+- Update version to match iOS SDK; no changes from 1.3.29
+
+## 1.3.29 - 2022-01-24
+- Don't use tuple destructuring which is not supported by the compiler.
+- Fixed impressionType in web video reference app. 
+
+## 1.3.28 - 2021-12-14
+- Update version to match Android SDK; no changes from 1.3.27
+
+## 1.3.27 - 2021-11-17
+### Update
+- Move headless fullstack tests to headful mode.
+- Implement VerificationVendor.
+- Do not serialize the DOM elements.
+- Update OM Web Video Dev Docs.
+
+## 1.3.26 - 2021-10-22
+### Update
+- Validate schema in fullstack tests.
+- Update Closure Compiler version to 20200112.0.0
+- Remove instanceof checks in type validators
+
+## 1.3.25 - 2021-09-24
+### Update
+- Update fullstack test data for Chrome 94.
+
+## 1.3.24 - 2021-09-16
+### Update
+- Add STRICT dependency mode where applicable.
+- Use built-in globalThis instead of eval('this’).
+- Fix Travis breakage due to chromedriver/Chrome version mismatch.
+- Add hidden reason code when ad area is 0.
+- Missing reason code where percentageInView < 100%.
+- Replace `notFound` reason code sent for ad views without window focus to `backgrounded` and `noWindowFocus` only when there is evidence that the out-of-focus view is attached.
+- Define `adView.pixelsInView` field to represent the number of visible pixels aka unrounded value for `percentageInView` * `adView`'s area.
+- Modify `adView.onScreenGeometry.pixels` to ignore app state, i.e. doesn't get zeroed out when app is backgrounded.
+
+## 1.3.23 - 2021-08-18
+### Update
+- Fixed friendlyToTop crash.
+
+## 1.3.22 - 2021-07-23
+### Update
+- Update OM Web Video Dev Docs with Access Mode Guidance. 
+- Change default log server domain name from 'iabtechlab.com' to 'localhost' in validation verification script.
+- Ensure chrome and chromedriver versions match. 
+
+## 1.3.21 - 2021-06-24
+### Update
+- Added friendlyToTop to compliance script. 
+- Fixes for float arithmetic issues
+
+## 1.3.20 - 2021-05-25
+### Update
+- Add @externs annotation to omid-native.js
+- Making schema match 1.3 reality
+
+
+## 1.3.19 - 2021-04-07
+### Fixed
+- Publish cached `loaded` event for display ad sessions. (`loaded` events that were sent before `sessionStart`)
+
+## 1.3.18 - 2021-04-14
+### Web Video
+- Fire Reason.BACKGROUNDED correctly on web
+
+## 1.3.17 - 2021-03-10
+### Update - Web Video
+- Added injectionSource to verification client API and supporting code to Service and Domain Loader code
+
+## 1.3.16 - 2021-02-04
+### Update - Web Video
+- Add custom reference data usage to Web Reference App.
+
 ## 1.3.15 - 2020-12-17
 - Update version to match JS Service, Android, and iOS SDKs; no changes from 1.3.14
 

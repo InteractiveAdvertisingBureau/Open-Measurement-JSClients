@@ -1,7 +1,5 @@
 const compilerPackage = require('google-closure-compiler');
 const gulp = require('gulp');
-const concat = require('gulp-concat');
-const zip = require('gulp-zip');
 const inject = require('gulp-inject');
 const closureCompiler = compilerPackage.gulp();
 
@@ -12,6 +10,7 @@ const commonConfig = {
   language_in: 'ECMASCRIPT_2017',
   language_out: 'ECMASCRIPT5_STRICT',
   externs: [
+    './src/externs/closure.js',
     './src/externs/omid-global.js',
   ],
   output_wrapper_file: './lightweight-bootstrapper.js',
@@ -68,6 +67,8 @@ gulp.task('build-verification-client', () => {
     js: VERIFICATION_CLIENT_SRC,
     js_output_file: 'omid-verification-client-v1.js',
     output_wrapper_file: UMD_BOOTSTRAPPER,
+    dependency_mode: 'PRUNE',
+    entry_point: 'goog:omid.verificationClient.VerificationClient',
     externs: [
       ...commonConfig.externs,
       './src/externs/omid-jasmine.js',
@@ -100,6 +101,8 @@ gulp.task('build-validation-verification-script', () => {
     js: VERIFICATION_CLIENT_SRC.concat(VALIDATION_VERIFICATION_SCRIPT_SRC),
     js_output_file: 'omid-validation-verification-script-v1.js',
     output_wrapper_file: UMD_BOOTSTRAPPER,
+    dependency_mode: 'PRUNE',
+    entry_point: 'goog:validationVerificationClientMain',
     externs: [
         ...commonConfig.externs,
       './src/externs/omid-jasmine.js',
@@ -132,6 +135,8 @@ gulp.task('build-compliance-verification-script', () => {
     js: VERIFICATION_CLIENT_SRC.concat(COMPLIANCE_VERIFICATION_SCRIPT_SRC),
     js_output_file: 'omid-compliance-verification-script-v1.js',
     output_wrapper_file: UMD_BOOTSTRAPPER,
+    dependency_mode: 'PRUNE',
+    entry_point: 'goog:complianceVerificationClientMain',
     externs: [
         ...commonConfig.externs,
       './src/externs/omid-jasmine.js',
@@ -236,7 +241,7 @@ gulp.task('inject-display-creative-session-script', () => {
               return '<script>' + file.contents.toString() + '</script>';
           }
       }))
-      .pipe(gulp.dest('./bin')); 
+      .pipe(gulp.dest('./bin'));
 });
 
 gulp.task('build-video-creative-session-script', () => {
@@ -271,7 +276,7 @@ gulp.task('inject-video-creative-session-script', () => {
               return '<script>' + file.contents.toString() + '</script>';
           }
       }))
-      .pipe(gulp.dest('./bin')); 
+      .pipe(gulp.dest('./bin'));
 });
 
 gulp.task('build-visibility-measurement-script', () => {

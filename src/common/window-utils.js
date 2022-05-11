@@ -108,6 +108,19 @@ function resolveTopWindowContext(win) {
 }
 
 /**
+ * Returns true if top window is available, false otherwise.
+ * @param {!Window=} win The current window object.
+ * @return {boolean}
+ */
+function isTopWindowAccessible(win) {
+  try {
+    return win.top.location.href ? true : false;
+  } catch (c) {
+    return false;
+  }
+}
+
+/**
  * Returns the URL of the top-level web page as determined by
  * the OMSDK JS service. Returns null when service is running
  * in cross-domain iframe.
@@ -134,4 +147,5 @@ exports = {
   isCrossOrigin,
   resolveGlobalContext,
   resolveTopWindowContext,
+  isTopWindowAccessible,
 };

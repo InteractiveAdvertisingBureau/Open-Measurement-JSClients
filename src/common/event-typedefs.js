@@ -326,6 +326,8 @@ let EventData;
 /**
  * Provides information about the ad container geometry.
   * @typedef {{
+  *   percentageInView: !number,
+  *   pixelsInView: !number,
   *   geometry: !Geometry,
   *   onScreenGeometry: !OnScreenGeometry,
   *   reasons: !Array<!constants.Reason>,

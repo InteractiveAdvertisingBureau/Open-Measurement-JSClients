@@ -440,6 +440,7 @@ const Reason = {
   OBSTRUCTED: 'obstructed',
   CLIPPED: 'clipped',
   UNMEASURABLE: 'unmeasurable',
+  NO_WINDOW_FOCUS: 'noWindowFocus',
 };
 
 /**
@@ -536,6 +537,7 @@ const NativeViewKeys = {
   OBSTRUCTION_PURPOSE: 'obstructionPurpose',
   OBSTRUCTION_REASON: 'obstructionReason',
   PIXELS: 'pixels',
+  HAS_WINDOW_FOCUS: 'hasWindowFocus',
 };
 
 /**

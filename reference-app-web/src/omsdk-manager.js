@@ -5,7 +5,7 @@ const MediaEvents = goog.require('omid.sessionClient.MediaEvents');
 const Partner = goog.require('omid.sessionClient.Partner');
 const VastProperties = goog.require('omid.common.VastProperties');
 const VerificationScriptResource = goog.require('omid.sessionClient.VerificationScriptResource');
-const {AccessMode: OmidAccessMode, CreativeType, ErrorType, VideoPosition} = goog.require('omid.common.constants');
+const {AccessMode: OmidAccessMode, ImpressionType, InteractionType, CreativeType, ErrorType, VideoPlayerState, VideoPosition} = goog.require('omid.common.constants');
 import {AccessMode, OmidPartnerName, OmidPartnerVersion} from './constants.js';
 import {VerificationSettings} from './typedefs.js';
 
@@ -17,15 +17,22 @@ const VIDEO_EVENT_TYPES = [
   'error',
   'loadeddata',
   'timeupdate',
+  'volumechange',
+  'click',
+  'pause',
+  'play',
+  'fullscreenchange',
+  'webkitfullscreenchange',
+  'mozfullscreenchange',
+  'msfullscreenchange',
 ];
 
 /**
  * Manages measurement integration with the OM SDK.
  *
  * NOTE: This is a simplified OMSDK integration, without allowance for user
- * pause/resume, skips, volume changes, clicks, or interactions. A creative that
- * featured these capabilities would have to also integrate with those
- * respective OMID APIs.
+ * skips, or interactions. A creative that featured these capabilities would 
+ * have to also integrate with those respective OMID APIs.
  */
 class OmsdkManager {
   /**
@@ -93,6 +100,8 @@ class OmsdkManager {
   omsdkIframeDidLoad_() {
     this.adSession_ = this.createAdSession_();
     this.adSession_.setCreativeType(CreativeType.VIDEO);
+    // See impression type documentation to determine which type you should use.
+    this.adSession_.setImpressionType(ImpressionType.BEGIN_TO_RENDER);
     this.adEvents_ = new AdEvents(this.adSession_);
     this.mediaEvents_ = new MediaEvents(this.adSession_);
     this.adSession_.start();
@@ -111,8 +120,9 @@ class OmsdkManager {
         this.verificationSettings_.verificationParameters,
         this.getOmidAccessMode_());
     const contentUrl = this.verificationSettings_.contentUrl || null;
-    const context =
-        new Context(partner, [verificationScriptResource], contentUrl);
+    const customReferenceData = 'cust=ref&data=frominteg';
+    const context = new Context(
+        partner, [verificationScriptResource], contentUrl, customReferenceData);
     context.underEvaluation = true;
     context.setVideoElement(this.videoElement_);
     const serviceWindow = this.omsdkIframe_.contentWindow;
@@ -167,11 +177,44 @@ class OmsdkManager {
       case 'timeupdate':
         this.videoElementDidDispatchTimeUpdate_();
         break;
+      case 'click':
+        this.mediaEvents_.adUserInteraction(InteractionType.CLICK);
+        break;
+      case 'pause':
+        if (!this.videoElement_.ended) {
+          this.mediaEvents_.pause();
+        }
+        break;
+      case 'play':
+        if (this.videoElement_.currentTime != 0) {
+          this.mediaEvents_.resume();
+        }
+        break;
+      case 'volumechange':
+        this.mediaEvents_.volumeChange(this.videoElement_.volume);
+        break;
+      case 'fullscreenchange':
+      case 'webkitfullscreenchange':
+      case 'mozfullscreenchange':
+      case 'msfullscreenchange': 
+        this.videoPlayerStateDidChange_();
+        break;
       default:
         break;
     }
   }
-
+  
+  /**
+   * Handles player state change event from the measured video element
+   * @private
+   */
+  videoPlayerStateDidChange_() {
+    const isFullscreen = document.fullscreenElement !== null || document.mozFullScreen ||
+        document.webkitIsFullScreen || document.msFullScreen;
+    const playerState = isFullscreen ? VideoPlayerState.FULLSCREEN : VideoPlayerState.NORMAL;
+    this.mediaEvents_.playerStateChange(playerState);
+  }
+  
   /**
    * Handles a timeupdate event from the measured video element.
    * @private

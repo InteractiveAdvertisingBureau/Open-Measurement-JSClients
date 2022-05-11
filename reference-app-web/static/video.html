@@ -5,10 +5,19 @@
     <meta charset="utf-8"/>
     <link rel="stylesheet" href="/style.css" />
   </head>
-  <body>
-    <video id="videoElement" playsinline></video>
+  <body class="testCaseBody">
+    <video id="videoElement" playsinline src="https://storage.googleapis.com/gvabox/nickchavez/media/mp4/music_sounds_better_with_you.mp4"></video>
     <!-- The start button is in the creative iframe so that it can obtain playback permission. -->
-    <button id="startButton"><h3>START</h3></button>
+    <button id="startButton" class="button"><h3>START</h3></button>
+    <div id="playbackControls"> 
+      <button id="playPauseButton" class="button playbackButton"><h3>Pause</h3></button>
+      <button id="fullscreenButton" class="button playbackButton"><h3>Fullscreen</h3></button>
+      <button id="clickButton" class="button playbackButton"><h3>Click</h3></button>
+    </div>
+    <div id="volumeContainer">
+      <label for="volumeControl"><h3>Volume</h3></label>
+      <input id="volumeControl" type="range" min="0" max="100" value="100"></input>  
+    </div>
     <script src="/video.js"></script>
   </body>
 </html>

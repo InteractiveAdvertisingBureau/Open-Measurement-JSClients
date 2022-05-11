@@ -18,8 +18,6 @@ integration partners to perform ad session activities in the JavaScript layer.
 It functions both at the top level of the webview and in a cross-domain iframe.
 Ad SDKs include its source code into ad HTML at build time.
 
-* For Support Questions please contact OMSDK Support <omsdksupport@iabtechlab.com> 
-
 ## Folder Structure
 
 ### `/`
@@ -122,9 +120,9 @@ After this step, the repo is ready to be built.
 
 ## Building
 
-Running the following command builds `omid-session-client-v1.js`, 
-`omid-verification-client-v1.js`, and `omid-compliance-verification-client-v1.js`, 
-locally in a new `./bin/` folder. Note that running `build` will always first remove any and all 
+Running the following command builds `omid-session-client-v1.js`,
+`omid-verification-client-v1.js`, and `omid-compliance-verification-client-v1.js`,
+locally in a new `./bin/` folder. Note that running `build` will always first remove any and all
 existing content in`./bin/` prior to producing the output bundles.
 
 ```sh
@@ -150,8 +148,9 @@ const {OmidVerificationClient} = Omid;
 ```
 
 ### Google Closure
-Add the OMID source files to the Google Closure compiler. For the verification client
-these are:
+Add the OMID source files to the Google Closure compiler (version 20200112.0.0 or later).
+
+For the verification client these are:
 
   - `public/src/common/**.js`
   - `public/src/verification-client/**.js`

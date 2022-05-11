@@ -3,11 +3,12 @@ const {packageExport} = goog.require('omid.common.exporter');
 const {AdEventType} = goog.require('omid.common.constants');
 const VerificationClient = goog.require('omid.verificationClient.VerificationClient');
 const {Version} = goog.require('omid.common.version');
+const {isTopWindowAccessible, resolveGlobalContext} = goog.require('omid.common.windowUtils');
 
 /**
  * @const {string} the default URL to send messages to another server.
  */
-const DefaultLogServer = 'http://complianceomsdk.iabtechlab.com/sendmessage?';
+const DefaultLogServer = 'https://complianceomsdk.iabtechlab.org/omsdk/sendmessage?';
 
 /**
  * @const {string}
@@ -86,13 +87,6 @@ class ComplianceVerificationClient {
                 let k = prefix ? prefix + '[' + p + ']' : p;
                 let v = obj[p];
 
-                if (p === 'videoElement') {
-                    v = 'DOM Video Element - Present but not parsed to avoid parse error';
-                }
-                if (p === 'slotElemeent') {
-                    v = 'DOM Slot Element - Present but not parsed to avoid parse error';
-                }
-
                 /* Special check for an empty array to ensure that it is printed instead of being skipped. */
                 if (Array.isArray(v) && v.length == 0) {
                     str.push(encodeURIComponent(k) + '=' + encodeURIComponent('[]'));
@@ -100,6 +94,12 @@ class ComplianceVerificationClient {
                     str.push((v !== null && typeof v === 'object') ?
                         this.serialize_(v, k) :
                         encodeURIComponent(k) + '=' + encodeURIComponent(v));
+                }
+
+                /* Add new param friendlyToTop, true if top window is available, false otherwise. */
+                if (p === 'accessMode') {
+                    let ftt = prefix ? prefix + '[' + 'friendlyToTop' + ']' : 'friendlyToTop';
+                    str.push(encodeURIComponent(ftt) + '=' + JSON.stringify(isTopWindowAccessible(resolveGlobalContext())));
                 }
             }
         }
@@ -120,10 +120,28 @@ class ComplianceVerificationClient {
      * @param {Object} event data
      */
     fireEvent_(event) {
+        event = this.removeDomElements_(event);
         let params = this.serialize_(event, undefined);
         params += '&rawJSON=' + encodeURIComponent(JSON.stringify(event));
         let url = DefaultLogServer + params;
         this.fireURL_(url);
+    }
+
+    /**
+     * Simple helper function to avoid serialize error for videoElement and slotElement.
+     * @param {!Object} event with DOM elements.
+     * @return {!Object} event after removing DOM elements.
+     */
+     removeDomElements_(event) {
+        if (event['type'] === AdEventType.SESSION_START) {
+            if (typeof event['data']['context']['videoElement'] !== 'undefined') {
+                event['data']['context']['videoElement'] = 'DOM Video Element - Present but not parsed to avoid parse error';
+            }
+            if (typeof event['data']['context']['slotElement'] !== 'undefined') {
+                event['data']['context']['slotElement'] = 'DOM Slot Element - Present but not parsed to avoid parse error';
+            }
+        }
+        return event;
     }
 }
 exports = ComplianceVerificationClient;

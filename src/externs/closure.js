@@ -1,4 +1,4 @@
 /** @externs */
 
 /** @type {!Object} */
-let omidExports;
+let goog;

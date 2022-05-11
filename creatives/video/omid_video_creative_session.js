@@ -47,9 +47,20 @@ class OmidVideoCreativeSession {
         this.adEvents_ = new AdEvents(this.adClient_);
         this.mediaEvents = new MediaEvents(this.adClient_);
         this.sessionActive_ = false;
-        this.occurredAndStarted = false;
 
-        this.isPlaying = false;
+        /**
+         * The last observed percentage of the video element. Null until video is started playing.
+         * @private {?number}
+         */
+        this.lastVideoPercentage = null;
+
+        /**
+         * Whether or not an impression and start events occurred before session start,
+         * impression and start events should be called while session is active. 
+         * Defaults to false.
+         * @type {boolean}
+         */
+        this.shouldCallImpressionOccurredAndStart = false;
         this.isBuffering = false;
         this.isFullscreen = document.fullscreenElement === this.player;
         this.quartileEvents = { "1q": false, "2q": false, "3q": false, "4q": false };
@@ -88,7 +99,7 @@ class OmidVideoCreativeSession {
         switch (type) {
         case AdEventType.SESSION_START:
             this.sessionActive_ = true;
-            if (this.occurredAndStarted) {
+            if (this.shouldCallImpressionOccurredAndStart) {
                 this.callImpressionOccurredAndVideoStart();
             }
             break;
@@ -104,15 +115,14 @@ class OmidVideoCreativeSession {
      */
     setupEventListeners_() {
         this.player.addEventListener("play", () => {
-            if (!this.isPlaying) {
-                this.isPlaying = true;
-                this.impressionOccurredAndVideoStart();
-            } else {
+            if (this.player.currentTime != 0) {
                 this.mediaEvents.resume();
             }
         });
         this.player.addEventListener("pause", () => {
-            this.mediaEvents.pause();
+            if (!this.player.ended) {
+                this.mediaEvents.pause();
+            }
         });
         this.player.addEventListener("waiting", () => {
             this.isBuffering = true;
@@ -123,25 +133,30 @@ class OmidVideoCreativeSession {
                 this.isBuffering = false;
                 this.mediaEvents.bufferFinish();
             }
-            const progress = this.player.currentTime / this.player.duration;
-            if (progress >= .99 && !this.quartileEvents["4q"]) {
-                this.quartileEvents["4q"] = true;
-                this.mediaEvents.complete();
-            } else if (progress >= .75 && !this.quartileEvents["3q"]) {
-                this.quartileEvents["3q"] = true;
-                this.mediaEvents.thirdQuartile();
-            } else if (progress >= .50 && !this.quartileEvents["2q"]) {
-                this.quartileEvents["2q"] = true;
-                this.mediaEvents.midpoint();
-            } else if (progress >= .25 && !this.quartileEvents["1q"]) {
-                this.quartileEvents["1q"] = true;
-                this.mediaEvents.firstQuartile();
+            if (this.player.duration > 0) {
+                const percentProgress = this.player.currentTime / this.player.duration;
+                if (percentProgress >= 0 && this.lastVideoPercentage == null) {
+                    this.callImpressionOccurredAndVideoStart();
+                } else if (percentProgress >= .25 && !this.quartileEvents["1q"]) {
+                    this.quartileEvents["1q"] = true;
+                    this.mediaEvents.firstQuartile();
+                } else if (percentProgress >= .50 && !this.quartileEvents["2q"]) {
+                    this.quartileEvents["2q"] = true;
+                    this.mediaEvents.midpoint();
+                } else if (percentProgress >= .75 && !this.quartileEvents["3q"]) {
+                    this.quartileEvents["3q"] = true;
+                    this.mediaEvents.thirdQuartile();
+                } else if (percentProgress >= .99 && !this.quartileEvents["4q"]) {
+                    this.quartileEvents["4q"] = true;
+                    this.mediaEvents.complete();
+                }
+                
+                this.lastVideoPercentage = percentProgress;
             }
         });
         this.player.addEventListener("volumechange", () => {
             this.mediaEvents.volumeChange(this.player.muted ? 0 : this.player.volume);
         });
-
 
         // event listeners for ios
         this.player.addEventListener('webkitendfullscreen', () => {
@@ -192,17 +207,18 @@ class OmidVideoCreativeSession {
     }
 
     impressionOccurredAndVideoStart() {
+        // Must wait for session to start before firing impression and start.
         if (this.sessionActive_) {
             this.adEvents_.impressionOccurred();
             this.mediaEvents.start(this.player.duration, this.player.muted ? 0 : this.player.volume);
         } else {
-            this.occurredAndStarted = true;
+            this.shouldCallImpressionOccurredAndStart = true;
         }
     }
 
     callImpressionOccurredAndVideoStart() {
-        this.occurredAndStarted = false;
         this.impressionOccurredAndVideoStart();
+        this.shouldCallImpressionOccurredAndStart = false;
     }
 }
 
