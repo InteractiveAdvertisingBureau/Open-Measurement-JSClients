@@ -11,6 +11,12 @@ describe('verificationVendorIdForScriptUrl', () => {
     expectScriptUrlToMatchVendorId(
         'https://cdn.doubleverify.com/script.js',
         VerificationVendorId.DOUBLEVERIFY);
+    expectScriptUrlToMatchVendorId(
+        'https://c.amazon-adsystem.com/vfw/dv/script.js',
+        VerificationVendorId.DOUBLEVERIFY);
+    expectScriptUrlToMatchVendorId(
+        'https://www.twitch.tv/r/s/d/script.js',
+        VerificationVendorId.DOUBLEVERIFY);
   });
   it('correctly identifies IAS URLs', () => {
     expectScriptUrlToMatchVendorId(

@@ -52,6 +52,8 @@ const VERIFICATION_VENDORS = new Map([
     VerificationVendorId.DOUBLEVERIFY,
     [
       /^(https?:\/\/|\/\/)?[-a-zA-Z0-9.]+\.doubleverify\.com\/.*$/,
+      /^(https?:\/\/|\/\/)?c\.amazon\-adsystem\.com\/vfw\/dv\/.*$/,
+      /^(https?:\/\/|\/\/)?www\.twitch\.tv\/r\/s\/d\/.*$/,
     ],
   ],
   [
