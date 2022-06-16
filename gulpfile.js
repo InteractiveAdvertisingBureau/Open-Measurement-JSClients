@@ -1,6 +1,8 @@
 const compilerPackage = require('google-closure-compiler');
 const gulp = require('gulp');
 const inject = require('gulp-inject');
+const {gulpOperationIf} = require('./gulp_utils');
+
 const closureCompiler = compilerPackage.gulp();
 
 const commonConfig = {
@@ -50,12 +52,16 @@ const SESSION_CLIENT_ZIP_SRC = [
   './LICENSE',
 ];
 
-gulp.task('package-session-client', gulp.series(
-    () => gulp.src(SESSION_CLIENT_ZIP_SRC)
-              .pipe(gulp.dest(`${PACKAGE_DIR}/Session-Client`)),
-    () => gulp.src(SESSION_CLIENT_SRC)
-              .pipe(gulp.dest(`${PACKAGE_DIR}/Session-Client/Source`)),
-));
+gulp.task(
+    'package-session-client',
+    gulpOperationIf(
+        VERSION_NUMBER,
+        gulp.series(
+            () => gulp.src(SESSION_CLIENT_ZIP_SRC)
+                      .pipe(gulp.dest(`${PACKAGE_DIR}/Session-Client`)),
+            () => gulp.src(SESSION_CLIENT_SRC)
+                      .pipe(gulp.dest(`${PACKAGE_DIR}/Session-Client/Source`)),
+            )));
 
 const VERIFICATION_CLIENT_SRC = [
   './src/common/**.js',
@@ -85,12 +91,17 @@ const VERIFICATION_CLIENT_ZIP_SRC = [
   './LICENSE',
 ];
 
-gulp.task('package-verification-client', gulp.series(
-  () => gulp.src(VERIFICATION_CLIENT_ZIP_SRC)
-            .pipe(gulp.dest(`${PACKAGE_DIR}/Verification-Client`)),
-  () => gulp.src(VERIFICATION_CLIENT_SRC)
-            .pipe(gulp.dest(`${PACKAGE_DIR}/Verification-Client/Source`)),
-));
+gulp.task(
+    'package-verification-client',
+    gulpOperationIf(
+        VERSION_NUMBER,
+        gulp.series(
+            () => gulp.src(VERIFICATION_CLIENT_ZIP_SRC)
+                      .pipe(gulp.dest(`${PACKAGE_DIR}/Verification-Client`)),
+            () => gulp.src(VERIFICATION_CLIENT_SRC)
+                      .pipe(gulp.dest(
+                          `${PACKAGE_DIR}/Verification-Client/Source`)),
+            )));
 
 const VALIDATION_VERIFICATION_SCRIPT_SRC = [
   './src/validation-verification-script/**.js',
@@ -119,12 +130,17 @@ const VALIDATION_VERIFICATION_SCRIPT_ZIP_SRC = [
   './LICENSE',
 ];
 
-gulp.task('package-validation-verification-script', gulp.series(
-  () => gulp.src(VALIDATION_VERIFICATION_SCRIPT_ZIP_SRC)
-            .pipe(gulp.dest(`${PACKAGE_DIR}/Validation-Script`)),
-  () => gulp.src(VALIDATION_VERIFICATION_SCRIPT_SRC)
-            .pipe(gulp.dest(`${PACKAGE_DIR}/Validation-Script/Source`)),
-));
+gulp.task(
+    'package-validation-verification-script',
+    gulpOperationIf(
+        VERSION_NUMBER,
+        gulp.series(
+            () => gulp.src(VALIDATION_VERIFICATION_SCRIPT_ZIP_SRC)
+                      .pipe(gulp.dest(`${PACKAGE_DIR}/Validation-Script`)),
+            () =>
+                gulp.src(VALIDATION_VERIFICATION_SCRIPT_SRC)
+                    .pipe(gulp.dest(`${PACKAGE_DIR}/Validation-Script/Source`)),
+            )));
 
 const COMPLIANCE_VERIFICATION_SCRIPT_SRC = [
   './src/compliance-verification-script/**.js',
@@ -153,12 +169,17 @@ const COMPLIANCE_VERIFICATION_SCRIPT_ZIP_SRC = [
   './LICENSE',
 ];
 
-gulp.task('package-compliance-verification-script', gulp.series(
-  () => gulp.src(COMPLIANCE_VERIFICATION_SCRIPT_ZIP_SRC)
-            .pipe(gulp.dest(`${PACKAGE_DIR}/Compliance-Script`)),
-  () => gulp.src(COMPLIANCE_VERIFICATION_SCRIPT_SRC)
-            .pipe(gulp.dest(`${PACKAGE_DIR}/Compliance-Script/Source`)),
-));
+gulp.task(
+    'package-compliance-verification-script',
+    gulpOperationIf(
+        VERSION_NUMBER,
+        gulp.series(
+            () => gulp.src(COMPLIANCE_VERIFICATION_SCRIPT_ZIP_SRC)
+                      .pipe(gulp.dest(`${PACKAGE_DIR}/Compliance-Script`)),
+            () =>
+                gulp.src(COMPLIANCE_VERIFICATION_SCRIPT_SRC)
+                    .pipe(gulp.dest(`${PACKAGE_DIR}/Compliance-Script/Source`)),
+            )));
 
 gulp.task('build-unit-tests', () => {
   const taskConfig = {

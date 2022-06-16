@@ -1,5 +1,11 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.3.35 - 2022-06-15
+- Fix JSClients update issue in TravisCI release script.
+- Skip packaging step for local builds.
+- Replace display:none by border:0px in OM SDK iframe.
+- Return before source check for non-session client messages.
+
 ## 1.3.34 - 2022-05-03
 - [OM Web] Treat all Service DirectCommunications as from same message source.
 - [Reference apps] Fire impression and start event for video ads when video starts playing.

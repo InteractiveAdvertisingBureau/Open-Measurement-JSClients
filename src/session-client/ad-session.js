@@ -8,11 +8,12 @@ const Rectangle = goog.require('omid.common.Rectangle');
 const VerificationScriptResource = goog.require('omid.sessionClient.VerificationScriptResource');
 const argsChecker = goog.require('omid.common.argsChecker');
 const logger = goog.require('omid.common.logger');
-const {AdEventType, CreativeType, ImpressionType, ErrorType} = goog.require('omid.common.constants');
+const {AdEventType, CreativeType, ErrorType, ImpressionType} = goog.require('omid.common.constants');
 const {Event} = goog.require('omid.common.eventTypedefs');
 const {Version} = goog.require('omid.common.version');
 const {deserializeMessageArgs, serializeMessageArgs} = goog.require('omid.common.ArgsSerDe');
 const {generateGuid} = goog.require('omid.common.guid');
+const {getPrefixedSessionServiceMethod} = goog.require('omid.common.serviceMethodUtils');
 const {packageExport} = goog.require('omid.common.exporter');
 const {resolveGlobalContext} = goog.require('omid.common.windowUtils');
 const {startSessionServiceCommunication} = goog.require('omid.common.serviceCommunication');
@@ -330,7 +331,7 @@ class AdSession {
       this.callbackMap_[guid] = responseCallback;
     }
     const message = new InternalMessage(
-        guid, `SessionService.${method}`, SESSION_CLIENT_VERSION,
+        guid, getPrefixedSessionServiceMethod(method), SESSION_CLIENT_VERSION,
         serializeMessageArgs(SESSION_CLIENT_VERSION, args));
     this.communication_.sendMessage(message);
   }

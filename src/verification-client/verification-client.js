@@ -9,6 +9,7 @@ const {Version} = goog.require('omid.common.version');
 const {assertFunction, assertPositiveNumber, assertTruthyString} = goog.require('omid.common.argsChecker');
 const {deserializeMessageArgs, serializeMessageArgs} = goog.require('omid.common.ArgsSerDe');
 const {generateGuid} = goog.require('omid.common.guid');
+const {getPrefixedVerificationServiceMethod} = goog.require('omid.common.serviceMethodUtils');
 const {omidGlobal} = goog.require('omid.common.OmidGlobalProvider');
 const {packageExport} = goog.require('omid.common.exporter');
 const {resolveGlobalContext} = goog.require('omid.common.windowUtils');
@@ -491,7 +492,7 @@ class VerificationClient {
 
     const message = new InternalMessage(
         guid,
-        `VerificationService.${method}`,
+        getPrefixedVerificationServiceMethod(method),
         VERIFICATION_CLIENT_VERSION,
         serializeMessageArgs(VERIFICATION_CLIENT_VERSION, args));
     this.communication.sendMessage(message);
