@@ -1,5 +1,8 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.3.36 - 2022-07-15
+- Add third party hosted prefixes.
+
 ## 1.3.35 - 2022-06-15
 - Fix JSClients update issue in TravisCI release script.
 - Skip packaging step for local builds.
