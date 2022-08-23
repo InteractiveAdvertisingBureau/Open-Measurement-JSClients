@@ -1,6 +1,6 @@
 {
   "accessMode": "creative",
-  "mediaUrl": "https://s3-us-west-2.amazonaws.com/omsdk-files/demo/creative/MANIA.mp4",
+  "mediaUrl": "https://omsdk-demo-files.s3.us-west-2.amazonaws.com/creative/MANIA.mp4",
   "omsdkUrl": "//localhost:8081/omweb-v1.js",
   "vendorKey": "imasdk.googleapis.com-test",
   "verificationScriptUrl": "http://localhost:8081/omid-validation-verification-script-v1.js",

@@ -1,5 +1,10 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.3.37 - 2022-08-22
+- Update chromedriver and pixel data for Chrome 104.
+- Update reference urls in Access Mode Guidance.
+- [Reference apps] Update ad reference urls.
+
 ## 1.3.36 - 2022-07-15
 - Add third party hosted prefixes.
 
