@@ -1,5 +1,20 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.4.0 - 2022-09-30
+OM SDK 1.4.0 is a significant update. It adds support for CTV.
+[Implement CTV-related features](https://iabtechlab.com/wp-content/uploads/2022/08/OMSDK_What-is-new-in-1.4_master.pdf)
+
+### CTV Update
+- Add DeviceCategory to Context definitions.
+- Last Activity signal for CTV.
+- Handled user activity signal in omsdk service.
+- Added lastActivityTime to verification event schema & event-typedfs.
+- Add noOutputDevice to list of reasons in schema.
+- Factor noOutputDevice connected into viewability.
+### Other Update
+- Remove unused adId field.
+- Update web video doc with audio ads info.
+
 ## 1.3.37 - 2022-08-22
 - Update chromedriver and pixel data for Chrome 104.
 - Update reference urls in Access Mode Guidance.
