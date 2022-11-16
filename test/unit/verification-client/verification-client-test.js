@@ -319,7 +319,16 @@ describe('VerificationClient', () => {
       it('proxies to the service', () => {
         const eventType = AdEventType.SESSION_START;
         client.addEventListener(eventType, doNothing);
-        expectCommunication('VerificationService.addEventListener');
+        expectCommunication(
+            'VerificationService.addEventListener', [eventType, INJECTION_ID]);
+      });
+      it('works when injectionId is unavailable', () => {
+        omidGlobal.omidVerificationProperties = undefined;
+        client = new VerificationClient(communication);
+        const eventType = AdEventType.SESSION_START;
+        client.addEventListener(eventType, doNothing);
+        expectCommunication(
+            'VerificationService.addEventListener', [eventType, undefined]);
       });
       it('validates the eventType parameter', () => {
         expectValidatesString(
@@ -420,7 +429,16 @@ describe('VerificationClient', () => {
       it('should pass arguments to omid3p implementation', () => {
         const eventType = AdEventType.START;
         client.addEventListener(eventType, doNothing);
-        expectCalledWithArgs(omid3p.addEventListener, [eventType, doNothing]);
+        expectCalledWithArgs(
+            omid3p.addEventListener, [eventType, doNothing, INJECTION_ID]);
+      });
+      it('should pass arguments when injectionId is unavailable', () => {
+        omidGlobal.omidVerificationProperties = undefined;
+        client = new VerificationClient();
+        const eventType = AdEventType.START;
+        client.addEventListener(eventType, doNothing);
+        expectCalledWithArgs(
+            omid3p.addEventListener, [eventType, doNothing, undefined]);
       });
     });
 
