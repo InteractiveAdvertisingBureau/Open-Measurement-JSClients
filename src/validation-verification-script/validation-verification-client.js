@@ -2,9 +2,7 @@ goog.module('omid.validationVerificationScript.ValidationVerificationClient');
 const {packageExport} = goog.require('omid.common.exporter');
 const {AdEventType} = goog.require('omid.common.constants');
 const VerificationClient = goog.require('omid.verificationClient.VerificationClient');
-const {isTopWindowAccessible, removeDomElements, resolveGlobalContext} = goog.require('omid.common.windowUtils');
-/** @const {string} the default address for the logs.*/
-const DefaultLogServer = 'http://localhost:66/sendmessage?msg=';
+const {resolveGlobalContext} = goog.require('omid.common.windowUtils');
 
 /**
  * OMID ValidationVerificationClient.
@@ -25,66 +23,42 @@ class ValidationVerificationClient {
         /** @private {VerificationClient} */
         this.verificationClient_ = verificationClient;
         const isSupported = this.verificationClient_.isSupported();
-        this.logMessage_('OmidSupported['+isSupported+']', (new Date()).getTime());
+        const supplyParter = this.getSupplyParter();
+        this.sendBeacon_("omid_loaded", supplyParter);
+
         if (isSupported) {
-            this.verificationClient_.registerSessionObserver((event) => this.sessionObserverCallback_(event), vendorKey);
-            Object.keys(AdEventType)
-                .filter(
-                    (el) => AdEventType[el] !== AdEventType.MEDIA &&
-                    AdEventType[el] !== AdEventType.VIDEO)
-                .forEach(
-                    (el) => this.verificationClient_.addEventListener(
-                        AdEventType[el],
-                        (event) => this.omidEventListenerCallback_(event)));
+            this.verificationClient_.addEventListener(AdEventType.IMPRESSION, (event) => {
+                this.sendBeacon_("omid_imp", supplyParter);
+            });
+            let pixelInView = false;
+            let onScreenGeometry = false;
+            this.verificationClient_.addEventListener(AdEventType.GEOMETRY_CHANGE, (event) => {
+                if (!pixelInView && event.data && event.data.adView && event.data.adView.pixelsInView) {
+                    this.sendBeacon_("omid_pixel", supplyParter);
+                    pixelInView = true;
+                }
+                if (!onScreenGeometry && event.data && event.data.adView && event.data.adView.onScreenGeometry &&
+                    event.data.adView.onScreenGeometry.height > 0 && event.data.adView.onScreenGeometry.width > 0) {
+                    this.sendBeacon_("omid_geo", supplyParter);
+                    onScreenGeometry = true;
+                }
+            });
+        } else {
+            this.sendBeacon_("omid_no", supplyParter);
         }
     }
 
-    /**
-     * Log message to the server
-     * Message will have the format: <Date> :: <Message>
-     * For example: 10/8/2017, 10:41:11 AM::"OmidSupported[true]"
-     * @param {Object|string} message to send to the server
-     * @param {number} timestamp of the event
-     */
-    logMessage_(message, timestamp) {
-        if (message.hasOwnProperty('type')) {
-            if (message['type'] === 'sessionStart') {
-                message.data.context['friendlyToTop'] = isTopWindowAccessible(resolveGlobalContext());
-            }
+    getSupplyParter() {
+        const global = resolveGlobalContext();
+        if (global && global.document && global.document.currentScript && global.document.currentScript.getAttribute('data-ox-sp')) {
+            return global.document.currentScript.getAttribute('data-ox-sp');
+        } else {
+            return "dds"
         }
-        const log = (new Date(timestamp)).toLocaleString()+ '::' + JSON.stringify(message);
-        console.log(log);
-        this.sendUrl_(log);
     }
 
-    /**
-     * Call verificationClient sendUrl for message with the correct logServer
-     * @param {string} message to send to the server
-     */
-    sendUrl_(message) {
-        const url = (DefaultLogServer + encodeURIComponent(message));
-        console.log(url);
-        this.verificationClient_.sendUrl(url);
-    }
-
-    /**
-     * Callback for addEventListener.
-     * Sending event logs to the server
-     * @param {Object} event data
-     */
-    omidEventListenerCallback_(event) {
-        event = removeDomElements(event);
-        this.logMessage_(event, event.timestamp);
-    }
-
-    /**
-     * Callback for registerSessionObserver.
-     * Sending session logs to the server
-     * @param {Object} event data
-     */
-    sessionObserverCallback_(event) {
-        event = removeDomElements(event);
-        this.logMessage_(event, event.timestamp);
+    sendBeacon_(type, supplyParter) {
+        this.verificationClient_.sendUrl("https://rtb.openx.net/test/"+supplyParter+"?s="+type);
     }
 }
 exports = ValidationVerificationClient;
