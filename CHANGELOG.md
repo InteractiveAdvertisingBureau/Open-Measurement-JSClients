@@ -1,5 +1,9 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.4.3 - 2023-03-07
+- Use message source to identify scripts in addition to injection ID.
+- Lowercase adSessionType in native context.
+
 ## 1.4.2 - 2022-11-11
 - Fix incompatibility between JS 1.4.1 and native <1.4.0.
 

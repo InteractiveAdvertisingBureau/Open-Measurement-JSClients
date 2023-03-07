@@ -7,7 +7,7 @@ const InternalMessage = goog.require('omid.common.InternalMessage');
 /**
  * A send and forget style communication between two DirectCommunication
  * instances.
- * @extends {Communication<DirectCommunication>}
+ * @extends {Communication<!DirectCommunication>}
  * @unrestricted
  */
 class DirectCommunication extends Communication {
