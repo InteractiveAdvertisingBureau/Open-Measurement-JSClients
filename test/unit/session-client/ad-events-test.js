@@ -7,6 +7,8 @@ const argsChecker = goog.require('omid.common.argsChecker');
 const {VideoPosition} = goog.require('omid.common.constants');
 const {asSpy} = goog.require('omid.test.typingUtils');
 
+const MOCK_AD_SESSION_ID = 'a1b2c3';
+
 describe('AdEventsTest', () => {
   /** @type{!AdSession} */
   let mockAdSession;
@@ -14,12 +16,14 @@ describe('AdEventsTest', () => {
   beforeEach(() => {
     mockAdSession = jasmine.createSpyObj(
         'AdSession', [
+          'getAdSessionId',
           'registerMediaEvents',
           'registerAdEvents',
           'sendOneWayMessage',
           'assertSessionRunning',
           'impressionOccurred',
           'creativeLoaded']);
+    mockAdSession.getAdSessionId.and.returnValue(MOCK_AD_SESSION_ID);
     spyOn(argsChecker, 'assertTruthyString');
     spyOn(argsChecker, 'assertNotNullObject');
   });
@@ -46,7 +50,7 @@ describe('AdEventsTest', () => {
       const adEvents = new AdEvents(mockAdSession);
       adEvents.impressionOccurred();
       expect(mockAdSession.sendOneWayMessage)
-          .toHaveBeenCalledWith('impressionOccurred');
+          .toHaveBeenCalledWith('impressionOccurred', MOCK_AD_SESSION_ID);
     });
 
     it('should flag the AdSession with the impression event', () => {
@@ -68,7 +72,8 @@ describe('AdEventsTest', () => {
       const adEvents = new AdEvents(mockAdSession);
       adEvents.loaded(null);
       expect(mockAdSession.sendOneWayMessage)
-          .toHaveBeenCalledWith('loaded');
+          .toHaveBeenCalledWith(
+              'loaded', /* vastProperties= */ null, MOCK_AD_SESSION_ID);
     });
 
     it(`video creatives should send a message to the SessionService with
@@ -85,7 +90,7 @@ describe('AdEventsTest', () => {
         skipOffset: 10,
         isAutoPlay: true,
         position: 'preroll',
-      });
+      }, MOCK_AD_SESSION_ID);
     });
 
     it('should flag the AdSession with the loaded event', () => {

@@ -9,11 +9,15 @@ const Partner = goog.require('omid.sessionClient.Partner');
 const PostMessageCommunication = goog.require('omid.common.PostMessageCommunication');
 const Rectangle = goog.require('omid.common.Rectangle');
 const argsChecker = goog.require('omid.common.argsChecker');
+const guidUtils = goog.require('omid.common.guid');
 const {VERSION_COMPATABILITY_TABLE, makeVersionRespondingCommunicationClass} = goog.require('omid.test.versionUtils');
 const {CreativeType, ErrorType, ImpressionType} = goog.require('omid.common.constants');
 const {Version} = goog.require('omid.common.version');
 const {asSpy} = goog.require('omid.test.typingUtils');
 const {serializeMessageArgs, deserializeMessageArgs} = goog.require('omid.common.ArgsSerDe');
+
+/** @type {string} */
+const MOCK_AD_SESSION_ID = 'a1b2c3';
 
 /** @type {string} */
 const CLIENT_VERSION = Version;
@@ -61,6 +65,7 @@ function expectMessage(method) {
 describe('AdSessionTest', () => {
   beforeEach(() => {
     spyOn(argsChecker, 'assertNotNullObject');
+    spyOn(guidUtils, 'generateGuid').and.returnValue(MOCK_AD_SESSION_ID);
 
     // Spy on the send message method of the communication, to check when a
     // message is sent to the service. The message parsing itself is a function
@@ -136,7 +141,7 @@ describe('AdSessionTest', () => {
       expect(communication.sendMessage).toHaveBeenCalledWith(
         jasmine.objectContaining({
           'method': `SessionService.setCreativeType`,
-          'args': [CreativeType.HTML_DISPLAY],
+          'args': [CreativeType.HTML_DISPLAY, MOCK_AD_SESSION_ID],
       }));
     });
     it('relays creativeType to the service by sending a message if creativeType was defined as '
@@ -146,7 +151,7 @@ describe('AdSessionTest', () => {
       expect(communication.sendMessage).toHaveBeenCalledWith(
         jasmine.objectContaining({
           'method': `SessionService.setCreativeType`,
-          'args': [CreativeType.VIDEO],
+          'args': [CreativeType.VIDEO, MOCK_AD_SESSION_ID],
       }));
     });
   });
@@ -189,7 +194,7 @@ describe('AdSessionTest', () => {
       expect(communication.sendMessage).toHaveBeenCalledWith(
         jasmine.objectContaining({
           'method': `SessionService.setImpressionType`,
-          'args': [ImpressionType.ONE_PIXEL],
+          'args': [ImpressionType.ONE_PIXEL, MOCK_AD_SESSION_ID],
       }));
     });
     it('relays impressionType to the service by sending a message if impressionType was defined as '
@@ -199,7 +204,7 @@ describe('AdSessionTest', () => {
       expect(communication.sendMessage).toHaveBeenCalledWith(
         jasmine.objectContaining({
           'method': `SessionService.setImpressionType`,
-          'args': [ImpressionType.BEGIN_TO_RENDER],
+          'args': [ImpressionType.BEGIN_TO_RENDER, MOCK_AD_SESSION_ID],
       }));
     });
   });
@@ -317,6 +322,7 @@ describe('AdSessionTest', () => {
                 'customReferenceData': CUSTOM_REFERENCE_DATA,
                 'underEvaluation': UNDER_EVALUATION,
               },
+              MOCK_AD_SESSION_ID,
             ],
           }));
     });
@@ -347,7 +353,7 @@ describe('AdSessionTest', () => {
           jasmine.objectContaining(
               {
                 'method': 'SessionService.setElementBounds',
-                'args': [rectangle],
+                'args': [rectangle, MOCK_AD_SESSION_ID],
               }
           ));
     });
@@ -379,7 +385,7 @@ describe('AdSessionTest', () => {
         expect(communication.sendMessage).toHaveBeenCalledWith(
             jasmine.objectContaining({
               'method': `SessionService.${communicationMethod}`,
-              'args': [element],
+              'args': [element, MOCK_AD_SESSION_ID],
             }));
       });
       it('should send element to service if using session interface', () => {
@@ -388,7 +394,8 @@ describe('AdSessionTest', () => {
         const element = /** @type {!HTMLElement} */ ({});
         session[methodToCall](element);
         expect(sessionInterface.sendMessage)
-            .toHaveBeenCalledWith(communicationMethod, null, [element]);
+            .toHaveBeenCalledWith(
+                communicationMethod, null, [element, MOCK_AD_SESSION_ID]);
       });
       it('should fire sessionError if communication is post message', () => {
         const element = /** @type {!HTMLElement} */ ({});
@@ -401,7 +408,10 @@ describe('AdSessionTest', () => {
         expect(communication.sendMessage).toHaveBeenCalledWith(
             jasmine.objectContaining({
               'method': 'SessionService.sessionError',
-              'args': jasmine.arrayContaining([ErrorType.GENERIC]),
+              'args': jasmine.arrayContaining([
+                ErrorType.GENERIC,
+                MOCK_AD_SESSION_ID,
+              ]),
             }));
       });
     });

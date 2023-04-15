@@ -7,6 +7,8 @@ const MediaEvents = goog.require('omid.sessionClient.MediaEvents');
 const {InteractionType, VideoPlayerState, VideoPosition} = goog.require('omid.common.constants');
 const {asSpy} = goog.require('omid.test.typingUtils');
 
+const MOCK_AD_SESSION_ID = 'a1b2c3';
+
 /** @type {!MediaEvents} */
 let mediaEvents;
 
@@ -32,11 +34,13 @@ describe('MediaEventsTest', () => {
   beforeEach(() => {
     mockAdSession = jasmine.createSpyObj(
         'AdSession', [
+          'getAdSessionId',
           'registerMediaEvents',
           'registerAdEvents',
           'sendOneWayMessage',
           'assertSessionRunning',
           'impressionOccurred']);
+    mockAdSession.getAdSessionId.and.returnValue(MOCK_AD_SESSION_ID);
     spyOn(argsChecker, 'assertNotNullObject');
     spyOn(argsChecker, 'assertNumber');
     spyOn(argsChecker, 'assertNumberBetween');
@@ -77,7 +81,7 @@ describe('MediaEventsTest', () => {
 
     testForwardingFunction(
         'start', MediaEvents.prototype.start, 5 /* duration */,
-        0.6 /* volume */);
+        0.6 /* volume */, MOCK_AD_SESSION_ID);
   });
 
   describe('volumeChange', () => {
@@ -90,7 +94,8 @@ describe('MediaEventsTest', () => {
     });
 
     testForwardingFunction(
-        'volumeChange', MediaEvents.prototype.volumeChange, 0.6 /* volume */);
+        'volumeChange', MediaEvents.prototype.volumeChange, 0.6 /* volume */,
+        MOCK_AD_SESSION_ID);
   });
 
   describe('playerStateChange', () => {
@@ -106,7 +111,8 @@ describe('MediaEventsTest', () => {
     testForwardingFunction(
         'playerStateChange',
         MediaEvents.prototype.playerStateChange,
-        VideoPlayerState.FULLSCREEN);
+        VideoPlayerState.FULLSCREEN,
+        MOCK_AD_SESSION_ID);
   });
 
   describe('adUserInteraction', () => {
@@ -122,44 +128,54 @@ describe('MediaEventsTest', () => {
     testForwardingFunction(
         'adUserInteraction',
         MediaEvents.prototype.adUserInteraction,
-        InteractionType.CLICK);
+        InteractionType.CLICK,
+        MOCK_AD_SESSION_ID);
   });
 
   describe('firstQuartile', () => {
     testForwardingFunction(
-        'firstQuartile', MediaEvents.prototype.firstQuartile);
+        'firstQuartile', MediaEvents.prototype.firstQuartile,
+        MOCK_AD_SESSION_ID);
   });
 
   describe('midpoint', () => {
-    testForwardingFunction('midpoint', MediaEvents.prototype.midpoint);
+    testForwardingFunction(
+        'midpoint', MediaEvents.prototype.midpoint, MOCK_AD_SESSION_ID);
   });
 
   describe('thirdQuartile', () => {
-    testForwardingFunction('thirdQuartile',
-        MediaEvents.prototype.thirdQuartile);
+    testForwardingFunction(
+        'thirdQuartile', MediaEvents.prototype.thirdQuartile,
+        MOCK_AD_SESSION_ID);
   });
 
   describe('complete', () => {
-    testForwardingFunction('complete', MediaEvents.prototype.complete);
+    testForwardingFunction(
+        'complete', MediaEvents.prototype.complete, MOCK_AD_SESSION_ID);
   });
 
   describe('pause', () => {
-    testForwardingFunction('pause', MediaEvents.prototype.pause);
+    testForwardingFunction(
+        'pause', MediaEvents.prototype.pause, MOCK_AD_SESSION_ID);
   });
 
   describe('resume', () => {
-    testForwardingFunction('resume', MediaEvents.prototype.resume);
+    testForwardingFunction(
+        'resume', MediaEvents.prototype.resume, MOCK_AD_SESSION_ID);
   });
 
   describe('bufferStart', () => {
-    testForwardingFunction('bufferStart', MediaEvents.prototype.bufferStart);
+    testForwardingFunction(
+        'bufferStart', MediaEvents.prototype.bufferStart, MOCK_AD_SESSION_ID);
   });
 
   describe('bufferFinish', () => {
-    testForwardingFunction('bufferFinish', MediaEvents.prototype.bufferFinish);
+    testForwardingFunction(
+        'bufferFinish', MediaEvents.prototype.bufferFinish, MOCK_AD_SESSION_ID);
   });
 
   describe('skipped', () => {
-    testForwardingFunction('skipped', MediaEvents.prototype.skipped);
+    testForwardingFunction(
+        'skipped', MediaEvents.prototype.skipped, MOCK_AD_SESSION_ID);
   });
 });

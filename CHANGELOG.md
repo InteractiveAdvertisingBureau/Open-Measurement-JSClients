@@ -1,5 +1,9 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.4.4 - 2023-04-15
+- Trigger initial geometryChange event when page hidden on session start.
+- Update JS session client to send ID-scoped messages.
+
 ## 1.4.3 - 2023-03-07
 - Use message source to identify scripts in addition to injection ID.
 - Lowercase adSessionType in native context.

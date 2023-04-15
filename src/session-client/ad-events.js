@@ -22,6 +22,9 @@ class AdEvents {
   constructor(adSession) {
     argsChecker.assertNotNullObject('AdEvents.adSession', adSession);
 
+    /** @private @const {string} */
+    this.adSessionId_ = adSession.getAdSessionId();
+
     try {
       adSession.registerAdEvents();
       this.adSession = adSession;
@@ -39,7 +42,7 @@ class AdEvents {
   impressionOccurred() {
     this.adSession.assertSessionRunning();
     this.adSession.impressionOccurred();
-    this.adSession.sendOneWayMessage('impressionOccurred');
+    this.adSession.sendOneWayMessage('impressionOccurred', this.adSessionId_);
   }
 
   /**
@@ -54,11 +57,9 @@ class AdEvents {
    */
   loaded(vastProperties = null) {
     this.adSession.creativeLoaded();
-    if (vastProperties) {
-      this.adSession.sendOneWayMessage('loaded', vastProperties.toJSON());
-    } else {
-      this.adSession.sendOneWayMessage('loaded');
-    }
+    const vastPropertiesJson = vastProperties ? vastProperties.toJSON() : null;
+    this.adSession.sendOneWayMessage(
+        'loaded', vastPropertiesJson, this.adSessionId_);
   }
 }
 

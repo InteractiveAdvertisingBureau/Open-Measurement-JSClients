@@ -7,12 +7,12 @@ const OmidJsSessionInterface = goog.require('omid.sessionClient.OmidJsSessionInt
 const Rectangle = goog.require('omid.common.Rectangle');
 const VerificationScriptResource = goog.require('omid.sessionClient.VerificationScriptResource');
 const argsChecker = goog.require('omid.common.argsChecker');
+const guidUtils = goog.require('omid.common.guid');
 const logger = goog.require('omid.common.logger');
 const {AdEventType, CreativeType, ErrorType, ImpressionType} = goog.require('omid.common.constants');
 const {Event} = goog.require('omid.common.eventTypedefs');
 const {Version} = goog.require('omid.common.version');
 const {deserializeMessageArgs, serializeMessageArgs} = goog.require('omid.common.ArgsSerDe');
-const {generateGuid} = goog.require('omid.common.guid');
 const {getPrefixedSessionServiceMethod} = goog.require('omid.common.serviceMethodUtils');
 const {packageExport} = goog.require('omid.common.exporter');
 const {resolveGlobalContext} = goog.require('omid.common.windowUtils');
@@ -49,6 +49,9 @@ class AdSession {
   constructor(
       context, communication = undefined, sessionInterface = undefined) {
     argsChecker.assertNotNullObject('AdSession.context', context);
+
+    /** @private @const {string} */
+    this.adSessionId_ = guidUtils.generateGuid();
 
     /** @private @const {!Context} */
     this.context_ = context;
@@ -116,6 +119,14 @@ class AdSession {
   }
 
   /**
+   * Get the ID of this ad session.
+   * @return {string}
+   */
+  getAdSessionId() {
+    return this.adSessionId_;
+  }
+
+  /**
    * Specifies the type of creative to be rendered in this session.
    * Requires that the native layer set the creative type to
    * DEFINED_BY_JAVASCRIPT.
@@ -147,7 +158,7 @@ class AdSession {
     if (this.creativeType_ === undefined) {
       throw new Error('Native integration is using OMID 1.2 or earlier');
     }
-    this.sendOneWayMessage('setCreativeType', creativeType);
+    this.sendOneWayMessage('setCreativeType', creativeType, this.adSessionId_);
     this.creativeType_ = creativeType;
   }
 
@@ -182,7 +193,8 @@ class AdSession {
     if (this.impressionType_ === undefined) {
       throw new Error('Native integration is using OMID 1.2 or earlier');
     }
-    this.sendOneWayMessage('setImpressionType', impressionType);
+    this.sendOneWayMessage(
+        'setImpressionType', impressionType, this.adSessionId_);
     this.impressionType_ = impressionType;
   }
 
@@ -223,7 +235,8 @@ class AdSession {
    * @public
    */
   registerSessionObserver(functionToExecute) {
-    this.sendMessage('registerSessionObserver', functionToExecute);
+    this.sendMessage(
+        'registerSessionObserver', functionToExecute, this.adSessionId_);
   }
 
   /**
@@ -239,7 +252,8 @@ class AdSession {
       'customReferenceData': this.context_.customReferenceData,
       'underEvaluation': this.context_.underEvaluation,
     };
-    this.sendOneWayMessage('startSession', sessionStartContext);
+    this.sendOneWayMessage(
+        'startSession', sessionStartContext, this.adSessionId_);
   }
 
   /**
@@ -250,7 +264,7 @@ class AdSession {
    * is no active ad session or in a mobile app environment.
    */
   finish() {
-    this.sendOneWayMessage('finishSession');
+    this.sendOneWayMessage('finishSession', this.adSessionId_);
   }
 
   /**
@@ -262,7 +276,8 @@ class AdSession {
    * @public
    */
   error(errorType, message) {
-    this.sendOneWayMessage('sessionError', errorType, message);
+    this.sendOneWayMessage(
+        'sessionError', errorType, message, this.adSessionId_);
   }
 
   /**
@@ -273,7 +288,7 @@ class AdSession {
       throw new Error('AdEvents already registered.');
     }
     this.hasAdEvents_ = true;
-    this.sendOneWayMessage('registerAdEvents');
+    this.sendOneWayMessage('registerAdEvents', this.adSessionId_);
   }
 
   /**
@@ -284,7 +299,7 @@ class AdSession {
       throw new Error('MediaEvents already registered.');
     }
     this.hasMediaEvents_ = true;
-    this.sendOneWayMessage('registerMediaEvents');
+    this.sendOneWayMessage('registerMediaEvents', this.adSessionId_);
   }
 
   /**
@@ -296,6 +311,7 @@ class AdSession {
    *     function.
    */
   sendOneWayMessage(method, ...args) {
+    // TODO(OMSDK-930): Consolidate logic for ordering of message arguments.
     this.sendMessage(method, null, ...args);
   }
 
@@ -326,7 +342,7 @@ class AdSession {
    * @private
    */
   sendInternalMessage_(method, responseCallback, args) {
-    const guid = generateGuid();
+    const guid = guidUtils.generateGuid();
     if (responseCallback) {
       this.callbackMap_[guid] = responseCallback;
     }
@@ -430,8 +446,9 @@ class AdSession {
    * @private
    */
   setClientInfo_() {
-    this.sendOneWayMessage('setClientInfo', SESSION_CLIENT_VERSION,
-        this.context_.partner.name, this.context_.partner.version);
+    this.sendOneWayMessage(
+        'setClientInfo', SESSION_CLIENT_VERSION, this.context_.partner.name,
+        this.context_.partner.version, this.adSessionId_);
   }
 
   /**
@@ -446,7 +463,8 @@ class AdSession {
   injectVerificationScripts_(verificationScriptResources) {
     if (!verificationScriptResources) return;
     const resources = verificationScriptResources.map((r) => r.toJSON());
-    this.sendOneWayMessage('injectVerificationScriptResources', resources);
+    this.sendOneWayMessage(
+        'injectVerificationScriptResources', resources, this.adSessionId_);
   }
 
   /**
@@ -485,7 +503,7 @@ class AdSession {
           `Session Client ${method} called when communication is cross-origin`);
       return;
     }
-    this.sendOneWayMessage(method, element);
+    this.sendOneWayMessage(method, element, this.adSessionId_);
   }
 
   /**
@@ -497,7 +515,7 @@ class AdSession {
     if (!contentUrl) {
       return;
     }
-    this.sendOneWayMessage('setContentUrl', contentUrl);
+    this.sendOneWayMessage('setContentUrl', contentUrl, this.adSessionId_);
   }
 
   /**
@@ -509,7 +527,8 @@ class AdSession {
    */
   setElementBounds(elementBounds) {
     argsChecker.assertNotNullObject('AdSession.elementBounds', elementBounds);
-    this.sendOneWayMessage('setElementBounds', elementBounds);
+    this.sendOneWayMessage(
+        'setElementBounds', elementBounds, this.adSessionId_);
   }
 
   /**

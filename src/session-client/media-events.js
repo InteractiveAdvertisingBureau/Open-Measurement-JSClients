@@ -24,6 +24,9 @@ class MediaEvents {
   constructor(adSession) {
     argsChecker.assertNotNullObject('MediaEvents.adSession', adSession);
 
+    /** @private @const {string} */
+    this.adSessionId_ = adSession.getAdSessionId();
+
     try {
       adSession.registerMediaEvents();
       this.adSession = adSession;
@@ -46,7 +49,8 @@ class MediaEvents {
     argsChecker.assertNumber('MediaEvents.start.duration', duration);
     argsChecker.assertNumberBetween('MediaEvents.start.mediaPlayerVolume',
         mediaPlayerVolume, 0, 1);
-    this.adSession.sendOneWayMessage('start', duration, mediaPlayerVolume);
+    this.adSession.sendOneWayMessage(
+        'start', duration, mediaPlayerVolume, this.adSessionId_);
   }
 
   /**
@@ -55,7 +59,7 @@ class MediaEvents {
    * @public
    */
   firstQuartile() {
-    this.adSession.sendOneWayMessage('firstQuartile');
+    this.adSession.sendOneWayMessage('firstQuartile', this.adSessionId_);
   }
 
   /**
@@ -63,7 +67,7 @@ class MediaEvents {
    * @public
    */
   midpoint() {
-    this.adSession.sendOneWayMessage('midpoint');
+    this.adSession.sendOneWayMessage('midpoint', this.adSessionId_);
   }
 
   /**
@@ -72,7 +76,7 @@ class MediaEvents {
    * @public
    */
   thirdQuartile() {
-    this.adSession.sendOneWayMessage('thirdQuartile');
+    this.adSession.sendOneWayMessage('thirdQuartile', this.adSessionId_);
   }
 
   /**
@@ -80,7 +84,7 @@ class MediaEvents {
    * @public
    */
   complete() {
-    this.adSession.sendOneWayMessage('complete');
+    this.adSession.sendOneWayMessage('complete', this.adSessionId_);
   }
 
   /**
@@ -89,7 +93,7 @@ class MediaEvents {
    * @public
    */
   pause() {
-    this.adSession.sendOneWayMessage('pause');
+    this.adSession.sendOneWayMessage('pause', this.adSessionId_);
   }
 
   /**
@@ -98,7 +102,7 @@ class MediaEvents {
    * @public
    */
   resume() {
-    this.adSession.sendOneWayMessage('resume');
+    this.adSession.sendOneWayMessage('resume', this.adSessionId_);
   }
 
   /**
@@ -107,7 +111,7 @@ class MediaEvents {
    * @public
    */
   bufferStart() {
-    this.adSession.sendOneWayMessage('bufferStart');
+    this.adSession.sendOneWayMessage('bufferStart', this.adSessionId_);
   }
 
   /**
@@ -116,7 +120,7 @@ class MediaEvents {
    * @public
    */
   bufferFinish() {
-    this.adSession.sendOneWayMessage('bufferFinish');
+    this.adSession.sendOneWayMessage('bufferFinish', this.adSessionId_);
   }
 
   /**
@@ -126,7 +130,7 @@ class MediaEvents {
    * @public
    */
   skipped() {
-    this.adSession.sendOneWayMessage('skipped');
+    this.adSession.sendOneWayMessage('skipped', this.adSessionId_);
   }
 
   /**
@@ -139,7 +143,8 @@ class MediaEvents {
   volumeChange(mediaPlayerVolume) {
     argsChecker.assertNumberBetween(
         'MediaEvents.volumeChange.mediaPlayerVolume', mediaPlayerVolume, 0, 1);
-    this.adSession.sendOneWayMessage('volumeChange', mediaPlayerVolume);
+    this.adSession.sendOneWayMessage(
+        'volumeChange', mediaPlayerVolume, this.adSessionId_);
   }
 
   /**
@@ -152,7 +157,8 @@ class MediaEvents {
   playerStateChange(playerState) {
     argsChecker.assertNotNullObject(
         'MediaEvents.playerStateChange.playerState', playerState);
-    this.adSession.sendOneWayMessage('playerStateChange', playerState);
+    this.adSession.sendOneWayMessage(
+        'playerStateChange', playerState, this.adSessionId_);
   }
 
   /**
@@ -164,7 +170,8 @@ class MediaEvents {
   adUserInteraction(interactionType) {
     argsChecker.assertNotNullObject(
         'MediaEvents.adUserInteraction.interactionType', interactionType);
-    this.adSession.sendOneWayMessage('adUserInteraction', interactionType);
+    this.adSession.sendOneWayMessage(
+        'adUserInteraction', interactionType, this.adSessionId_);
   }
 }
 
