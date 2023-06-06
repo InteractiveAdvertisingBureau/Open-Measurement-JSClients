@@ -10,7 +10,7 @@ function error(...args) {
         // If this is a Jasmine run, throw loudly. Causing the tests to barf.
         throw new Error('Could not complete the test successfully - ', ...args);
       },
-      () => console.error(...args)
+      () => console.error(...args),
   );
 }
 
@@ -22,7 +22,7 @@ function debug(...args) {
   executeLog(
       // ignore on test runs, it just produces noise.
       () => {},
-      () => console.error(...args)
+      () => console.error(...args),
   );
 }
 

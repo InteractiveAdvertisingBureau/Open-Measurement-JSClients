@@ -17,7 +17,7 @@ const ServiceMethodPrefix = {
 function getPrefixedSessionServiceMethod(unprefixedMethod) {
   return getPrefixedMethod(
     unprefixedMethod,
-    ServiceMethodPrefix.SESSION_SERVICE
+    ServiceMethodPrefix.SESSION_SERVICE,
   );
 }
 
@@ -30,7 +30,7 @@ function getPrefixedSessionServiceMethod(unprefixedMethod) {
 function getUnprefixedSessionServiceMethod(prefixedMethod) {
   return getUnprefixedMethod(
     prefixedMethod,
-    ServiceMethodPrefix.SESSION_SERVICE
+    ServiceMethodPrefix.SESSION_SERVICE,
   );
 }
 
@@ -51,7 +51,7 @@ function isPrefixedSessionServiceMethod(prefixedMethod) {
 function getPrefixedVerificationServiceMethod(unprefixedMethod) {
   return getPrefixedMethod(
     unprefixedMethod,
-    ServiceMethodPrefix.VERIFICATION_SERVICE
+    ServiceMethodPrefix.VERIFICATION_SERVICE,
   );
 }
 
@@ -64,7 +64,7 @@ function getPrefixedVerificationServiceMethod(unprefixedMethod) {
 function getUnprefixedVerificationServiceMethod(prefixedMethod) {
   return getUnprefixedMethod(
     prefixedMethod,
-    ServiceMethodPrefix.VERIFICATION_SERVICE
+    ServiceMethodPrefix.VERIFICATION_SERVICE,
   );
 }
 

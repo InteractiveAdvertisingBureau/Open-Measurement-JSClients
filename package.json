@@ -1,6 +1,6 @@
 {
   "name": "open-measurement-jsclients",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "JavaScript common and client components of OM SDK",
   "watch": {
     "test-unit": {
@@ -61,27 +61,30 @@
   "homepage": "https://github.com/InteractiveAdvertisingBureau/Open-Measurement-JSClients#readme",
   "private": false,
   "devDependencies": {
-    "ajv": "^6.5.2",
-    "chromedriver": "^100",
-    "clang-format": "^1.2.4",
+    "ajv": "^8.12.0",
+    "chromedriver": "^113.0.0",
+    "clang-format": "^1.8.0",
     "es6-template-strings": "^2.0.1",
-    "eslint": "5.16.0",
-    "eslint-config-google": "0.13.0",
-    "google-closure-compiler": "^20200112.0.0",
-    "gulp": "^4.0.0",
+    "eslint": "^8.40.0",
+    "eslint-config-google": "^0.14.0",
+    "google-closure-compiler": "^20230502.0.0",
+    "gulp": "^4.0.2",
     "gulp-cli": "^2.0.1",
     "gulp-concat": "^2.6.1",
     "gulp-inject": "^5.0.5",
-    "gulp-zip": "^4.2.0",
-    "jasmine": "^2.7.0",
-    "jsdoc": "^3.6.4",
-    "karma": "^4.1.0",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-jasmine": "^1.1.0",
-    "karma-jasmine-html-reporter": "^0.2.2",
-    "mkdirp": "^0.5.1",
-    "npm-watch": "^0.2.0",
-    "rimraf": "^2.6.1",
-    "selenium-webdriver": "^3.5.0"
+    "gulp-zip": "^5.1.0",
+    "jasmine": "^4.6.0",
+    "jsdoc": "^4.0.2",
+    "karma": "^6.4.2",
+    "karma-chrome-launcher": "^3.2.0",
+    "karma-jasmine": "^5.1.0",
+    "karma-jasmine-html-reporter": "^2.0.0",
+    "mkdirp": "^3.0.1",
+    "npm-watch": "^0.11.0",
+    "rimraf": "^5.0.0",
+    "selenium-webdriver": "^4.9.2"
+  },
+  "overrides": {
+    "chokidar": "^3.5.3"
   }
 }

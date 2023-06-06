@@ -7,27 +7,35 @@ const InternalMessage = goog.require('omid.common.InternalMessage');
  *
  * @param {!Communication} communication1
  * @param {!Communication} communication2
- * @param {function()} done
  */
-function canTalkToEachOther(communication1, communication2, done) {
+function expectTwoWayCommunication(communication1, communication2) {
   const testMessage1 = new InternalMessage('guid1', 'method1', '1.0', '[123]');
   const testMessage2 = new InternalMessage('guid2', 'method2', '1.0', '[321]');
-  // When communication1 receives a message from communication2, it will respond
-  // with another message.
-  communication1.onMessage = (message, from) => {
-    expect(message.serialize()).toEqual(testMessage1.serialize());
-    communication1.sendMessage(testMessage2, from);
+
+  let spy = {
+    communication1Received: (message, from) => {
+      // When communication1 receives a message from communication2, respond
+      // with another message.
+      expect(message.serialize()).toEqual(testMessage1.serialize());
+      communication1.sendMessage(testMessage2, from);
+    },
+    communication2Received: (message, from) => {
+      // When the response message from communication1 is received by
+      // communication2, complete the test.
+      expect(message.serialize()).toEqual(testMessage2.serialize());
+    },
   };
-  // When the response message from communication1 is received by
-  // communication2, complete the test.
-  communication2.onMessage = (message, from) => {
-    expect(message.serialize()).toEqual(testMessage2.serialize());
-    done();
-  };
-  // Send a message to communication1. Once received, a response message will be
-  // sent, which ultimately will complete the test. Here we use the signature
-  // that uses the destination stored as instance state.
+  spyOn(spy, 'communication1Received');
+  spyOn(spy, 'communication2Received');
+
+  communication1.onMessage = (message, from) => spy.communication1Received();
+  communication2.onMessage = (message, from) => spy.communication2Received();
+
+  // Send a message to communication1.
   communication2.sendMessage(testMessage1);
+
+  expect(spy.communication1Received).toHaveBeenCalled;
+  expect(spy.communication2Received).toHaveBeenCalled;
 }
 
-exports = {canTalkToEachOther};
+exports = {expectTwoWayCommunication};

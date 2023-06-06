@@ -584,6 +584,17 @@ const OmidImplementer = {
   OMSDK: 'omsdk',
 };
 
+/**
+ * Values for the `method` of a particular message sent to or from the OM SDK
+ * service. The "method" identifies the purpose of the message and determines
+ * how its arguments will be interpreted.
+ * TODO(OMSDK-930): Include all methods used for client-service communication.
+ * @enum {string}
+ */
+const MessageMethod = {
+  IDENTIFY_SERVICE_WINDOW: 'identifyServiceWindow',
+};
+
 exports = {
   AccessMode,
   AdEventType,
@@ -600,6 +611,7 @@ exports = {
   InteractionType,
   MeasurementStateChangeSource,
   MediaType,
+  MessageMethod,
   NativeViewKeys,
   OmidImplementer,
   Reason,

@@ -144,8 +144,8 @@ describe('AdSessionTest', () => {
           'args': [CreativeType.HTML_DISPLAY, MOCK_AD_SESSION_ID],
       }));
     });
-    it('relays creativeType to the service by sending a message if creativeType was defined as '
-      + CreativeType.DEFINED_BY_JAVASCRIPT, () => {
+    it('relays creativeType to the service by sending a message if creativeType was defined as ' +
+      CreativeType.DEFINED_BY_JAVASCRIPT, () => {
       session.creativeType_ = CreativeType.DEFINED_BY_JAVASCRIPT;
       session.setCreativeType(CreativeType.VIDEO);
       expect(communication.sendMessage).toHaveBeenCalledWith(
@@ -197,8 +197,8 @@ describe('AdSessionTest', () => {
           'args': [ImpressionType.ONE_PIXEL, MOCK_AD_SESSION_ID],
       }));
     });
-    it('relays impressionType to the service by sending a message if impressionType was defined as '
-      + ImpressionType.DEFINED_BY_JAVASCRIPT, () => {
+    it('relays impressionType to the service by sending a message if impressionType was defined as ' +
+      ImpressionType.DEFINED_BY_JAVASCRIPT, () => {
       session.impressionType_ = ImpressionType.DEFINED_BY_JAVASCRIPT;
       session.setImpressionType(ImpressionType.BEGIN_TO_RENDER);
       expect(communication.sendMessage).toHaveBeenCalledWith(
@@ -354,7 +354,7 @@ describe('AdSessionTest', () => {
               {
                 'method': 'SessionService.setElementBounds',
                 'args': [rectangle, MOCK_AD_SESSION_ID],
-              }
+              },
           ));
     });
   });

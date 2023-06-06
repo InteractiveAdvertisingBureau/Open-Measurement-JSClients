@@ -1,5 +1,12 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.4.5 - 2023-06-06
+- Add method to set session client window.
+- Add iPadOS and tvOS to our list of expected OS values.
+- Fix 'stale element' error in fullstack tests.
+- Malware in fsevents and update Node to lts/hydrogen.
+- Add documentation for cross-origin session clients.
+
 ## 1.4.4 - 2023-04-15
 - Trigger initial geometryChange event when page hidden on session start.
 - Update JS session client to send ID-scoped messages.
