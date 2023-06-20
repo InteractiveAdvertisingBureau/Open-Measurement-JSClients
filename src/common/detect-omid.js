@@ -50,7 +50,8 @@ exports.declareOmidPresence = function(globalObject) {
   } else {
     const frameTag = '<iframe style="display:none" ' +
         `id="${exports.OMID_PRESENT_FRAME_NAME}"` +
-        ` name="${exports.OMID_PRESENT_FRAME_NAME}">` + '</iframe>';
+        ` name="${exports.OMID_PRESENT_FRAME_NAME}"` +
+        ` sandbox>`+ '</iframe>';
     globalObject.document.write(frameTag);
   }
 };
@@ -66,6 +67,7 @@ exports.appendPresenceIframe_ = function(globalObject) {
   iframe.id = exports.OMID_PRESENT_FRAME_NAME;
   iframe.name = exports.OMID_PRESENT_FRAME_NAME;
   iframe.style.display = 'none';
+  iframe.sandbox = undefined;
   globalObject.document.body.appendChild(iframe);
 };
 

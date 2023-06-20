@@ -99,6 +99,7 @@ describe('DetectOmidTest', () => {
           `id="${DetectOmid.OMID_PRESENT_FRAME_NAME}"`);
       expect(frameTagUsed).toMatch(
           `name="${DetectOmid.OMID_PRESENT_FRAME_NAME}"`);
+      expect(frameTagUsed).toMatch(`sandbox`);
     });
 
     it('should add special frame without mutation observer if body exists',
@@ -121,6 +122,7 @@ describe('DetectOmidTest', () => {
                 tag: tagName,
                 id: '',
                 name: '',
+                sandbox: '',
                 style: {
                   display: '',
                 },
@@ -137,6 +139,7 @@ describe('DetectOmidTest', () => {
           expect(frameTagUsed.tag).toEqual('iframe');
           expect(frameTagUsed.id).toEqual(DetectOmid.OMID_PRESENT_FRAME_NAME);
           expect(frameTagUsed.name).toEqual(DetectOmid.OMID_PRESENT_FRAME_NAME);
+          expect(frameTagUsed.sandbox).toBeUndefined();
           expect(frameTagUsed.style.display).toEqual('none');
         });
   });
