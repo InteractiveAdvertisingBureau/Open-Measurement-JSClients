@@ -1,5 +1,10 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.4.6 - 2023-06-23
+- Allow setting session client window with same-origin window.
+- Add sandbox attribute to presence iframe.
+- Add friendlyToTop in rawJSON.
+
 ## 1.4.5 - 2023-06-06
 - Add method to set session client window.
 - Add iPadOS and tvOS to our list of expected OS values.

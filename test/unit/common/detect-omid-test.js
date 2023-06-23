@@ -74,7 +74,7 @@ describe('DetectOmidTest', () => {
           mockWindow);
     });
 
-    it('should add special frame without mutation observer if not exists',
+    it('should add special frame without mutation observer if no body exists',
         () => {
       spyOn(DetectOmid, 'isMutationObserverAvailable_').and.callFake(
           (window) => false);
@@ -99,6 +99,7 @@ describe('DetectOmidTest', () => {
           `id="${DetectOmid.OMID_PRESENT_FRAME_NAME}"`);
       expect(frameTagUsed).toMatch(
           `name="${DetectOmid.OMID_PRESENT_FRAME_NAME}"`);
+      expect(frameTagUsed).toMatch('sandbox');
     });
 
     it('should add special frame without mutation observer if body exists',
@@ -138,6 +139,7 @@ describe('DetectOmidTest', () => {
           expect(frameTagUsed.id).toEqual(DetectOmid.OMID_PRESENT_FRAME_NAME);
           expect(frameTagUsed.name).toEqual(DetectOmid.OMID_PRESENT_FRAME_NAME);
           expect(frameTagUsed.style.display).toEqual('none');
+          expect(frameTagUsed.sandbox).toEqual('');
         });
   });
 });

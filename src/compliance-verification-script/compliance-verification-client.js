@@ -95,12 +95,6 @@ class ComplianceVerificationClient {
                         this.serialize_(v, k) :
                         encodeURIComponent(k) + '=' + encodeURIComponent(v));
                 }
-
-                /* Add new param friendlyToTop, true if top window is available, false otherwise. */
-                if (p === 'accessMode') {
-                    let ftt = prefix ? prefix + '[' + 'friendlyToTop' + ']' : 'friendlyToTop';
-                    str.push(encodeURIComponent(ftt) + '=' + JSON.stringify(isTopWindowAccessible(resolveGlobalContext())));
-                }
             }
         }
         return str.join('&');
@@ -121,6 +115,12 @@ class ComplianceVerificationClient {
      */
     fireEvent_(event) {
         event = removeDomElements(event);
+        /* Add new param friendlyToTop, true if top window is available, false otherwise. */
+        if (event.hasOwnProperty('type')) {
+            if (event['type'] === 'sessionStart') {
+                event.data.context['friendlyToTop'] = JSON.stringify(isTopWindowAccessible(resolveGlobalContext()));
+            }
+        }
         let params = this.serialize_(event, undefined);
         params += '&rawJSON=' + encodeURIComponent(JSON.stringify(event));
         let url = DefaultLogServer + params;
