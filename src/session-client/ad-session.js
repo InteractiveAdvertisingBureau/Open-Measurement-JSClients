@@ -108,6 +108,9 @@ class AdSession {
     if (this.communication_) {
       this.communication_.onMessage = this.handleInternalMessage_.bind(this);
     }
+    // NOTE: The service assumes that 'setClientInfo' is the first message it
+    // will receive for each session, so do not change the order without first
+    // updating the service.
     this.setClientInfo_();
     this.injectVerificationScripts_(context.verificationScriptResources);
     this.sendSlotElement_(context.slotElement);

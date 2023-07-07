@@ -1,5 +1,8 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.4.7 - 2023-07-07
+- Partition session state in service.
+
 ## 1.4.6 - 2023-06-23
 - Allow setting session client window with same-origin window.
 - Add sandbox attribute to presence iframe.
