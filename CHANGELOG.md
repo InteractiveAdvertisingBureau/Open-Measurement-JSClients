@@ -1,5 +1,10 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.4.8 - 2023-08-03
+- Send a sessionError event when verification scripts included in the creative (a.k.a. side-loaded or inline scripts) attempt to register on Web. Only verification scripts injected by the OM SDK will be permitted on Web. In a future release, all non-injected scripts will fail to register at all on Web.
+- Trigger initial geometryChange event when backgrounded.
+- Add getEnvironment method to verification client.
+
 ## 1.4.7 - 2023-07-07
 - Partition session state in service.
 

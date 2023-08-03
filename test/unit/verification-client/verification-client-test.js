@@ -1,6 +1,7 @@
 goog.module('omid.test.verificationClient.VerificationClient');
 
 const Communication = goog.require('omid.common.Communication');
+const DetectOmid = goog.require('omid.common.DetectOmid');
 const VerificationClient = goog.require('omid.verificationClient.VerificationClient');
 const MockXmlHttpRequest = goog.require('omid.test.MockXmlHttpRequest');
 const {AdEventType, Environment} = goog.require('omid.common.constants');
@@ -370,6 +371,34 @@ describe('VerificationClient', () => {
       it('communication does not exist', () => {
         delete client.communication;
         expect(client.isSupported()).toEqual(false);
+      });
+    });
+
+    describe('getEnvironment', () => {
+      it('should return "web" when web service injected client', () => {
+        omidGlobal.omidVerificationProperties.injectionSource = Environment.WEB;
+        expect(client.getEnvironment()).toEqual('web');
+      });
+      it('should return "app" when app service injected client', () => {
+        omidGlobal.omidVerificationProperties.injectionSource = Environment.APP;
+        expect(client.getEnvironment()).toEqual('app');
+      });
+      it('should return "web" when web service inline client', () => {
+        delete omidGlobal.omidVerificationProperties.injectionSource;
+        spyOn(DetectOmid, 'getOmidEnvironment')
+            .and.returnValue(Environment.WEB);
+        expect(client.getEnvironment()).toEqual('web');
+      });
+      it('should return "app" when app service inline client', () => {
+        delete omidGlobal.omidVerificationProperties.injectionSource;
+        spyOn(DetectOmid, 'getOmidEnvironment')
+            .and.returnValue(Environment.APP);
+        expect(client.getEnvironment()).toEqual('app');
+      });
+      it('should return null when not injected and no env detected', () => {
+        delete omidGlobal.omidVerificationProperties.injectionSource;
+        spyOn(DetectOmid, 'getOmidEnvironment').and.returnValue(null);
+        expect(client.getEnvironment()).toBeNull();
       });
     });
 

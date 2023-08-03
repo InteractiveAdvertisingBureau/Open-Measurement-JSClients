@@ -9,10 +9,11 @@ const {Version} = goog.require('omid.common.version');
 const {assertFunction, assertPositiveNumber, assertTruthyString} = goog.require('omid.common.argsChecker');
 const {deserializeMessageArgs, serializeMessageArgs} = goog.require('omid.common.ArgsSerDe');
 const {generateGuid} = goog.require('omid.common.guid');
+const {getOmidEnvironment} = goog.require('omid.common.DetectOmid');
 const {getPrefixedVerificationServiceMethod} = goog.require('omid.common.serviceMethodUtils');
 const {omidGlobal} = goog.require('omid.common.OmidGlobalProvider');
 const {packageExport} = goog.require('omid.common.exporter');
-const {resolveGlobalContext} = goog.require('omid.common.windowUtils');
+const {resolveGlobalContext, resolveTopWindowContext} = goog.require('omid.common.windowUtils');
 const {startVerificationServiceCommunication} = goog.require('omid.common.serviceCommunication');
 
 /**
@@ -114,6 +115,25 @@ class VerificationClient {
   }
 
   /**
+   * Gets the environment type of the OM Service that either injected the
+   * verification resource or is present in the global context (e.g. window).
+   * Note that this check is based on which service binary is used: omsdk-v1.js
+   * (App) or omweb-v1.js (Web). The binary typically corresponds to the actual
+   * environment in which the OM SDK is run, but there may be counterexamples
+   * such as the Web service binary running in a webview inside a mobile app.
+   * @return {Environment|null} The service's environment type; null if either
+   * (1) the service is a 3rd party custom service or (2) this verification
+   * client is inlined (not injected) and the service is version 1.4.7 or below.
+   * @public
+   */
+  getEnvironment() {
+    const globalContext = resolveGlobalContext();
+    return this.injectionSource() || getOmidEnvironment(globalContext) ||
+        getOmidEnvironment(resolveTopWindowContext(globalContext));
+  }
+
+  /**
+   * DEPRECATED: use getEnvironment to cover both injected and inline scripts.
    * Gets the environment type of the OM Service that injected the verification
    * resource.
    * @return {Environment|undefined} the injecting service's environment type or
