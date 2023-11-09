@@ -1,5 +1,12 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.4.9 - 2023-11-09
+- Set underEvaluation to true for JS-managed sessions.
+- Prevent display ad verification scripts from falsely detecting OM SDK.
+- Allow sessions to be started/finished from the JS session client on App.
+- Block session client post messages from unregistered windows.
+- Remove unnecessary @export annotations in example creatives.
+
 ## 1.4.8 - 2023-08-03
 - Send a sessionError event when verification scripts included in the creative (a.k.a. side-loaded or inline scripts) attempt to register on Web. Only verification scripts injected by the OM SDK will be permitted on Web. In a future release, all non-injected scripts will fail to register at all on Web.
 - Trigger initial geometryChange event when backgrounded.

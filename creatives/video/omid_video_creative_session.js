@@ -33,7 +33,8 @@ class OmidVideoCreativeSession {
     constructor(verificationScriptResources) {
         const partner = new Partner('TestApp', '1.0');
         const context = new Context(partner,
-            convertVerificationScriptResources_(verificationScriptResources));
+            convertVerificationScriptResources_(verificationScriptResources),
+            'testcontenturl.com', 'test-custom-reference-data');
         this.adClient_ = new AdSession(context);
         if (!(this.adClient_ && this.adClient_.isSupported && this.adClient_.isSupported())) {
             throw new Error("adSession not present");
@@ -47,6 +48,7 @@ class OmidVideoCreativeSession {
         this.adEvents_ = new AdEvents(this.adClient_);
         this.mediaEvents = new MediaEvents(this.adClient_);
         this.sessionActive_ = false;
+        this.sessionFinished_ = false;
 
         /**
          * The last observed percentage of the video element. Null until video is started playing.
@@ -73,7 +75,6 @@ class OmidVideoCreativeSession {
      * @param {!Array<Object>} verificationScriptResources
      * @param {string=} urlPrefix base URL to send test pings, or use default
      * @return {!OmidVideoCreativeSession} the created session
-     * @export
      */
     static main(verificationScriptResources, urlPrefix = undefined) {
         const creative = new OmidVideoCreativeSession(verificationScriptResources);
@@ -83,7 +84,6 @@ class OmidVideoCreativeSession {
     
     /**
      * Start monitoring OMID events.
-     * @export
      */
     start() {
         this.setupEventListeners_();
@@ -105,6 +105,7 @@ class OmidVideoCreativeSession {
             break;
         case AdEventType.SESSION_FINISH:
             this.sessionActive_ = false;
+            this.sessionFinished_ = true;
             break;
         }
     }
@@ -115,20 +116,24 @@ class OmidVideoCreativeSession {
      */
     setupEventListeners_() {
         this.player.addEventListener("play", () => {
+            if (this.sessionFinished_) return;
             if (this.player.currentTime != 0) {
                 this.mediaEvents.resume();
             }
         });
         this.player.addEventListener("pause", () => {
+            if (this.sessionFinished_) return;
             if (!this.player.ended) {
                 this.mediaEvents.pause();
             }
         });
         this.player.addEventListener("waiting", () => {
+            if (this.sessionFinished_) return;
             this.isBuffering = true;
             this.mediaEvents.bufferStart();
         });
         this.player.addEventListener("timeupdate", () => {
+            if (this.sessionFinished_) return;
             if (this.isBuffering) {
                 this.isBuffering = false;
                 this.mediaEvents.bufferFinish();
@@ -155,17 +160,21 @@ class OmidVideoCreativeSession {
             }
         });
         this.player.addEventListener("volumechange", () => {
+            if (this.sessionFinished_) return;
             this.mediaEvents.volumeChange(this.player.muted ? 0 : this.player.volume);
         });
 
         // event listeners for ios
         this.player.addEventListener('webkitendfullscreen', () => {
+            if (this.sessionFinished_) return;
             this.mediaEvents.playerStateChange(VideoPlayerState.NORMAL);
         });
         this.player.addEventListener('webkitbeginfullscreen', () => {
-                this.mediaEvents.playerStateChange(VideoPlayerState.FULLSCREEN);
+            if (this.sessionFinished_) return;
+            this.mediaEvents.playerStateChange(VideoPlayerState.FULLSCREEN);
         });
         this.player.onfullscreenchange = (ev) => {
+            if (this.sessionFinished_) return;
             console.log("fullscreen change");
             if (document.fullscreenElement) {
                 this.mediaEvents.playerStateChange(VideoPlayerState.FULLSCREEN);
@@ -176,9 +185,24 @@ class OmidVideoCreativeSession {
     }
 
     /**
+     * Start the ad session.
+     * On App, only supported if the native-layer JS Session Service is running.
+     */
+    startSession() {
+        this.adClient_.start();
+    }
+
+    /**
+     * Finish the ad session.
+     * On App, only supported if the native-layer JS Session Service is running.
+     */
+    finishSession() {
+        this.adClient_.finish();
+    }
+
+    /**
      * Set the CreativeType.
      * @param {!CreativeType} creativeType
-     * @export
      */
     setCreativeType(creativeType) {
         this.adClient_.setCreativeType(creativeType);
@@ -187,7 +211,6 @@ class OmidVideoCreativeSession {
     /**
      * Set the ImpressionType.
      * @param {!ImpressionType} impressionType
-     * @export
      */
     setImpressionType(impressionType) {
         this.adClient_.setImpressionType(impressionType);
@@ -195,7 +218,6 @@ class OmidVideoCreativeSession {
 
     /**
      * Register that the ad has loaded.
-     * @export
      */
     loaded() {
         const vastProperties = new VastProperties(

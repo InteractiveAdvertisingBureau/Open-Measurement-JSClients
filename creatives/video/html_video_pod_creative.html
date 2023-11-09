@@ -1,0 +1,29 @@
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="initial-scale=1" />
+    <title>Example Ad</title>
+    <style type="text/css">
+        html * {
+            padding: 0;
+            margin: auto 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- this margin styling is to enable vertical scrolling in the webView so that the element percentageInView can be monitored easily -->
+    <div style="margin-bottom: 800px;">
+        <!--This is where the ad element will be string injected-->
+        <video width="300" class="omid-element" id="player" controls playsinline autoplay muted>
+        </video>
+        <ul>
+            <li id="percentageInView">-%</li>
+        </ul>
+        <!-- for uncompiled version of the session script please look at code 
+            inside of: /Open-Measurement-JSClients/src/creatives/video/-->
+        <!-- inject:creative:session:script:js -->
+        <!-- endinject -->
+    </div>
+</body>
+</html>

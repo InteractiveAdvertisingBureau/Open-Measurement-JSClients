@@ -365,12 +365,49 @@ describe('VerificationClient', () => {
     });
 
     describe('isSupported', () => {
-      it('communication exists', () => {
-        expect(client.isSupported()).toEqual(true);
+      describe('when environment is NULL', () => {
+        beforeEach(() => {
+          spyOn(client, 'getEnvironment').and.returnValue(null);
+        });
+        it('communication exists', () => {
+          expect(client.isSupported()).toEqual(true);
+        });
+        it('communication does not exists', () => {
+          delete client.communication;
+          expect(client.isSupported()).toEqual(false);
+        });
       });
-      it('communication does not exist', () => {
-        delete client.communication;
-        expect(client.isSupported()).toEqual(false);
+      describe('when environment is APP', () => {
+        beforeEach(() => {
+          spyOn(client, 'getEnvironment').and.returnValue(Environment.APP);
+        });
+        it('communication exists', () => {
+          expect(client.isSupported()).toEqual(true);
+        });
+        it('communication does not exists', () => {
+          delete client.communication;
+          expect(client.isSupported()).toEqual(false);
+        });
+      });
+      describe('when environment is WEB', () => {
+        it('injectionId is undefined', () => {
+          omidGlobal.omidVerificationProperties.injectionId = undefined;
+          client = new VerificationClient(communication);
+          spyOn(client, 'getEnvironment').and.returnValue(Environment.WEB);
+          expect(client.isSupported()).toEqual(false);
+        });
+        describe('injectionId is defined', () => {
+          beforeEach(() => {
+            spyOn(client, 'getEnvironment').and.returnValue(Environment.WEB);
+          });
+          it('communication exists', () => {
+            expect(client.isSupported()).toEqual(true);
+          });
+          it('communication does not exists', () => {
+            delete client.communication;
+            expect(client.isSupported()).toEqual(false);
+          });
+        });
       });
     });
 

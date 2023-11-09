@@ -1,6 +1,6 @@
 {
   "name": "open-measurement-jsclients",
-  "version": "1.4.8",
+  "version": "1.4.9",
   "description": "JavaScript common and client components of OM SDK",
   "watch": {
     "test-unit": {
@@ -31,6 +31,7 @@
     "build-compliance-verification-script": "gulp build-compliance-verification-script && gulp package-compliance-verification-script",
     "build-display-creative": "gulp build-display-creative-session-script && gulp inject-display-creative-session-script",
     "build-video-creative": "gulp build-video-creative-session-script && gulp inject-video-creative-session-script",
+    "build-video-pod-creative": "gulp build-video-pod-creative-session-script && gulp inject-video-pod-creative-session-script",
     "build-visibility-measurement-script": "gulp build-visibility-measurement-script",
     "prebuild-unit-tests": "npm run prebuild",
     "build-unit-tests": "gulp build-unit-tests",
@@ -62,7 +63,7 @@
   "private": false,
   "devDependencies": {
     "ajv": "^8.12.0",
-    "chromedriver": "^114.0.3",
+    "chromedriver": "^119.0.1",
     "clang-format": "^1.8.0",
     "es6-template-strings": "^2.0.1",
     "eslint": "^8.40.0",

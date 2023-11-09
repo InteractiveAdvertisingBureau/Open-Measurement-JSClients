@@ -111,6 +111,9 @@ class VerificationClient {
    * @public
    */
   isSupported() {
+    if (this.getEnvironment() === Environment.WEB && !this.injectionId_) {
+      return false;
+    }
     return Boolean(this.communication || this.omid3p);
   }
 

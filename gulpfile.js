@@ -300,6 +300,41 @@ gulp.task('inject-video-creative-session-script', () => {
       .pipe(gulp.dest('./bin'));
 });
 
+gulp.task('build-video-pod-creative-session-script', () => {
+  const taskConfig = {
+    js: [
+      './creatives/video/**.js',
+      './src/session-client/**.js',
+      './src/common/**.js'
+    ],
+    js_output_file: 'video-pod-creative-session-script.js',
+    output_wrapper_file: UMD_BOOTSTRAPPER_WITH_DEFAULT,
+    entry_point: 'goog:omid.creatives.OmidVideoPodCreativeSessionMain',
+    externs: [
+      ...commonConfig.externs,
+      './src/externs/omid-exports.js',
+      './src/externs/omid-jasmine.js',
+    ],
+  };
+  return closureCompiler(Object.assign({}, commonConfig, taskConfig))
+      .src() // needed to force the plugin to run without gulp.src
+      .pipe(gulp.dest('./bin'))
+});
+
+gulp.task('inject-video-pod-creative-session-script', () => {
+  var target = gulp.src('./creatives/video/html_video_pod_creative.html');
+  var source = gulp.src('./bin/video-pod-creative-session-script.js');
+
+  return target
+      .pipe(inject(source, {
+          starttag: '<!-- inject:creative:session:script:js -->',
+          transform: (filepath, file) => {
+              return '<script>' + file.contents.toString() + '</script>';
+          }
+      }))
+      .pipe(gulp.dest('./bin'));
+});
+
 gulp.task('build-visibility-measurement-script', () => {
   const taskConfig = {
     js: [

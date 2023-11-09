@@ -46,7 +46,6 @@ class OmidCreativeSession {
    * @param {!Array<Object>} verificationScriptResources
    * @param {string=} urlPrefix base URL to send test pings, or use default
    * @return {!OmidCreativeSession} the created session
-   * @export
    */
   static main(verificationScriptResources,
                urlPrefix = undefined) {
@@ -58,7 +57,6 @@ class OmidCreativeSession {
 
   /**
    * Start monitoring OMID events.
-   * @export
    */
   start() {
     this.adClient_.registerSessionObserver(
@@ -87,7 +85,6 @@ class OmidCreativeSession {
   /**
    * Set the CreativeType.
    * @param {!CreativeType} creativeType
-   * @export
    */
   setCreativeType(creativeType) {
     this.adClient_.setCreativeType(creativeType);
@@ -96,7 +93,6 @@ class OmidCreativeSession {
   /**
    * Set the ImpressionType.
    * @param {!ImpressionType} impressionType
-   * @export
    */
   setImpressionType(impressionType) {
     this.adClient_.setImpressionType(impressionType);
@@ -104,7 +100,6 @@ class OmidCreativeSession {
 
   /**
    * Register that the ad has loaded.
-   * @export
    */
   loaded() {
     this.adEvents_.loaded();
@@ -112,7 +107,6 @@ class OmidCreativeSession {
 
   /**
    * Register that an impression occurred.
-   * @export
    */
   impressionOccurred() {
     // Must wait for session to start before firing impression.
