@@ -71,19 +71,23 @@ const VERIFICATION_CLIENT_SRC = [
 gulp.task('build-verification-client', () => {
   const taskConfig = {
     js: VERIFICATION_CLIENT_SRC,
-    js_output_file: 'omid-verification-client-v1.js',
-    output_wrapper_file: UMD_BOOTSTRAPPER,
+    js_output_file: 'omid-verification-client.js',
+    output_wrapper_file: './webpack-bootstrapper.js',
+    env: 'BROWSER',
+    compilation_level: 'ADVANCED',
+    assume_function_wrapper: true,
     dependency_mode: 'PRUNE',
     entry_point: 'goog:omid.verificationClient.VerificationClient',
     externs: [
       ...commonConfig.externs,
       './src/externs/omid-jasmine.js',
       './src/externs/omid-exports.js',
+      './src/externs/omid-verification-client.js',
     ],
   };
   return closureCompiler(Object.assign({}, commonConfig, taskConfig))
       .src() // needed to force the plugin to run without gulp.src
-      .pipe(gulp.dest('./bin'))
+      .pipe(gulp.dest('../xpln.ai/scripts_crea/omid'))
 });
 
 const VERIFICATION_CLIENT_ZIP_SRC = [
