@@ -1,5 +1,8 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.4.10 - 2024-01-03
+- Add dv.tech domain to DoubleVerify's Whitelist.
+
 ## 1.4.9 - 2023-11-09
 - Set underEvaluation to true for JS-managed sessions.
 - Prevent display ad verification scripts from falsely detecting OM SDK.

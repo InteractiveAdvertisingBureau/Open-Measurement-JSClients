@@ -17,6 +17,9 @@ describe('verificationVendorIdForScriptUrl', () => {
     expectScriptUrlToMatchVendorId(
         'https://www.abc.tv/r/s/d/script.js',
          VerificationVendorId.DOUBLEVERIFY);
+    expectScriptUrlToMatchVendorId(
+        'http://c.dv.tech/script.js',
+        VerificationVendorId.DOUBLEVERIFY);
   });
   it('correctly identifies IAS URLs', () => {
     expectScriptUrlToMatchVendorId(
