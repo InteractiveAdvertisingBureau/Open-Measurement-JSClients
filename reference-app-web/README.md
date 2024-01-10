@@ -12,15 +12,16 @@ A sample web application built to showcase a canonical OM SDK for Web integratio
 [nvm] is recommended for installing and managing Node and NPM.
 
 ## Getting Started
-1. Install dependencies with `npm install`
-1. Copy the dependencies into `static/`:
+cd reference-app-web
+1. Install dependencies with `npm install` or `npm install --legacy-peer-deps`  if you have installed npm in your root directory
+2. Copy the dependencies into `static/`: (ALREADY DONE FOR YOU)
     - If in SDKJS repo: Run `npm run buildDeps`
-    - If in JSClients repo: 
+    - If in JSClients repo:
         - Copy the OM SDK for Web into `./static/omweb-v1.js`
         - Copy the OM Domain Loader into `./static/.well-known/omid/omloader-v1.html`
         - Copy the Validation Verification Script into `./static/omid-validation-verification-script-v1.js`
-1. Run the dev server by running `npm run start`
-1. Open http://localhost:8080 in a browser
+3. Run the dev server by running `npm run start`
+4. Open http://localhost:8080 in a browser
 
 ## Advanced
 If you'd like to specify your own default settings, override the values in `./templates/.settings.default.json`.
