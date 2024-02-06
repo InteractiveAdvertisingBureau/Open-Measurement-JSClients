@@ -1,5 +1,8 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.4.11 - 2024-02-06
+- Update chromedriver version.
+
 ## 1.4.10 - 2024-01-03
 - Add dv.tech domain to DoubleVerify's Whitelist.
 
