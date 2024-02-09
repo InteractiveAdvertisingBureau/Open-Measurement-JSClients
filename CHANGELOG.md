@@ -1,5 +1,8 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.4.12 - 2024-02-09
+- Update version to match iOS SDK; no changes from 1.4.11
+
 ## 1.4.11 - 2024-02-06
 - Update chromedriver version.
 
