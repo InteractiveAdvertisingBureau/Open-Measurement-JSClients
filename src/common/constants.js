@@ -350,6 +350,15 @@ const AppState = {
 };
 
 /**
+ * Enum for device lock state of the native device.
+ * @enum {string}
+ */
+const DeviceLockState = {
+  LOCKED: 'locked',
+  UNLOCKED: 'unlocked',
+};
+
+/**
  * Enum for Environment OM SDK JS is running in.
  * @enum {string}
  */
@@ -447,6 +456,8 @@ const Reason = {
   NOT_FOUND: 'notFound',
   HIDDEN: 'hidden',
   BACKGROUNDED: 'backgrounded',
+  PICTURE_IN_PICTURE: 'pictureInPicture',
+  DEVICE_LOCKED: 'deviceLocked',
   VIEWPORT: 'viewport',
   OBSTRUCTED: 'obstructed',
   CLIPPED: 'clipped',
@@ -600,6 +611,7 @@ exports = {
   AdEventType,
   AdSessionType,
   AppState,
+  DeviceLockState,
   CommunicationType,
   CreativeType,
   DeviceCategory,

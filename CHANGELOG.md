@@ -1,5 +1,8 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.4.13 - 2024-04-15
+- Mark Picture-in-Picture as non-viewable in Service Library.
+
 ## 1.4.12 - 2024-02-09
 - Update version to match iOS SDK; no changes from 1.4.11
 
