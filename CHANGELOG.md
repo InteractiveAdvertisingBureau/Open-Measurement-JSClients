@@ -1,5 +1,8 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.4.14 - 2024-05-23
+- Add session owner to context in session start event.
+
 ## 1.4.13 - 2024-04-15
 - Mark Picture-in-Picture as non-viewable in Service Library.
 

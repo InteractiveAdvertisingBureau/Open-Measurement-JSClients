@@ -329,6 +329,15 @@ const EventOwner = {
 };
 
 /**
+ * Enum describing who owns a session (starts and finishes it).
+ * @enum {string}
+ */
+const SessionOwner = {
+  JAVASCRIPT: 'javascript',
+  NATIVE: 'native',
+};
+
+/**
  * Enum for sandboxing mode. FULL implies both that verification code has access
  * to the creative element and that OMSDK will provide a reference to that
  * creative element via video/slotElement in the context.
@@ -627,6 +636,7 @@ exports = {
   NativeViewKeys,
   OmidImplementer,
   Reason,
+  SessionOwner,
   SupportedFeatures,
   MediaEventType,
   VideoPosition,

@@ -64,6 +64,7 @@ let OmidNativeInfo;
  *   environment: (!constants.Environment|undefined),
  *   accessMode: (!constants.AccessMode|undefined),
  *   adSessionType: (!constants.AdSessionType|undefined),
+ *   sessionOwner: (!constants.SessionOwner|undefined),
  *   supports: (!Array<constants.SupportedFeatures>|undefined),
  *   omidNativeInfo: (!OmidNativeInfo|undefined),
  *   omidJsInfo: !OmidJsInfo,
