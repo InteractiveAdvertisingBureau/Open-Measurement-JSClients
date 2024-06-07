@@ -50,5 +50,9 @@ function greaterThanOrRoughlyEqual(x, y) {
     return x > y || roughlyEqual(x, y);
 }
 
-
-exports = {roughlyLessThan, lessThanOrRoughlyEqual, greaterThanOrRoughlyEqual};
+exports = {
+    roughlyEqual,
+    roughlyLessThan,
+    lessThanOrRoughlyEqual,
+    greaterThanOrRoughlyEqual,
+};

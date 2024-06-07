@@ -1,0 +1,10 @@
+{
+  "id": "com.iabtechlab.om-testapp-lgwebos",
+  "version": "0.0.0",
+  "type": "web",
+  "main": "index.html",
+  "title": "OMID Test app",
+  "icon": "static/icon_60@2x.png",
+  "largeIcon": "static/icon_60@3x.png",
+  "disableBackHistoryAPI": true
+}

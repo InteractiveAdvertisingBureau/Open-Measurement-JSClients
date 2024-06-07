@@ -16,10 +16,10 @@ const constants = goog.require('omid.common.constants');
 let Event;
 
 /**
- * Represents the mobile app native layer is running on and contains key
- * information about it.
+ * Represents the native app or web TV app running OM SDK, and the
+ * OM SDK library version where applicable.
  * @typedef {{
- *   libraryVersion: string,
+ *   libraryVersion: (string|undefined),
  *   appId: string,
  * }}
  */

@@ -129,10 +129,12 @@ function isTopWindowAccessible(win) {
 function removeDomElements(event) {
   if (event['type'] === AdEventType.SESSION_START) {
     if (typeof event['data']['context']['videoElement'] !== 'undefined') {
-      event['data']['context']['videoElement'] = 'DOM Video Element - Present but not parsed to avoid parse error';
+      event['data']['context']['videoElement'] =
+        'Video Element (' + event['data']['context']['videoElement']['id'] + ')';
     }
     if (typeof event['data']['context']['slotElement'] !== 'undefined') {
-      event['data']['context']['slotElement'] = 'DOM Slot Element - Present but not parsed to avoid parse error';
+      event['data']['context']['slotElement'] =
+        'Slot Element (' + event['data']['context']['slotElement']['id'] + ')';
     }
   }
   return event;

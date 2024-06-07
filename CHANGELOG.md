@@ -1,5 +1,16 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.5.0 - 2024-06-07
+OM SDK 1.5.0 is a significant update. It adds support for Samsung and LG TVs. 
+
+### CTV Update
+- Add LG WebOS and Tizen CTV support in OM Web SDK.
+- Add Reference app for web CTV.
+- Add appId and deviceInfo for LG WebOS and Tizen.
+- Add device volume detection for LG WebOS and Tizen. 
+### Other Update
+- No longer mark JS-managed sessions as under evaluation.
+
 ## 1.4.14 - 2024-05-23
 - Add session owner to context in session start event.
 

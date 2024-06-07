@@ -1,0 +1,22 @@
+{
+  "name": "open-measurement-referenceapp-lgwebos",
+  "version": "0.0.0",
+  "description": "Reference app for the OMSDK for Web for CTV on LG webOS.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prep": "./copy_binaries.sh",
+    "lgBundle": "rm -f com.iabtechlab.om-testapp-lgwebos*.ipk && ares-package .",
+    "lgInstall": "ares-install com.iabtechlab.om-testapp-lgwebos_0.0.0_all.ipk",
+    "lgLaunch": "ares-launch com.iabtechlab.om-testapp-lgwebos",
+    "lgInspect": "ares-inspect com.iabtechlab.om-testapp-lgwebos",
+    "lgBundleRunAndInspect": "npm run prep && npm run lgBundle && npm run lgInstall && npm run lgLaunch && npm run lgInspect"
+  },
+  "keywords": [],
+  "author": "GitHub contributors",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/InteractiveAdvertisingBureau/Open-Measurement-ReferenceApp-Web#readme",
+  "private": false,
+  "devDependencies": {
+  }
+}

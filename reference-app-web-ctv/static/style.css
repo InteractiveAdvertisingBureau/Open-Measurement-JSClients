@@ -1,0 +1,102 @@
+html {
+  margin: 0px;
+  height: 100%;
+}
+
+body {
+  margin: 0px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+}
+
+h1, h2, h3, h4, a, label {
+}
+
+h3 {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+ul {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.section {
+  margin-top: 36px;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.controlField {
+  margin-bottom: 16px;
+}
+
+.controlInput {
+  width: 100%;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font-size: 1em;
+}
+
+.button {
+  margin: 0px;
+  padding: 0px;
+  background-color: #aaaaaa;
+  cursor: pointer;
+}
+
+#sidebarLeft {
+  width: 320px;
+  margin: auto;
+  font-size: 1.5em;
+}
+
+#content {
+  height: 100%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#sidebarRight {
+  width: 320px;
+  margin: auto;
+  font-size: 1.5em;
+}
+
+#creativeContainer {
+  width: 1200px;
+  background: #333333;
+  overflow: hidden;
+}
+
+#videoElement {
+  width: 100%;
+  aspect-ratio: 320 / 180;
+}
+
+#progressContainer {
+  background-color: #aaaaaa;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  text-align: center;
+}
+
+.fullscreen {
+  top:0px;
+  left:0px;
+  height:100%;
+  position:absolute;
+  z-index:2;
+}

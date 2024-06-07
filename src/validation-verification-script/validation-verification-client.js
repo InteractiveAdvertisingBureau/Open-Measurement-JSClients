@@ -20,10 +20,12 @@ class ValidationVerificationClient {
      *  - register a callback to all AdEventType, except additional registration to media events
      * @param {VerificationClient} verificationClient instance for communication with OMID server
      * @param {string} vendorKey - should be the same when calling sessionStart in order to get verificationParameters
-     */
-    constructor(verificationClient, vendorKey) {
+     * @param {string} messageLogServer - if different from DefaultLogServer, to send OMID events to a different host
+    */
+    constructor(verificationClient, vendorKey, messageLogServer = DefaultLogServer) {
         /** @private {VerificationClient} */
         this.verificationClient_ = verificationClient;
+        this.messageLogServer = messageLogServer;
         const isSupported = this.verificationClient_.isSupported();
         this.logMessage_('OmidSupported['+isSupported+']', (new Date()).getTime());
         if (isSupported) {
@@ -62,7 +64,7 @@ class ValidationVerificationClient {
      * @param {string} message to send to the server
      */
     sendUrl_(message) {
-        const url = (DefaultLogServer + encodeURIComponent(message));
+        const url = (this.messageLogServer + encodeURIComponent(message));
         console.log(url);
         this.verificationClient_.sendUrl(url);
     }
