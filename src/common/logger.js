@@ -8,7 +8,7 @@ function error(...args) {
   executeLog(
       () => {
         // If this is a Jasmine run, throw loudly. Causing the tests to barf.
-        throw new Error('Could not complete the test successfully - ', ...args);
+        throw Error.apply(null, ['Could not complete the test successfully - ', ...args]);
       },
       () => console.error(...args),
   );
