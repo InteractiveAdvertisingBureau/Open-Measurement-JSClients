@@ -1,7 +1,7 @@
 {
-  "name": "open-measurement-referenceapp-lgwebos",
+  "name": "open-measurement-referenceapp-web-ctv",
   "version": "0.0.0",
-  "description": "Reference app for the OMSDK for Web for CTV on LG webOS.",
+  "description": "Reference app for the OMSDK for Web for CTV.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -15,7 +15,7 @@
   "keywords": [],
   "author": "GitHub contributors",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/InteractiveAdvertisingBureau/Open-Measurement-ReferenceApp-Web#readme",
+  "homepage": "https://github.com/InteractiveAdvertisingBureau/Open-Measurement-SDKJS/blob/master/public/reference-app-web-ctv/README.md",
   "private": false,
   "devDependencies": {
   }

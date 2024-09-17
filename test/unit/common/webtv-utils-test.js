@@ -15,22 +15,32 @@ const DEFAULT_DEVICE_INFO = '{\n    "modelName": "65QNED85UQA",\n    ' +
  */
 let mockWindow;
 
-describe('webOS', function() {
+describe('WebTV Utilites', () => {
   beforeEach(() => {
     mockWindow = jasmine.createSpyObj(Object, ['setTimeout']);
   });
 
-  describe('checks for if the device is webOS', function() {
-    it('returns true when on webOS', function() {
+  describe('check if the device is webOS', () => {
+    it('returns true when on webOS', () => {
       mockWindow['webOSSystem'] = {
         deviceInfo: DEFAULT_DEVICE_INFO,
       };
       expect(PublicWebTv.isWebOS(mockWindow)).toEqual(true);
     });
-    it('returns false when not on webOS', function() {
+    it('returns false when not on webOS', () => {
       delete mockWindow['webOSSystem'];
       expect(PublicWebTv.isWebOS(mockWindow)).toEqual(false);
     });
   });
-});
 
+  describe('check if the device is Tizen', () => {
+    it('returns true when on Tizen', () => {
+      mockWindow.tizen = {};
+      expect(PublicWebTv.isTizen(mockWindow)).toEqual(true);
+    });
+    it('returns false when not on Tizen', () => {
+      delete mockWindow['tizen'];
+      expect(PublicWebTv.isTizen(mockWindow)).toEqual(false);
+    });
+  });
+});

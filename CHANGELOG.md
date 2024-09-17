@@ -1,5 +1,9 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.5.1 - 2024-09-16
+- Avoid using inline script in full access mode.
+- Add README for CTV reference app and new tests for web data parser.
+
 ## 1.5.0 - 2024-06-07
 OM SDK 1.5.0 is a significant update. It adds support for Samsung and LG TVs. 
 
