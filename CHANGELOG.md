@@ -1,5 +1,8 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.5.2 - 2024-09-26
+- Update version to match iOS SDK; no changes from 1.5.1
+
 ## 1.5.1 - 2024-09-16
 - Avoid using inline script in full access mode.
 - Add README for CTV reference app and new tests for web data parser.
