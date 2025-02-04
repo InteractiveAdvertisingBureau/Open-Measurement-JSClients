@@ -1,5 +1,8 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.5.3 - 2025-02-04
+- Update version to match iOS SDK and Android SDKs; no changes from 1.5.2
+
 ## 1.5.2 - 2024-09-26
 - Update version to match iOS SDK; no changes from 1.5.1
 
