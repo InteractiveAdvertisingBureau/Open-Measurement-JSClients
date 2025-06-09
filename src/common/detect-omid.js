@@ -25,7 +25,7 @@ exports.OMID_PRESENT_FRAME_NAME_APP = 'omid_v1_present_app';
 /**
  * Returns name of presence iframe based on service environment
  * @param {!Environment} env The environment of the service
- * @return {!string}
+ * @return {string}
  */
 exports.getEnvironmentIframeName = function(env) {
   const environmentsIframeNames = {
@@ -90,7 +90,7 @@ exports.getOmidEnvironment = function(globalObject) {
 /**
  * Write using document.write an iframe with a given iframe ID
  * @param {!Window} globalObject
- * @param {!string} iframeId
+ * @param {string} iframeId
  * @private
  */
 function writePresenceIframe_(globalObject, iframeId) {
@@ -144,7 +144,7 @@ exports.declareOmidPresence = function(globalObject, env) {
  * Appends the presence iframe in the body of a window document.
  * @param {!Window} globalObject the Window or other global object where the
  *     client is running
- * @param {!string} frameId
+ * @param {string} frameId
  * @private
  */
 exports.appendPresenceIframe_ = function(globalObject, frameId) {

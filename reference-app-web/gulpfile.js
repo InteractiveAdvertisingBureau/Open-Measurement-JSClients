@@ -101,8 +101,7 @@ function buildDependencies(callback) {
       'cd ../ && ' +
       'npm run build-validation-verification-script && ' +
       'cd ../ && ' +
-      'npm run build-web-service && ' +
-      'npm run build-domain-loader',
+      'npm run build-web-service',
       (err) => {
         callback(err);
       });
@@ -112,8 +111,7 @@ function buildDependencies(callback) {
 function copyDependencies(callback) {
   exec(
       'cp ../bin/omid-validation-verification-script-v1.js static/ &&' +
-      'cp ../../bin/omweb-v1.js static/ &&' +
-      'cp ../../bin/omloader-v1.html static/.well-known/omid/',
+      'cp ../../bin/omweb-v1.js static/',
       (err) => {
         callback(err);
       });

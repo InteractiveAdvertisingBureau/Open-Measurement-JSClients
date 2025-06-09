@@ -6,6 +6,7 @@ const Context = goog.require('omid.sessionClient.Context');
 const InternalMessage = goog.require('omid.common.InternalMessage');
 const OmidJsSessionInterface = goog.require('omid.sessionClient.OmidJsSessionInterface');
 const Partner = goog.require('omid.sessionClient.Partner');
+const UniversalAdId = goog.require('omid.sessionClient.UniversalAdId');
 const PostMessageCommunication = goog.require('omid.common.PostMessageCommunication');
 const Rectangle = goog.require('omid.common.Rectangle');
 const argsChecker = goog.require('omid.common.argsChecker');
@@ -46,6 +47,11 @@ let communication;
 /** @type {?OmidJsSessionInterface} */
 let sessionInterface;
 
+/** @type {!UniversalAdId} */
+let universalAdId;
+
+/** @type {string} */
+const UNIVERSAL_AD_ID_SERIALISED = 'CNPA0484000H; universal.id.org';
 /**
  * Checks that a message with a specified method has been sent.
  * @param {string} method
@@ -78,8 +84,9 @@ describe('AdSessionTest', () => {
         'sessionInterface', ['isSupported', 'sendMessage']);
     asSpy(sessionInterface.isSupported).and.returnValue(true);
 
+    universalAdId = new UniversalAdId('CNPA0484000H', 'universal.id.org');
     partner = new Partner('partner', '1');
-    context = new Context(partner, [], CONTENT_URL, CUSTOM_REFERENCE_DATA);
+    context = new Context(partner, [], CONTENT_URL, CUSTOM_REFERENCE_DATA, universalAdId);
     context.underEvaluation = UNDER_EVALUATION;
     session = new AdSession(context, communication, sessionInterface);
 
@@ -321,6 +328,7 @@ describe('AdSessionTest', () => {
               {
                 'customReferenceData': CUSTOM_REFERENCE_DATA,
                 'underEvaluation': UNDER_EVALUATION,
+                'universalAdId': UNIVERSAL_AD_ID_SERIALISED,
               },
               MOCK_AD_SESSION_ID,
             ],

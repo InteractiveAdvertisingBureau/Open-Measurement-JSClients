@@ -3,6 +3,9 @@
 export const OmidPartnerName = 'Referenceapp';
 export const OmidPartnerVersion = '0.0.0';
 
+export const UniversalAdIdValue = 'CNPA0484000H';
+export const UniversalAdIdRegistry = 'universal.id.org';
+
 /**
   * Keys used to identify creative and measurement settings.
   * @const @enum {string}
@@ -24,7 +27,6 @@ export const VerificationSettingsKeys = {
  */
 export const AccessMode = {
   LIMITED: 'limited',
-  DOMAIN: 'domain',
   CREATIVE: 'creative',
   FULL: 'full',
 };

@@ -255,6 +255,9 @@ class AdSession {
       'customReferenceData': this.context_.customReferenceData,
       'underEvaluation': this.context_.underEvaluation,
     };
+    if (this.context_.universalAdId) {
+        sessionStartContext['universalAdId'] = this.context_.universalAdId.toSerialisedValue();
+    }
     this.sendOneWayMessage(
         'startSession', sessionStartContext, this.adSessionId_);
   }

@@ -345,6 +345,11 @@ const SessionOwner = {
  */
 const AccessMode = {
   FULL: 'full',
+  /**
+   * @deprecated
+   * DOMAIN access mode is no longer supported. Selecting DOMAIN access mode
+   * will result in LIMITED access mode being applied.
+   */
   DOMAIN: 'domain',
   LIMITED: 'limited',
 };

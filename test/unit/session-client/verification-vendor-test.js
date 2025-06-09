@@ -3,9 +3,9 @@ goog.module('omid.test.sessionClient.VerificationVendor');
 const {verificationVendorIdForScriptUrl, VerificationVendorId} = goog.require('omid.sessionClient.VerificationVendor');
 
 describe('verificationVendorIdForScriptUrl', () => {
-  it('correctly identifies Moat URLs', () => {
+  it('identifies Moat URLs as Other', () => {
     expectScriptUrlToMatchVendorId(
-        'https://cdn.moatads.com/script.js', VerificationVendorId.MOAT);
+        'https://cdn.moatads.com/script.js', VerificationVendorId.OTHER);
   });
   it('correctly identifies Doubleverify URLs', () => {
     expectScriptUrlToMatchVendorId(
@@ -53,6 +53,17 @@ describe('verificationVendorIdForScriptUrl', () => {
     expectScriptUrlToMatchVendorId(
         'https://www.googletagservices.com/script.js',
         VerificationVendorId.GOOGLE);
+  });
+  it('correctly identifies HUMAN URLs', () => {
+    expectScriptUrlToMatchVendorId(
+        'https://sonar.script.ac/test-li/pgi.js',
+        VerificationVendorId.HUMAN);
+    expectScriptUrlToMatchVendorId(
+        'https://ads.example.com/2/em01/analytics.js?',
+        VerificationVendorId.HUMAN);
+    expectScriptUrlToMatchVendorId(
+        'https://ads.example.com/static/1.2.3/analytics.js?',
+        VerificationVendorId.HUMAN);
   });
   it('returns OTHER for unrecognized URLs', () => {
     expectScriptUrlToMatchVendorId(

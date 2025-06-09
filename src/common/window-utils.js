@@ -4,8 +4,8 @@
  */
 goog.module('omid.common.windowUtils');
 
-const {omidGlobal} = goog.require('omid.common.OmidGlobalProvider');
 const {AdEventType} = goog.require('omid.common.constants');
+const {omidGlobal} = goog.require('omid.common.OmidGlobalProvider');
 
 /**
  * Detects if the given window exists in a DOM and is not null or undefined.
@@ -160,7 +160,7 @@ function evaluatePageUrl(globalObject) {
     // location access is blocked, so in cross-domain.
     return null;
   }
-};
+}
 
 exports = {
   evaluatePageUrl,

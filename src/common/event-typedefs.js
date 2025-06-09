@@ -74,6 +74,7 @@ let OmidNativeInfo;
  *   customReferenceData: (?Object|undefined),
  *   canMeasureVisibility: (boolean|undefined),
  *   underEvaluation: (boolean|undefined),
+ *   universalAdId: (?Object|undefined),
  * }}
  */
 let Context;
@@ -88,7 +89,7 @@ let Context;
  *   mediaEventsOwner: (!constants.EventOwner|undefined),
  *   creativeType: (!constants.CreativeType|undefined),
  *   impressionType: (!constants.ImpressionType|undefined),
- *   isolateVerificationScripts: !boolean,
+ *   isolateVerificationScripts: boolean,
  * }}
  */
 let AdSessionConfiguration;
@@ -334,14 +335,14 @@ let EventData;
 
 /**
  * Provides information about the ad container geometry.
-  * @typedef {{
-  *   percentageInView: !number,
-  *   pixelsInView: !number,
-  *   geometry: !Geometry,
-  *   onScreenGeometry: !OnScreenGeometry,
-  *   reasons: !Array<!constants.Reason>,
-  *   measuringElement: (boolean|undefined),
-  * }}
+ * @typedef {{
+ *   percentageInView: number,
+ *   pixelsInView: number,
+ *   geometry: !Geometry,
+ *   onScreenGeometry: !OnScreenGeometry,
+ *   reasons: !Array<!constants.Reason>,
+ *   measuringElement: (boolean|undefined),
+ * }}
  */
 let AdViewEventData;
 

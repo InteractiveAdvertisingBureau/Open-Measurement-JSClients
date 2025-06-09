@@ -17,7 +17,6 @@ A sample web application built to showcase a canonical OM SDK for Web integratio
     - If in SDKJS repo: Run `npm run buildDeps`
     - If in JSClients repo: 
         - Copy the OM SDK for Web into `./static/omweb-v1.js`
-        - Copy the OM Domain Loader into `./static/.well-known/omid/omloader-v1.html`
         - Copy the Validation Verification Script into `./static/omid-validation-verification-script-v1.js`
 1. Run the dev server by running `npm run start`
 1. Open http://localhost:8080 in a browser

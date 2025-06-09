@@ -3,6 +3,7 @@ goog.module('omid.sessionClient.Context');
 const argsChecker = goog.require('omid.common.argsChecker');
 const Partner = goog.require('omid.sessionClient.Partner');
 const VerificationScriptResource = goog.require('omid.sessionClient.VerificationScriptResource');
+const UniversalAdId = goog.require('omid.sessionClient.UniversalAdId');
 const {packageExport} = goog.require('omid.common.exporter');
 
 /**
@@ -24,10 +25,12 @@ class Context {
    * @param {?string=} customReferenceData Arbitrary reference data the
    * integrator can share with verification scripts. Has no effect in
    * mobile app environment. Defaults to null.
+   * @param {?UniversalAdId} universalAdId - The UniversalId tag used for creative ID validation.
+   *     Defaults to null.
    * @throws error if the supplied partner is undefined or null.
    */
   constructor(partner, verificationScriptResources, contentUrl = null,
-    customReferenceData = null) {
+    customReferenceData = null, universalAdId = null) {
     argsChecker.assertNotNullObject('Context.partner', partner);
 
     this.partner = partner;
@@ -54,6 +57,9 @@ class Context {
      * @type {?Window}
      */
     this.serviceWindow = null;
+
+    /** @type {?UniversalAdId} */
+    this.universalAdId = universalAdId;
   }
 
   /**

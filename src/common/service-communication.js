@@ -7,8 +7,8 @@ goog.module('omid.common.serviceCommunication');
 const Communication = goog.require('omid.common.Communication');
 const DirectCommunication = goog.require('omid.common.DirectCommunication');
 const PostMessageCommunication = goog.require('omid.common.PostMessageCommunication');
-const {isOmidPresent} = goog.require('omid.common.DetectOmid');
 const {isCrossOrigin, resolveTopWindowContext} = goog.require('omid.common.windowUtils');
+const {isOmidPresent} = goog.require('omid.common.DetectOmid');
 
 /**
  * The keypath of the communication exported by the OMID SessionService.

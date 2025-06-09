@@ -3,10 +3,11 @@ const AdEvents = goog.require('omid.sessionClient.AdEvents');
 const Context = goog.require('omid.sessionClient.Context');
 const MediaEvents = goog.require('omid.sessionClient.MediaEvents');
 const Partner = goog.require('omid.sessionClient.Partner');
+const UniversalAdId = goog.require('omid.sessionClient.UniversalAdId');
 const VastProperties = goog.require('omid.common.VastProperties');
 const VerificationScriptResource = goog.require('omid.sessionClient.VerificationScriptResource');
 const {AccessMode: OmidAccessMode, ImpressionType, InteractionType, CreativeType, ErrorType, VideoPlayerState, VideoPosition} = goog.require('omid.common.constants');
-import {AccessMode, OmidPartnerName, OmidPartnerVersion} from './constants.js';
+import {AccessMode, OmidPartnerName, OmidPartnerVersion, UniversalAdIdValue, UniversalAdIdRegistry} from './constants.js';
 import {VerificationSettings} from './typedefs.js';
 
 /**
@@ -121,8 +122,9 @@ class OmsdkManager {
         this.getOmidAccessMode_());
     const contentUrl = this.verificationSettings_.contentUrl || null;
     const customReferenceData = 'cust=ref&data=frominteg';
+    const universalAdId = new UniversalAdId(UniversalAdIdValue, UniversalAdIdRegistry);
     const context = new Context(
-        partner, [verificationScriptResource], contentUrl, customReferenceData);
+        partner, [verificationScriptResource], contentUrl, customReferenceData, universalAdId);
     context.underEvaluation = true;
     context.setVideoElement(this.videoElement_);
     const serviceWindow = this.omsdkIframe_.contentWindow;
@@ -144,8 +146,6 @@ class OmsdkManager {
     switch (this.verificationSettings_.accessMode) {
       case AccessMode.LIMITED:
         return OmidAccessMode.LIMITED;
-      case AccessMode.DOMAIN:
-        return OmidAccessMode.DOMAIN;
       case AccessMode.CREATIVE:
       case AccessMode.FULL:
       default:

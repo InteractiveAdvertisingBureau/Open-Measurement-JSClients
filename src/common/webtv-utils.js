@@ -36,7 +36,7 @@ exports.getWebOSSystem = getWebOSSystem;
  */
 function isWebOS(windowContext) {
   return typeof getWebOSSystem(windowContext) === 'object';
-};
+}
 exports.isWebOS = isWebOS;
 
 // TIZEN integration
@@ -71,5 +71,5 @@ exports.getTizen = getTizen;
  */
 function isTizen(windowContext) {
   return typeof getTizen(windowContext) === 'object';
-};
+}
 exports.isTizen = isTizen;

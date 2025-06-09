@@ -1,7 +1,7 @@
 const videoElement = document.getElementById('videoElement');
 const progressBar = document.getElementById('progressBar');
 
-const mediaUrl = videoElement.src; // https://omsdk-demo-files.s3.us-west-2.amazonaws.com/creative/MANIA.mp4
+const mediaUrl = videoElement.src;
 const verificationScriptUrl = "./bin/omid-validation-verification-script-v1.js";
 const verificationParameters = "campaignId=1234";
 const vendorKey = "iabtechlab.com-test";

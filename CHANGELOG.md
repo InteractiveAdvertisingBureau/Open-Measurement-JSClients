@@ -1,5 +1,15 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.5.5 - 2025-06-09
+- Add UniversalAdId support.
+- Update DefaultLogServer URL and reference app creative URLs.
+- Remove Moat's url regex to prevent anyone who takes control of the domain from impressionating Moat.
+- Update verification vendors to include HUMAN.
+
+## 1.5.4 - 2025-02-26
+- Remove domain access mode.
+- Fix full stack webview tests.
+
 ## 1.5.3 - 2025-02-04
 - Update version to match iOS SDK and Android SDKs; no changes from 1.5.2
 

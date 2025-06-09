@@ -17,6 +17,7 @@ const VerificationVendorId = {
   COMSCORE: 7,
   MEETRICS: 8,
   GOOGLE: 9,
+  HUMAN: 10,
 };
 
 /**
@@ -42,12 +43,9 @@ function verificationVendorIdForScriptUrl(scriptUrl) {
  * @private @const {!Map<!VerificationVendorId, !Array<!RegExp>>}
  */
 const VERIFICATION_VENDORS = new Map([
-  [
-    VerificationVendorId.MOAT,
-    [
-      /^(https?:\/\/|\/\/)?[-a-zA-Z0-9.]+\.moatads\.com\/.*$/,
-    ],
-  ],
+  // MOAT intentionally excluded from this list because they no longer operate
+  // and we don't want the namespace to become used by another party who
+  // acquires Moat's old domains
   [
     VerificationVendorId.DOUBLEVERIFY,
     [
@@ -93,6 +91,13 @@ const VERIFICATION_VENDORS = new Map([
     [
       /^(https?:\/\/|\/\/)?pagead2\.googlesyndication\.com\/.*$/,
       /^(https?:\/\/|\/\/)?www\.googletagservices\.com\/.*$/,
+    ],
+  ],
+  [
+    VerificationVendorId.HUMAN,
+    [
+      /^(https?:\/\/|\/\/)?[-a-zA-Z0-9.]+\.script\.ac\/.*$/,
+      /^(https?:\/\/|\/\/)?[-a-zA-Z0-9.]+\/(2|ag|static)\/[a-zA-Z0-9.]*\/analytics.js.*$/,
     ],
   ],
 ]);

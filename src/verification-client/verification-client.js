@@ -330,7 +330,8 @@ class VerificationClient {
     // and onerror events as measures of success. Note that if the parsing of
     // the script fails, the onload event will still fire. Success only
     // indicates HTTP success.
-    const scriptNode = document.createElement('script');
+    const scriptNode =
+        /** @type {!HTMLScriptElement} */ (document.createElement('script'));
     // Type expected for onload/onerror callbacks is slightly different
     scriptNode.onload =
         /** @type {function ((Event|null)): ?|null} */ (successCallback);

@@ -4,8 +4,8 @@ const {CreativeType, ImpressionType} = goog.require('omid.common.constants');
 const omidCreativeVideoSession = goog.require('omid.creatives.OmidVideoCreativeSession');
 
 const adVideoUrls = [
-  "https://omsdk-demo-files.s3.us-west-2.amazonaws.com/ra_1.3/IABTL_VAST_Intro_30s.mp4",
-  "https://omsdk-demo-files.s3.us-west-2.amazonaws.com/creative/MANIA.mp4",
+  "https://compliance.iabtechnologylab.com/omsdk-demo-files/ra_1.3/IABTL_VAST_Intro_30s.mp4",
+  "https://compliance.iabtechnologylab.com/omsdk-demo-files/creative/MANIA.mp4",
 ]
 
 let omidSession;

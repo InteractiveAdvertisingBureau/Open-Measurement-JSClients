@@ -1,8 +1,8 @@
 goog.module('omid.common.DirectCommunication');
 
 const Communication = goog.require('omid.common.Communication');
-const {CommunicationType} = goog.require('omid.common.constants');
 const InternalMessage = goog.require('omid.common.InternalMessage');
+const {CommunicationType} = goog.require('omid.common.constants');
 
 /**
  * A send and forget style communication between two DirectCommunication

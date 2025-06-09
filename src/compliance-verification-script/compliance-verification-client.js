@@ -8,7 +8,7 @@ const {isTopWindowAccessible, removeDomElements, resolveGlobalContext} = goog.re
 /**
  * @const {string} the default URL to send messages to another server.
  */
-const DefaultLogServer = 'https://complianceomsdk.iabtechlab.org/omsdk/sendmessage?';
+const DefaultLogServer = 'https://compliance.iabtechnologylab.com/omsdk/sendmessage.json?';
 
 /**
  * @const {string}
