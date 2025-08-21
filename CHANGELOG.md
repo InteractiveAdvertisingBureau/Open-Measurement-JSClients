@@ -1,5 +1,10 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.5.6 - 2025-08-21
+- Create minified verification client.
+- Do not use iframe in Web reference app. 
+- Add guidance about not using display:none for OM service Iframe.
+
 ## 1.5.5 - 2025-06-09
 - Add UniversalAdId support.
 - Update DefaultLogServer URL and reference app creative URLs.

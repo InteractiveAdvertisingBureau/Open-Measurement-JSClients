@@ -63,15 +63,9 @@ class OmsdkManager {
      */
     this.lastVideoTime_ = -1;
 
-    /**
-     * The friendly iframe containing the OMSDK.
-     * @private @const {!HTMLIFrameElement}
-     */
-    this.omsdkIframe_ = this.createOmsdkIframe_();
-
-    this.omsdkIframe_.addEventListener(
-        'load', () => this.omsdkIframeDidLoad_());
-    document.body.appendChild(this.omsdkIframe_);
+    const omsdkScript = this.createOmsdkScript_();
+    omsdkScript.addEventListener('load', () => this.omsdkScriptDidLoad_());
+    document.head.appendChild(omsdkScript);
 
     VIDEO_EVENT_TYPES.forEach((eventType) => {
       this.videoElement_.addEventListener(
@@ -80,25 +74,22 @@ class OmsdkManager {
   }
 
   /**
-   * Builds a friendly iframe in which to run the OMSDK.
-   * @return {!HTMLIFrameElement}
+   * Builds a script tag which loads the OM SDK service.
+   * @return {!HTMLScriptElement}
    * @private
    */
-  createOmsdkIframe_() {
-    const iframe =
-        /** @type {!HTMLIFrameElement}*/ (document.createElement('iframe'));
-    iframe.sandbox = 'allow-scripts allow-same-origin';
-    iframe.style.display = 'none';
-    iframe.srcdoc =
-        `<script src=${this.verificationSettings_.omsdkUrl}></script>`;
-    return iframe;
+  createOmsdkScript_() {
+    const script =
+        /** @type {!HTMLScriptElement} */ (document.createElement('script'));
+    script.src = this.verificationSettings_.omsdkUrl;
+    return script;
   }
 
   /**
-   * Handles loading of the OMSDK iframe, starting the ad session.
+   * Handles loading of the OMSDK service, starting the ad session.
    * @private
    */
-  omsdkIframeDidLoad_() {
+  omsdkScriptDidLoad_() {
     this.adSession_ = this.createAdSession_();
     this.adSession_.setCreativeType(CreativeType.VIDEO);
     // See impression type documentation to determine which type you should use.
@@ -127,11 +118,6 @@ class OmsdkManager {
         partner, [verificationScriptResource], contentUrl, customReferenceData, universalAdId);
     context.underEvaluation = true;
     context.setVideoElement(this.videoElement_);
-    const serviceWindow = this.omsdkIframe_.contentWindow;
-    if (!serviceWindow) {
-      throw new Error('OM SDK iframe content window not available.');
-    }
-    context.setServiceWindow(serviceWindow);
 
     const adSession = new AdSession(context);
     return adSession;

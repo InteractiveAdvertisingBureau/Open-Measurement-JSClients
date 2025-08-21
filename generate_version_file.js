@@ -17,6 +17,10 @@ const generateFilesSpec = [
     outputPath: 'umd-bootstrapper-with-default.js',
     additionalVersionString: 'default',
   },
+  {
+    templatePath: 'templates/umd-bootstrapper-minified-js.template',
+    outputPath: 'umd-bootstrapper-minified.js',
+  },
 ];
 
 buildFileOutput = (semVersionString, additionalVersionString, buildVersion, template) => {

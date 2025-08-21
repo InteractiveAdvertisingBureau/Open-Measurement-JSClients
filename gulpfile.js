@@ -19,6 +19,7 @@ const commonConfig = {
 };
 
 const UMD_BOOTSTRAPPER = './umd-bootstrapper.js';
+const UMD_BOOTSTRAPPER_MINIFIED = './umd-bootstrapper-minified.js';
 const UMD_BOOTSTRAPPER_WITH_DEFAULT = './umd-bootstrapper-with-default.js';
 
 // Package files into directory with version number.
@@ -77,6 +78,27 @@ gulp.task('build-verification-client', () => {
     entry_point: 'goog:omid.verificationClient.VerificationClient',
     externs: [
       ...commonConfig.externs,
+      './src/externs/omid-jasmine.js',
+      './src/externs/omid-exports.js',
+    ],
+  };
+  return closureCompiler(Object.assign({}, commonConfig, taskConfig))
+      .src() // needed to force the plugin to run without gulp.src
+      .pipe(gulp.dest('./bin'))
+});
+
+gulp.task('build-minified-verification-client', () => {
+  const taskConfig = {
+    js: VERIFICATION_CLIENT_SRC,
+    js_output_file: 'omid-verification-client-v1.min.js',
+    compilation_level: 'ADVANCED',
+    formatting: 'SINGLE_QUOTES',
+    output_wrapper_file: UMD_BOOTSTRAPPER_MINIFIED,
+    dependency_mode: 'PRUNE',
+    entry_point: 'goog:omid.verificationClient.VerificationClient',
+    externs: [
+      ...commonConfig.externs,
+      './src/externs/omid-verification-client.js',
       './src/externs/omid-jasmine.js',
       './src/externs/omid-exports.js',
     ],
