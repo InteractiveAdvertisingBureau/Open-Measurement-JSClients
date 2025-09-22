@@ -1,6 +1,6 @@
 {
   "name": "open-measurement-jsclients",
-  "version": "1.5.6",
+  "version": "1.5.7",
   "description": "JavaScript common and client components of OM SDK",
   "watch": {
     "test-unit": {
@@ -65,7 +65,7 @@
   "private": false,
   "devDependencies": {
     "ajv": "^8.12.0",
-    "chromedriver": "^138.0",
+    "chromedriver": "^140.0",
     "clang-format": "^1.8.0",
     "es6-template-strings": "^2.0.1",
     "eslint": "^8.40.0",

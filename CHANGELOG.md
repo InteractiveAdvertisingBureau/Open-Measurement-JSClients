@@ -1,5 +1,8 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.5.7 - 2025-09-22
+- Update chromedriver to 140.
+
 ## 1.5.6 - 2025-08-21
 - Create minified verification client.
 - Do not use iframe in Web reference app. 
