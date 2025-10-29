@@ -4,9 +4,9 @@ const Communication = goog.require('omid.common.Communication');
 const InternalMessage = goog.require('omid.common.InternalMessage');
 const logger = goog.require('omid.common.logger');
 const {AdEventType, Environment} = goog.require('omid.common.constants');
-const {GeometryChangeCallback, ImpressionCallback, SessionObserverCallback, VideoCallback} = goog.require('omid.common.eventTypedefs');
+const {GeometryChangeCallback, ImpressionCallback, SessionObserverCallback, VideoCallback, AttestCallback, AttestRequestPayload} = goog.require('omid.common.eventTypedefs');
 const {Version} = goog.require('omid.common.version');
-const {assertFunction, assertPositiveNumber, assertTruthyString} = goog.require('omid.common.argsChecker');
+const {assertFunction, assertPositiveNumber, assertTruthyString, assertNotNullObject} = goog.require('omid.common.argsChecker');
 const {deserializeMessageArgs, serializeMessageArgs} = goog.require('omid.common.ArgsSerDe');
 const {generateGuid} = goog.require('omid.common.guid');
 const {getOmidEnvironment} = goog.require('omid.common.DetectOmid');
@@ -103,6 +103,12 @@ class VerificationClient {
     this.injectionId_ = verificationProperties ?
         verificationProperties['injectionId'] :
         undefined;
+
+    /**
+     * Unique identifier for this verification client.
+     * @private {string|undefined}
+     */
+    this.verificationClientId_ = this.injectionId_ || generateGuid();
   }
 
   /**
@@ -183,6 +189,46 @@ class VerificationClient {
     }
     this.sendMessage_(
         'addSessionListener', functionToExecute, vendorKey, this.injectionId_);
+  }
+
+  /**
+   * Requests the attestation mechanism to be invoked.
+   *
+   * This can be used by the verification scripts to invoke the attestation
+   * mechanism supported by this device.
+   *
+   * @param {!AttestRequestPayload} requestPayload contains attestation details
+   *     like mechanism name, version and mechanism specific payload
+   * @param {!AttestCallback} callback callback to be executed.
+   *
+   * @throws error if the requestPayload is undefined, null or blank
+   * or if any of the required params in the payload is not available.
+   * @public
+   *
+   * @example
+   * const requestPayload = {
+   *   mechanism: 'FireTVFOSDAT',
+   *   version: '1.0',
+   *   payload: new Map([['verifierUrl', 'https://xyz-verifier.com']])
+   * };
+   * attest(requestPayload, (isSuccess, responseCode) => {
+   *   if (!isSuccess) {
+   *       console.log('Attestation Error response code:', responseCode);
+   *   }
+   * });
+   */
+  attest(requestPayload, callback) {
+     assertNotNullObject('requestPayload', requestPayload);
+     assertTruthyString('mechanism', requestPayload['mechanism']);
+     assertNotNullObject('payload', requestPayload['payload']);
+     assertFunction('callback', callback);
+
+    this.sendMessage_(
+        'attest', callback, requestPayload['mechanism'],
+        requestPayload['version'] == null ? '' : requestPayload['version'],
+        requestPayload['payload'],
+        this.verificationClientId_,
+        this.injectionId_);
   }
 
   /**

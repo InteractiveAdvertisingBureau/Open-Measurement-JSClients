@@ -1,6 +1,6 @@
 {
   "name": "open-measurement-jsclients",
-  "version": "1.5.7",
+  "version": "1.6.0",
   "description": "JavaScript common and client components of OM SDK",
   "watch": {
     "test-unit": {
@@ -21,14 +21,13 @@
     "test-unit": "karma start karma.conf.js && jasmine JASMINE_CONFIG_PATH='./jasmine.json' ./bin/Omid-Unit-Tests.js",
     "debug-tests": "karma start karma.conf-dev.js",
     "watch-unit-tests": "npm-watch test-unit",
-    "purge-version": "rimraf src/common/version.js && rimraf umd-bootstrapper.js && rimraf umd-bootstrapper-minified.js && rimraf umd-bootstrapper-with-default.js",
+    "purge-version": "rimraf src/common/version.js && rimraf umd-bootstrapper.js && rimraf umd-bootstrapper-minified.js && rimraf umd-bootstrapper-with-default.js && rimraf umd-bootstrapper-with-default-minified.js",
     "minify-bootstrapper": "ls && bash ./minify_bootstrapper.sh",
     "generate-version": "node ./generate_version_file.js",
     "prebuild": "npm run clean && mkdirp ./bin && npm run minify-bootstrapper && npm run generate-version",
-    "build": "npm run build-session-client && npm run build-verification-client && npm run build-minified-verification-client && npm run build-validation-verification-script && npm run build-compliance-verification-script && npm run build-display-creative && npm run build-video-creative && npm run build-visibility-measurement-script",
-    "build-session-client": "gulp build-session-client && gulp package-session-client",
-    "build-verification-client": "gulp build-verification-client && gulp package-verification-client",
-    "build-minified-verification-client": "gulp build-minified-verification-client && gulp package-verification-client",
+    "build": "npm run build-session-client && npm run build-verification-client && npm run build-validation-verification-script && npm run build-compliance-verification-script && npm run build-display-creative && npm run build-video-creative && npm run build-visibility-measurement-script",
+    "build-session-client": "gulp build-session-client && gulp build-minified-session-client && gulp build-modern-session-client && gulp package-session-client",
+    "build-verification-client": "gulp build-verification-client && gulp build-minified-verification-client && gulp build-modern-verification-client && gulp package-verification-client",
     "build-validation-verification-script": "gulp build-validation-verification-script && gulp package-validation-verification-script",
     "build-compliance-verification-script": "gulp build-compliance-verification-script && gulp package-compliance-verification-script",
     "build-display-creative": "gulp build-display-creative-session-script && gulp inject-display-creative-session-script",
@@ -65,7 +64,7 @@
   "private": false,
   "devDependencies": {
     "ajv": "^8.12.0",
-    "chromedriver": "^140.0",
+    "chromedriver": "^142.0",
     "clang-format": "^1.8.0",
     "es6-template-strings": "^2.0.1",
     "eslint": "^8.40.0",

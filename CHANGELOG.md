@@ -1,5 +1,11 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.6.0 - 2025-10-29
+OM SDK 1.6.0 is a significant update. It adds support for FireTV Attestation.
+
+- Changes to support Privacy Pass Attestation for FireTV.
+- Add modern versions of session/verification clients.
+
 ## 1.5.7 - 2025-09-22
 - Update chromedriver to 140.
 

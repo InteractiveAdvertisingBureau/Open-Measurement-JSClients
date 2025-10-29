@@ -8,6 +8,7 @@ const {AdEventType, Environment} = goog.require('omid.common.constants');
 const {VERSION_COMPATABILITY_TABLE, makeVersionRespondingCommunicationClass} = goog.require('omid.test.versionUtils');
 const {asSpy} = goog.require('omid.test.typingUtils');
 const {omidGlobal} = goog.require('omid.common.OmidGlobalProvider');
+const guidUtils = goog.require('omid.common.guid');
 
 const doNothing = () => {};
 
@@ -22,6 +23,7 @@ let omid3p;
 
 const VENDOR_KEY = 'vendor.com-omid';
 const INJECTION_ID = 'abc123';
+const VERIFICATION_CLIENT_ID = 'abc12345679';
 
 class NoIntrinsicTimingClient extends VerificationClient {
   /** @override */
@@ -244,6 +246,7 @@ describe('VerificationClient', () => {
       communication = jasmine.createSpyObj(
           'communication', ['sendMessage', 'generateGuid']);
       client = new VerificationClient(communication);
+      spyOn(guidUtils, 'generateGuid').and.returnValue(VERIFICATION_CLIENT_ID);
     });
 
     describe('constructor', () => {
@@ -334,6 +337,65 @@ describe('VerificationClient', () => {
       it('validates the eventType parameter', () => {
         expectValidatesString(
             (eventType) => client.addEventListener(eventType, doNothing));
+      });
+    });
+
+    describe('attest', () => {
+      const VALID_PAYLOAD = {
+        mechanism: 'FireTVFOSDAT',
+        version: '1.0',
+        payload: new Map([['verifierUrl', 'https://test.com']]),
+      };
+
+      it('proxies to the service', () => {
+        client.attest(VALID_PAYLOAD, doNothing);
+        expectCommunication(
+            'VerificationService.attest',
+            ['FireTVFOSDAT', '1.0', VALID_PAYLOAD.payload,
+              INJECTION_ID,
+              INJECTION_ID]);
+      });
+
+      it('works when injectionId is unavailable', () => {
+        omidGlobal.omidVerificationProperties = undefined;
+        client = new VerificationClient(communication);
+        client.attest(VALID_PAYLOAD, doNothing);
+        expectCommunication(
+            'VerificationService.attest',
+            ['FireTVFOSDAT', '1.0', VALID_PAYLOAD.payload,
+              VERIFICATION_CLIENT_ID,
+              undefined]);
+      });
+
+      it('handles missing version', () => {
+        const payloadWithoutVersion = {
+          mechanism: 'FireTVFOSDAT',
+          payload: new Map([['verifierUrl', 'https://test.com']]),
+        };
+        client.attest(payloadWithoutVersion, doNothing);
+        expectCommunication(
+            'VerificationService.attest',
+            ['FireTVFOSDAT', '', payloadWithoutVersion.payload,
+              INJECTION_ID,
+              INJECTION_ID]);
+      });
+
+      it('validates the requestPayload parameter', () => {
+        expect(() => client.attest(null, doNothing)).toThrow();
+        expect(() => client.attest(undefined, doNothing)).toThrow();
+      });
+
+      it('validates the mechanism in payload', () => {
+        expect(() => client.attest({payload: new Map()}, doNothing)).toThrow();
+      });
+
+      it('validates the payload field', () => {
+        expect(() => client.attest({mechanism: 'FireTVFOSDAT'}, doNothing)).toThrow();
+      });
+
+      it('validates the callback parameter', () => {
+        expect(() => client.attest(VALID_PAYLOAD, null)).toThrow();
+        expect(() => client.attest(VALID_PAYLOAD, undefined)).toThrow();
       });
     });
 

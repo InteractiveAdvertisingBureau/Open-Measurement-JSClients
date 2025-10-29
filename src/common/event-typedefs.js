@@ -291,6 +291,22 @@ let ImpressionCallback;
 let SessionObserverCallback;
 
 /**
+ * Callback for attestation mechanism responses.
+ * @typedef {function(boolean, (string|undefined))} AttestCallback
+ * param 1 - A boolean indicating, whether request was successfully sent
+ *     to the attestation mechanism
+ * param 2 - A string - Response code indicating result statuses like:
+ *     TOO_MANY_REQUESTS - Multiple attempts in single session
+ *     UNSUPPORTED_MECHANISM - Attestation not supported
+ *     FAILED_TO_TRIGGER - Could not initiate attestation
+ *     SAMPLING_REJECTED - Request was rejected while sampling to next stage
+ *     SESSION_ATTESTATION_LIMIT_EXCEEDED - Request is rejected as the threshold
+ *           for the number of attest calls per session has already been reached
+ *     SUCCESS - Request for attestation made to native layer successfully
+ */
+let AttestCallback;
+
+/**
  * @typedef {function(!VideoEvent)}
  */
 let VideoCallback;
@@ -357,6 +373,55 @@ let AdViewEventData;
   */
  let VerificationScriptResource;
 
+/**
+ * Represents a payload structure for the Attest API request.
+ * Fields:
+ * - mechanism: Attestation mechanism name to be used
+ *    (e.g., 'FireTVFOSDAT', 'ApplePAT')
+ * - version: Specific version of the attestation mechanism
+ * - payload: Map containing key-value pairs of mechanism specific data
+ * @typedef {{
+ *   mechanism: string,
+ *   version: string,
+ *   payload: !Map<string, string>,
+ * }}
+ * @example
+ * const attestPayload = {
+ *   mechanism: 'FireTVFOSDAT',
+ *   version: '1.0',
+ *   payload: new Map([
+ *     ['verifierUrl', 'https://xyz-verifier.com'],
+ *   ])
+ * };
+ */
+let AttestRequestPayload;
+
+/**
+ * Represents the structure of an attestation mechanism exposed to
+ * verification clients.
+ * Fields:
+ * - mechanism: Name of the supported attestation mechanism
+ *    (e.g., 'FireTVFOSDAT', 'ApplePAT')
+ * - version: Version of the supported attestation mechanism
+ * @typedef {{
+ *   mechanism: string,
+ *   version: string,
+ * }}
+ */
+let SupportedAttestationMechanism;
+
+/**
+ * Represents a list of supported attestation mechanisms in a device exposed to
+ * verification clients.
+ * Fields:
+ * - supportedAttestationMechanisms: List of supported attestation
+ *   mechanisms as exposed to client
+ * @typedef {{
+ *   supportedAttestationMechanisms: !Array<!SupportedAttestationMechanism>,
+ * }}
+ */
+let SupportedAttestationsEventData;
+
 exports = {
   AdSessionConfiguration,
   AdViewEventData,
@@ -385,6 +450,7 @@ exports = {
   GeometryChangeCallback,
   ImpressionCallback,
   SessionObserverCallback,
+  AttestCallback,
   VideoCallback,
   AdViewEvent,
   SessionStartEvent,
@@ -394,4 +460,6 @@ exports = {
   EventData,
   VerificationScriptResource,
   ActivityEventData,
+  AttestRequestPayload,
+  SupportedAttestationsEventData,
 };

@@ -249,6 +249,7 @@ class AdSession {
    * send to verification scripts injected for this ad session. This method
    * has no effect if called after the ad session has already started or in a
    * mobile app environment.
+   * @public
    */
   start() {
     const sessionStartContext = {
@@ -268,6 +269,7 @@ class AdSession {
    * This ceases ad view tracking and message sending to verification scripts
    * injected for the ad session. This method has no effect if called if there
    * is no active ad session or in a mobile app environment.
+   * @public
    */
   finish() {
     this.sendOneWayMessage('finishSession', this.adSessionId_);
