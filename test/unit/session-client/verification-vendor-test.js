@@ -65,6 +65,11 @@ describe('verificationVendorIdForScriptUrl', () => {
         'https://ads.example.com/static/1.2.3/analytics.js?',
         VerificationVendorId.HUMAN);
   });
+  it('correctly identifies Mobian URLs', () => {
+    expectScriptUrlToMatchVendorId(
+        'https://js.outcomes.net/script.js',
+        VerificationVendorId.MOBIAN);
+  });
   it('returns OTHER for unrecognized URLs', () => {
     expectScriptUrlToMatchVendorId(
         'https://cdn.some-other-vendor.com/vendor.js',
