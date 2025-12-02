@@ -1,0 +1,17 @@
+{
+  "name": "@iabtechlab-omsdk/open-measurement",
+  "version": "1.6.1",
+  "description": "This repository contains the client JavaScript code of Open Measurement SDK, also known as OM SDK JS.",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/InteractiveAdvertisingBureau/Open-Measurement-JSClients.git"
+  },
+  "author": "Mayank Mishra <mayank@iabtechlab.com>",
+  "license": "ISC",
+  "homepage": "https://github.com/InteractiveAdvertisingBureau/Open-Measurement-JSClients#readme"
+}

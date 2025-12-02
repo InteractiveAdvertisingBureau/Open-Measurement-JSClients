@@ -18,6 +18,7 @@ const VerificationVendorId = {
   MEETRICS: 8,
   GOOGLE: 9,
   HUMAN: 10,
+  MOBIAN: 11,
 };
 
 /**
@@ -98,6 +99,12 @@ const VERIFICATION_VENDORS = new Map([
     [
       /^(https?:\/\/|\/\/)?[-a-zA-Z0-9.]+\.script\.ac\/.*$/,
       /^(https?:\/\/|\/\/)?[-a-zA-Z0-9.]+\/(2|ag|static)\/[a-zA-Z0-9.]*\/analytics.js.*$/,
+    ],
+  ],
+  [
+    VerificationVendorId.MOBIAN,
+    [
+      /^(https?:\/\/|\/\/)?[-a-zA-Z0-9.]+\.outcomes\.net\/.*$/,
     ],
   ],
 ]);

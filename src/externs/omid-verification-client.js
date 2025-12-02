@@ -29,3 +29,5 @@ VerificationClient.setInterval = (
       (callback, timeInMillis) => {});
 /** @type {function(number)} */
 VerificationClient.clearInterval = ((intervalId) => {});
+/** @type {function(!Object, function(boolean, (string|undefined)))} */
+VerificationClient.attest = ((attestPayload, callback) => {});
