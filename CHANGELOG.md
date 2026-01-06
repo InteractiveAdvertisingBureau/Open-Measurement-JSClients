@@ -1,5 +1,8 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.6.2 - 2026-01-06
+- Update chromedriver to 143.
+
 ## 1.6.1 - 2025-11-27
 - Add Mobian to vendors list.
 - Added NPM package. 
