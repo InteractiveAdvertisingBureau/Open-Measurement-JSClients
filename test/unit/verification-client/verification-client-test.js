@@ -24,6 +24,7 @@ let omid3p;
 const VENDOR_KEY = 'vendor.com-omid';
 const INJECTION_ID = 'abc123';
 const VERIFICATION_CLIENT_ID = 'abc12345679';
+const TEST_SCRIPT_URL = 'http://example.com/script.js';
 
 class NoIntrinsicTimingClient extends VerificationClient {
   /** @override */
@@ -199,12 +200,11 @@ function runInjectJavaScriptResourceTest() {
   });
   if (hasWindow()) {
     it('injects it in DOM if omidGlobal is a window', () => {
-      const url = 'http://safescript4realz.com/4realz.js';
       spyOn(omidGlobal.document, 'createElement').and.callThrough();
       spyOn(omidGlobal.document.body, 'appendChild').and.callThrough();
 
       client.injectJavaScriptResource(
-          url,
+          TEST_SCRIPT_URL,
           doNothing /* successCallback */,
           doNothing /* failureCallback */);
 
@@ -214,11 +214,97 @@ function runInjectJavaScriptResourceTest() {
       const mostRecentAppendChildCall = asSpy(
           omidGlobal.document.body.appendChild).calls.mostRecent();
       expect(mostRecentAppendChildCall.args[0]).not.toBeUndefined();
-      expect(mostRecentAppendChildCall.args[0].src).toEqual(url);
+      expect(mostRecentAppendChildCall.args[0].src).toEqual(TEST_SCRIPT_URL);
       expect(mostRecentAppendChildCall.args[0].type).toEqual(
           'application/javascript');
     });
+
+    runDataInjectionIdAttributeOnInjectedScriptTest();
   }
+}
+
+function runDataInjectionIdAttributeOnInjectedScriptTest() {
+  describe('data-injection-id attribute on injected script', () => {
+    let originalCurrentScript;
+
+    beforeEach(() => {
+      originalCurrentScript = omidGlobal.document.currentScript;
+    });
+
+    afterEach(() => {
+      Object.defineProperty(omidGlobal.document, 'currentScript', {
+        value: originalCurrentScript,
+        configurable: true,
+      });
+    });
+
+    it('is set when currentScript has data-injection-id attribute', () => {
+      const mockCurrentScript = {
+        getAttribute: (attr) => attr === 'data-injection-id' ? INJECTION_ID : null,
+      };
+      Object.defineProperty(omidGlobal.document, 'currentScript', {
+        value: mockCurrentScript,
+        configurable: true,
+      });
+      spyOn(omidGlobal.document.body, 'appendChild').and.callThrough();
+
+      client.injectJavaScriptResource(
+          TEST_SCRIPT_URL,
+          doNothing,
+          doNothing);
+
+      const appendedScript = asSpy(
+          omidGlobal.document.body.appendChild).calls.mostRecent().args[0];
+      expect(appendedScript).not.toBeUndefined();
+      expect(appendedScript.src).toEqual(TEST_SCRIPT_URL);
+      expect(appendedScript.type).toEqual('application/javascript');
+      expect(appendedScript.getAttribute('data-injection-id'))
+          .toEqual(INJECTION_ID);
+    });
+
+    it('is not set when currentScript is null', () => {
+      Object.defineProperty(omidGlobal.document, 'currentScript', {
+        value: null,
+        configurable: true,
+      });
+      spyOn(omidGlobal.document.body, 'appendChild').and.callThrough();
+
+      client.injectJavaScriptResource(
+          TEST_SCRIPT_URL,
+          doNothing,
+          doNothing);
+
+      const appendedScript = asSpy(
+          omidGlobal.document.body.appendChild).calls.mostRecent().args[0];
+      expect(appendedScript).not.toBeUndefined();
+      expect(appendedScript.src).toEqual(TEST_SCRIPT_URL);
+      expect(appendedScript.type).toEqual('application/javascript');
+      expect(appendedScript.getAttribute('data-injection-id')).toBeNull();
+    });
+
+    it('is not set when currentScript has no data-injection-id attribute', () => {
+      const mockCurrentScript = {
+        getAttribute: () => null,
+      };
+      Object.defineProperty(omidGlobal.document, 'currentScript', {
+        value: mockCurrentScript,
+        configurable: true,
+      });
+      spyOn(omidGlobal.document.body, 'appendChild').and.callThrough();
+
+      client.injectJavaScriptResource(
+          TEST_SCRIPT_URL,
+          doNothing,
+          doNothing);
+
+      const appendedScript = asSpy(
+          omidGlobal.document.body.appendChild).calls.mostRecent().args[0];
+      expect(appendedScript).not.toBeUndefined();
+      expect(appendedScript.src).toEqual(TEST_SCRIPT_URL);
+      expect(appendedScript.type).toEqual('application/javascript');
+      expect(appendedScript.getAttribute('data-injection-id')).toBeNull();
+    });
+  });
 }
 
 describe('VerificationClient', () => {

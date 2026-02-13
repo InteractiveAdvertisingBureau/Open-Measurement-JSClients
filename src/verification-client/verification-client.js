@@ -385,7 +385,11 @@ class VerificationClient {
         /** @type {function ((Event|null)): ?|null} */ (failureCallback);
     scriptNode.src = url;
     scriptNode.type = 'application/javascript';
-
+    const dataInjectionIdAttribute = document.currentScript &&
+        document.currentScript.getAttribute('data-injection-id');
+    if (dataInjectionIdAttribute) {
+      scriptNode.setAttribute('data-injection-id', dataInjectionIdAttribute);
+    }
     body.appendChild(scriptNode);
   }
 
