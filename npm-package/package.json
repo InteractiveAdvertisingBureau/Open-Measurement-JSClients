@@ -1,6 +1,6 @@
 {
   "name": "@iabtechlab-omsdk/open-measurement",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "description": "This repository contains the client JavaScript code of Open Measurement SDK, also known as OM SDK JS.",
   "dependencies": {},
   "devDependencies": {},
