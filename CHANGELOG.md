@@ -1,5 +1,8 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.6.5 - 2026-04-01
+- Update version to match iOS SDK; no changes from 1.6.4
+
 ## 1.6.4 - 2026-03-24
 - Update version to match iOS SDK; no changes from 1.6.3
 
