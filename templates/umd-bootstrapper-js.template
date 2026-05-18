@@ -16,6 +16,9 @@
     factory(omidGlobal, exports);
 
     function deepFreeze(object) {
+      if (typeof object === 'string') {
+        return object;
+      }
       for (var key in object) {
         if (object.hasOwnProperty(key)) {
           object[key] = deepFreeze(object[key]);

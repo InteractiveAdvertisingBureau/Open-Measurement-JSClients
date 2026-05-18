@@ -141,6 +141,81 @@ function removeDomElements(event) {
 }
 
 /**
+ * Returns n rounded to two decimal places for compact log output.
+ * @param {number} n The value to round.
+ * @return {number} The rounded value.
+ * @private
+ */
+function roundToTwoDecimals_(n) {
+  return Math.round(n * 100) / 100;
+}
+
+/**
+ * Recursively rounds every numeric field in place on the given object or array.
+ * @param {?Object|undefined} obj Root tree to round (typically event.data).
+ * @private
+ */
+function roundNumbersInObject_(obj) {
+  if (obj == null) {
+    return;
+  }
+  if (Array.isArray(obj)) {
+    for (let i = 0; i < obj.length; i++) {
+      const item = obj[i];
+      if (typeof item === 'number') {
+        obj[i] = roundToTwoDecimals_(item);
+      } else if (item != null && typeof item === 'object') {
+        roundNumbersInObject_(item);
+      }
+    }
+    return;
+  }
+  for (const key in obj) {
+    if (!obj.hasOwnProperty(key)) {
+      continue;
+    }
+    const v = obj[key];
+    if (typeof v === 'number') {
+      obj[key] = roundToTwoDecimals_(v);
+    } else if (v != null && typeof v === 'object') {
+      roundNumbersInObject_(v);
+    }
+  }
+}
+
+/**
+ * Prepares the value verification scripts pass to JSON.stringify and URL
+ * serialization. For OMID event objects with a non-null data object, returns a
+ * deep copy with every numeric field under data rounded to two decimal places
+ * for serialization; the live event is not modified. For log
+ * lines without structured data, returns the input unchanged.
+ * @param {*} verificationEventOrMessage OMID event object, or a primitive log
+ *     line such as the OmidSupported string.
+ * @return {*} Object safe to serialize, or the original message value.
+ */
+function prepareVerificationEventForSerialization(verificationEventOrMessage) {
+  if (verificationEventOrMessage == null ||
+      typeof verificationEventOrMessage !== 'object') {
+    return verificationEventOrMessage;
+  }
+  const data = verificationEventOrMessage['data'];
+  if (data == null || typeof data !== 'object') {
+    return verificationEventOrMessage;
+  }
+  try {
+    const clone = /** @type {!Object} */ (
+        JSON.parse(JSON.stringify(verificationEventOrMessage)));
+    const clonedData = clone['data'];
+    if (clonedData != null && typeof clonedData === 'object') {
+      roundNumbersInObject_(clonedData);
+    }
+    return clone;
+  } catch (error) {
+    return verificationEventOrMessage;
+  }
+}
+
+/**
  * Returns the URL of the top-level web page as determined by
  * the OMSDK JS service. Returns null when service is running
  * in cross-domain iframe.
@@ -164,6 +239,7 @@ function evaluatePageUrl(globalObject) {
 
 exports = {
   evaluatePageUrl,
+  prepareVerificationEventForSerialization,
   isCrossOrigin,
   removeDomElements,
   resolveGlobalContext,

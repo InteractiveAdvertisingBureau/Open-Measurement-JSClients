@@ -57,6 +57,8 @@ ul {
   width: 320px;
   margin: auto;
   font-size: 1.5em;
+  position: relative;
+  z-index: 1;
 }
 
 #content {
@@ -65,18 +67,29 @@ ul {
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 0;
+  position: relative;
+  z-index: 0;
 }
 
 #sidebarRight {
   width: 320px;
   margin: auto;
   font-size: 1.5em;
+  position: relative;
+  z-index: 1;
 }
 
 #creativeContainer {
   width: 1200px;
   background: #333333;
   overflow: hidden;
+  position: relative;
+  isolation: isolate;
+}
+
+#creativeStage {
+  width: 100%;
 }
 
 #videoElement {

@@ -1,6 +1,6 @@
 goog.module('omid.test.common.windowUtils');
 
-const {evaluatePageUrl, isCrossOrigin, resolveGlobalContext} = goog.require('omid.common.windowUtils');
+const {evaluatePageUrl, isCrossOrigin, prepareVerificationEventForSerialization, resolveGlobalContext} = goog.require('omid.common.windowUtils');
 const {omidGlobal} = goog.require('omid.common.OmidGlobalProvider');
 
 describe('serviceCommunication', () => {
@@ -94,6 +94,56 @@ describe('serviceCommunication', () => {
       omsdkFrame.location.href = 'https://www.example.com/child';
 
       expect(evaluatePageUrl(omsdkFrame)).toBe(topFrame.location.href);
+    });
+  });
+
+  describe('prepareVerificationEventForSerialization', () => {
+    it('event with nested numeric data: rounded copy, original unchanged', () => {
+      const event = {
+        'type': 'geometryChange',
+        'data': {
+          'viewport': {'width': 402, 'height': 874.1234567},
+          'adView': {
+            'pixelsInView': 581.0000000000582,
+            'geometry': {'height': 714.6666666666667, 'y': 76.33333333333331},
+            'onScreenGeometry': {
+              'obstructions': [{'width': 17.33333333333333, 'height': 12}],
+            },
+            'declaredFriendlyObstructions': 6,
+          },
+        },
+      };
+      const serializationInput = prepareVerificationEventForSerialization(event);
+      expect(serializationInput).not.toBe(event);
+      expect(event['data']['adView']['pixelsInView']).toBe(581.0000000000582);
+      expect(serializationInput['data']['adView']['pixelsInView']).toBe(581);
+      expect(serializationInput['data']['viewport']['height']).toBe(874.12);
+      expect(serializationInput['data']['adView']['geometry']['height']).toBe(714.67);
+      expect(serializationInput['data']['adView']['onScreenGeometry']['obstructions'][0]['width']).toBe(17.33);
+      expect(serializationInput['data']['adView']['declaredFriendlyObstructions']).toBe(6);
+    });
+
+    it('event with numeric data: rounded copy, original unchanged', () => {
+      const event = {
+        'type': 'volumeChange',
+        'data': {'mediaPlayerVolume': 0.7333333333333, 'deviceVolume': 1},
+      };
+      const serializationInput = prepareVerificationEventForSerialization(event);
+      expect(serializationInput).not.toBe(event);
+      expect(event['data']['mediaPlayerVolume']).toBe(0.7333333333333);
+      expect(serializationInput['data']['mediaPlayerVolume']).toBe(0.73);
+      expect(serializationInput['data']['deviceVolume']).toBe(1);
+    });
+
+    it('primitive log line unchanged', () => {
+      expect(prepareVerificationEventForSerialization('OmidSupported[true]'))
+          .toBe('OmidSupported[true]');
+    });
+
+    it('event without object data unchanged', () => {
+      expect(prepareVerificationEventForSerialization({'type': 'x'})).toEqual({'type': 'x'});
+      expect(prepareVerificationEventForSerialization({'type': 'x', 'data': null}))
+          .toEqual({'type': 'x', 'data': null});
     });
   });
 });

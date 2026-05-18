@@ -1,5 +1,6 @@
 const videoElement = document.getElementById('videoElement');
 const progressBar = document.getElementById('progressBar');
+const creativeStage = document.getElementById('creativeStage');
 
 const mediaUrl = videoElement.src;
 const verificationScriptUrl = "./bin/omid-validation-verification-script-v1.js";
@@ -117,6 +118,7 @@ const videoControl = {
   isFullscreen: false,
   progress: 0,
   quartilesReached: [],
+  translateX: 0,
 
   // Playback controls
   togglePlay: function() {
@@ -184,9 +186,16 @@ const videoControl = {
   },
 
   // Clipping controls (for demonstration only)
-  offset: function(px)  {
-    const x = parseInt(getComputedStyle(videoElement).paddingLeft);
-    videoElement.style.paddingLeft = (x + px) + "px";
+  offset: function(px) {
+    this.translateX += px;
+    if (creativeStage) {
+      creativeStage.style.transform =
+          this.translateX ? 'translateX(' + this.translateX + 'px)' : '';
+    }
+    // Nudge listeners (e.g. IntersectionObserver) on engines that skip updates until layout.
+    if (typeof window !== 'undefined' && window.dispatchEvent) {
+      window.dispatchEvent(new Event('resize'));
+    }
   },
   
   // Session client callbacks (for OM integration below)

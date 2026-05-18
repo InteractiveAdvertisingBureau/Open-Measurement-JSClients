@@ -1,6 +1,12 @@
 goog.module('omid.common.constants');
 
 /**
+ * Common constants
+ * @module constants
+ * @public
+ */
+
+/**
  * List of all OMID ad event types.
  * @enum {string}
  * @public

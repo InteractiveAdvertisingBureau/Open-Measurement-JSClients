@@ -3,7 +3,7 @@ const {packageExport} = goog.require('omid.common.exporter');
 const {AdEventType} = goog.require('omid.common.constants');
 const VerificationClient = goog.require('omid.verificationClient.VerificationClient');
 const {Version} = goog.require('omid.common.version');
-const {isTopWindowAccessible, removeDomElements, resolveGlobalContext} = goog.require('omid.common.windowUtils');
+const {isTopWindowAccessible, prepareVerificationEventForSerialization, removeDomElements, resolveGlobalContext} = goog.require('omid.common.windowUtils');
 
 /**
  * @const {string} the default URL to send messages to another server.
@@ -116,13 +116,14 @@ class ComplianceVerificationClient {
     fireEvent_(event) {
         event = removeDomElements(event);
         /* Add new param friendlyToTop, true if top window is available, false otherwise. */
-        if (event.hasOwnProperty('type')) {
+        if (typeof event === 'object' && event !== null && event.hasOwnProperty('type')) {
             if (event['type'] === 'sessionStart') {
                 event.data.context['friendlyToTop'] = JSON.stringify(isTopWindowAccessible(resolveGlobalContext()));
             }
         }
-        let params = this.serialize_(event, undefined);
-        params += '&rawJSON=' + encodeURIComponent(JSON.stringify(event));
+        const serializationInput = prepareVerificationEventForSerialization(event);
+        let params = this.serialize_(serializationInput, undefined);
+        params += '&rawJSON=' + encodeURIComponent(JSON.stringify(serializationInput));
         let url = DefaultLogServer + params;
         this.fireURL_(url);
     }

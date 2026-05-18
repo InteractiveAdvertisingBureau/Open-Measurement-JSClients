@@ -1,6 +1,6 @@
 {
   "name": "open-measurement-jsclients",
-  "version": "1.6.5",
+  "version": "1.6.6",
   "description": "JavaScript common and client components of OM SDK",
   "watch": {
     "test-unit": {
@@ -62,9 +62,12 @@
   },
   "homepage": "https://github.com/InteractiveAdvertisingBureau/Open-Measurement-JSClients#readme",
   "private": false,
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "devDependencies": {
     "ajv": "^8.12.0",
-    "chromedriver": "^146.0",
+    "chromedriver": "148.0.1",
     "clang-format": "^1.8.0",
     "es6-template-strings": "^2.0.1",
     "eslint": "^8.40.0",
@@ -87,6 +90,9 @@
     "selenium-webdriver": "^4.9.2"
   },
   "overrides": {
-    "chokidar": "^3.5.3"
+    "chokidar": "^3.5.3",
+    "chromedriver": {
+      "proxy-agent": "6.4.0"
+    }
   }
 }

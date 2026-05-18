@@ -2,7 +2,7 @@ goog.module('omid.validationVerificationScript.ValidationVerificationClient');
 const {packageExport} = goog.require('omid.common.exporter');
 const {AdEventType} = goog.require('omid.common.constants');
 const VerificationClient = goog.require('omid.verificationClient.VerificationClient');
-const {isTopWindowAccessible, removeDomElements, resolveGlobalContext} = goog.require('omid.common.windowUtils');
+const {isTopWindowAccessible, prepareVerificationEventForSerialization, removeDomElements, resolveGlobalContext} = goog.require('omid.common.windowUtils');
 /** @const {string} the default address for the logs.*/
 const DefaultLogServer = 'http://localhost:66/sendmessage?msg=';
 
@@ -49,12 +49,13 @@ class ValidationVerificationClient {
      * @param {number} timestamp of the event
      */
     logMessage_(message, timestamp) {
-        if (message.hasOwnProperty('type')) {
+        if (typeof message === 'object' && message !== null && message.hasOwnProperty('type')) {
             if (message['type'] === 'sessionStart') {
                 message.data.context['friendlyToTop'] = isTopWindowAccessible(resolveGlobalContext());
             }
         }
-        const log = (new Date(timestamp)).toLocaleString()+ '::' + JSON.stringify(message);
+        const serializationInput = prepareVerificationEventForSerialization(message);
+        const log = (new Date(timestamp)).toLocaleString()+ '::' + JSON.stringify(serializationInput);
         console.log(log);
         this.sendUrl_(log);
     }
