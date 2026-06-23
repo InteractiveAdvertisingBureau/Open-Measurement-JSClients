@@ -1,5 +1,8 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.6.7 - 2026-06-23
+- Update version to match iOS SDK and Android SDKs; no changes from 1.6.6. 
+
 ## 1.6.6 - 2026-05-18
 - Improved precision handling in compliance and validation event data.
 - CTV reference app: Fix scrolling viewability geometry.
