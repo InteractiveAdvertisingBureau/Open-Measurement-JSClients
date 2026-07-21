@@ -8,7 +8,7 @@ const {isTopWindowAccessible, prepareVerificationEventForSerialization, removeDo
 /**
  * @const {string} the default URL to send messages to another server.
  */
-const DefaultLogServer = 'https://compliance.iabtechnologylab.com/omsdk/sendmessage.json?';
+const DefaultLogServer = 'https://compliance.iabtechlab.com/omsdk/sendmessage.json?';
 
 /**
  * @const {string}

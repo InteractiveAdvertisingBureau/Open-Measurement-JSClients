@@ -1,5 +1,10 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.6.8 - 2026-07-21
+- Fix null error in viewability watcher. 
+- Move resolve access mode to addSessionStartVerificationInfo_.
+- Updated the DefaultLogServer URL to resolve the ORB issue.
+
 ## 1.6.7 - 2026-06-23
 - Update version to match iOS SDK and Android SDKs; no changes from 1.6.6. 
 
