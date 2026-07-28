@@ -1,5 +1,9 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.6.9 - 2026-07-28
+- Update DefaultLogServer in the compliance verification script to http://localhost:66/sendmessage?
+- Add self-hosting guide for the compliance verification script to avoid traffic to IAB Tech Lab servers.
+
 ## 1.6.8 - 2026-07-21
 - Fix null error in viewability watcher. 
 - Move resolve access mode to addSessionStartVerificationInfo_.
