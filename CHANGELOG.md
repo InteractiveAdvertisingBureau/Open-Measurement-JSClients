@@ -1,5 +1,8 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.6.10 - 2026-09-02
+- Update chromedriver to 151.
+
 ## 1.6.9 - 2026-07-28
 - Update DefaultLogServer in the compliance verification script to http://localhost:66/sendmessage?
 - Add self-hosting guide for the compliance verification script to avoid traffic to IAB Tech Lab servers.
