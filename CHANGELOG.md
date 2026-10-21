@@ -1,5 +1,11 @@
 # Changelog for Open Measurement SDK JavaScript clients
 
+## 1.6.11 - 2026-10-21
+- Modify VerificationInjector to support running in an Android JavaScriptIsolate.
+- Fix stale element positions due to resize that moves the element without changing its ratio.
+- Harden CI release script logging.
+- Update chromedriver to 155.
+
 ## 1.6.10 - 2026-09-02
 - Update chromedriver to 151.
 
